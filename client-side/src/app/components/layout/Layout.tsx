@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import Footer from './footer/Footer'
 import Header from './header/Header'
-import styles from './Layout.module.scss'
 
 interface ILayoutProps {
 	children: any
@@ -9,9 +8,9 @@ interface ILayoutProps {
 
 const Layout: FC<ILayoutProps> = ({ children }) => {
 	return (
-		<div className={styles.layout}>
+		<div className='flex relative flex-col min-h-[100vh] h-[100%]'>
 			<Header />
-			<main className={styles.content}>{children}</main>
+			<main className='flex-[1]'>{children}</main>
 			<Footer />
 		</div>
 	)

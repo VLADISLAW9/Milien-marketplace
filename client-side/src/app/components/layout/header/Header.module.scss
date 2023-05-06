@@ -1,0 +1,7 @@
+.header {
+	@apply items-center border-b border-white/5 bg-[#181818];
+	padding: 20px 30px;
+	display: flex;
+	z-index: 10000;
+	justify-content: space-between;
+}
