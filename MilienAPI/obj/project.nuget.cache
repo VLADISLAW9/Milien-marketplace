@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "89sf05VSOWqbiRxjNDP75bmLLqfb/NlTZwTsP5zL48nHaCAosiRBvDOOXyyceUKI3+uPN0nh3x2BV221Fj/KvQ==",
+  "dgSpecHash": "CXfPUwYXepIu0BAhcIo1mZ5iaCjedswgHQa8UlcKhiHAT8vqHXYG/zcFObYmLOaU5zy03AcmPh/RWRdtFU+URg==",
   "success": true,
   "projectFilePath": "C:\\VisualStudioProjects\\MilienAPI\\MilienAPI\\MilienAPI.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\masj0\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\masj0\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\masj0\\.nuget\\packages\\entityframework\\6.4.4\\entityframework.6.4.4.nupkg.sha512",
     "C:\\Users\\masj0\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.5\\microsoft.aspnetcore.openapi.7.0.5.nupkg.sha512",
     "C:\\Users\\masj0\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",

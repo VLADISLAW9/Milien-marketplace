@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MilienAPI.Models;
+using System.Xml;
 
 namespace MilienAPI.Data
 {
@@ -13,9 +15,8 @@ namespace MilienAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>()
-            .Property(o => o.Status)
-            .HasColumnType("status")
-            .HasConversion<string>();
+            .Property(c => c.Status)
+            .HasColumnType("status");
         }
     }
 }

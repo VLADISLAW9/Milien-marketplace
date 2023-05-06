@@ -1,5 +1,8 @@
-﻿public enum Status
+﻿using NpgsqlTypes;
+using System.ComponentModel;
+
+public enum Status
 {
-    ADMIN,
-    USER
+    ADMIN = 1,
+    USER = 0
 }

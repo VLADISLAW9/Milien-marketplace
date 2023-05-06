@@ -57,3 +57,5 @@ C:\VisualStudioProjects\MilienAPI\MilienAPI\obj\Debug\net7.0\MilienAPI.genruntim
 C:\VisualStudioProjects\MilienAPI\MilienAPI\obj\Debug\net7.0\ref\MilienAPI.dll
 C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\AutoMapper.dll
+C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
