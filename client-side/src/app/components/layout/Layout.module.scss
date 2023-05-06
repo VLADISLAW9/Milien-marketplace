@@ -1,0 +1,12 @@
+.layout {
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	min-height: 100vh;
+	background-color: #181818;
+	height: 100%;
+}
+
+.content {
+	flex: 1;
+}
