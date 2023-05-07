@@ -6,17 +6,15 @@ using System.Data.Entity;
 
 namespace MilienAPI.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/CustomerAPI/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private Context _context;
-        private IMapper _mapper;
 
-        public UserController(Context context, IMapper mapper)
+        public UserController(Context context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         [HttpPost]
@@ -56,7 +54,7 @@ namespace MilienAPI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("")]
+        [HttpGet]
         public JsonResult GetAll()
         {
             var result = _context.Customers.ToList();
