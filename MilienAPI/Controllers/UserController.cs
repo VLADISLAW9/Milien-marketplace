@@ -20,20 +20,40 @@ namespace MilienAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] CustomerDTO customer)
+        public async Task<IActionResult> CreateUser([FromBody] Customer customer)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = _mapper.Map<CustomerDTO, Customer>(customer);
+            var newUser = new Customer
+            {
+                Login = customer.Login,
+                Pass = customer.Pass,
+                Email = customer.Email,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Age = customer.Age,
+                PhoneNumber = customer.PhoneNumber,
+            };
 
-            _context.Customers.Add(user);
+            _context.Customers.Add(newUser);
             await _context.SaveChangesAsync();
 
 
             return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult GetById(int id)
+        {
+            var result = _context.Customers.Find(id);
+
+            if (result == null)
+                return BadRequest();
+
+            return Ok(result);
         }
 
         [HttpGet("")]

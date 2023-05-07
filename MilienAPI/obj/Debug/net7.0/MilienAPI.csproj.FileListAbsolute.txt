@@ -59,3 +59,7 @@ C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\Microsoft.EntityFra
 C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\AutoMapper.dll
 C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\Humanizer.dll
+C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
+C:\VisualStudioProjects\MilienAPI\MilienAPI\bin\Debug\net7.0\Mono.TextTemplating.dll

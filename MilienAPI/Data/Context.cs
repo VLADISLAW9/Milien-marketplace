@@ -8,15 +8,16 @@ namespace MilienAPI.Data
     public class Context : DbContext
     {
         public Context(DbContextOptions<Context> options)
-            : base(options) { }
+            : base(options) 
+        {
+            
+        }
 
         public DbSet<Customer> Customers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Customer>()
-            .Property(c => c.Status)
-            .HasColumnType("status");
+
         }
     }
 }
