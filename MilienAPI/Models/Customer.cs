@@ -14,7 +14,8 @@ namespace MilienAPI.Models
         [MaxLength(100)]
         public string Login { get; set; }
 
-        [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")]
+        [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", ErrorMessage = "Invalid Password")]
+        [MinLength(8)]
         public string Pass { get; set; }
 
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
