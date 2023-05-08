@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MilienAPI.Models
 {
+    [Table("Customers")]
     public class Customer
     {
         [Key]
@@ -24,8 +25,9 @@ namespace MilienAPI.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        [Range(18, 99,ErrorMessage ="Invalid Age")]
+        [Range(18, 99, ErrorMessage = "Invalid Age")]
         public int Age { get; set; }
         public string PhoneNumber { get; set; }
+        public ICollection<Ad> Ads { get; set; }
     }
 }

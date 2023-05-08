@@ -14,6 +14,7 @@ namespace MilienAPI.Data
         }
 
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Ad> Ads { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

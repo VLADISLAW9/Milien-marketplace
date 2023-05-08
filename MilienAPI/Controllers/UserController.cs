@@ -25,25 +25,14 @@ namespace MilienAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var newUser = new Customer
-            {
-                Login = customer.Login,
-                Pass = customer.Pass,
-                Email = customer.Email,
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                Age = customer.Age,
-                PhoneNumber = customer.PhoneNumber,
-            };
-
-            _context.Customers.Add(newUser);
+            _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 
 
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var result = _context.Customers.Find(id);
