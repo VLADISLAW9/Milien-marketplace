@@ -4,7 +4,7 @@ using MilienAPI.Models;
 
 namespace MilienAPI.Controllers
 {
-    [Route("api/CustomerAPI/[controller]/[action]")]
+    [Route("api/Ad/[controller]/[action]")]
     [ApiController]
     public class AdController : ControllerBase
     {

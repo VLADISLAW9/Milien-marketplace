@@ -6,7 +6,7 @@ using System.Data.Entity;
 
 namespace MilienAPI.Controllers
 {
-    [Route("api/CustomerAPI/[controller]/[action]")]
+    [Route("api/Customer/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -44,11 +44,11 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAll()
+        public IActionResult GetAll()
         {
             var result = _context.Customers.ToList();
 
-            return new (Ok(result));
+            return Ok(result);
         }
     }
 }

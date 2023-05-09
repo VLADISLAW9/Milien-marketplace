@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MilienAPI.Models;
-using System.Xml;
+using Npgsql;
 
 namespace MilienAPI.Data
 {
@@ -13,12 +12,16 @@ namespace MilienAPI.Data
             
         }
 
+        static Context() => NpgsqlConnection.GlobalTypeMapper.MapEnum<Category>();
+
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Ad> Ads { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<Ad>()
+                .Property(c => c.Category)
+                .HasConversion(typeof(Category));
         }
     }
 }
