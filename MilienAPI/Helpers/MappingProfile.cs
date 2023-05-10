@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MilienAPI.Models;
+using MilienAPI.Models.DTO;
 
 namespace MilienAPI.Helpers
 {
@@ -7,7 +8,8 @@ namespace MilienAPI.Helpers
     {
         public MappingProfile()
         {
-
+            CreateMap<CustomerDTO, Customer>();
+            CreateMap<AdDTO, Ad>();
         }
     }
 }

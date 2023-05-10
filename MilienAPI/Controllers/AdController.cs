@@ -1,29 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MilienAPI.Data;
+using MilienAPI.Models.DTO;
 using MilienAPI.Models;
 
 namespace MilienAPI.Controllers
 {
-    [Route("api/Ad/[controller]/[action]")]
+    [Route("Ad/[controller]/[action]")]
     [ApiController]
     public class AdController : ControllerBase
     {
         private Context _context;
+        private IMapper _mapper;
 
-        public AdController(Context context)
+        public AdController(Context context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Ad>> CreateAd([FromBody] Ad ad)
+        public async Task<ActionResult<Ad>> CreateAd([FromBody] AdDTO ad)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Ads.Add(ad);
+            var res = _mapper.Map<AdDTO, Ad>(ad);
+            _context.Ads.Add(res);
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -31,14 +36,14 @@ namespace MilienAPI.Controllers
         [HttpGet("{customerId}")]
         public IActionResult GetAdsByCustomerId(int customerId)
         {
-            var customer =_context.Customers.FirstOrDefault(c => c.Id == customerId);
+            var res = _context.Ads
+                .Where(ad => ad.CustomerId == customerId)
+                .ToList();
 
-            var ads = _context.Ads.Where(a => a.CustomerId == customerId).ToList();
-
-            if (ads.Count == 0)
+            if (res.Count == 0)
                 return BadRequest();
 
-            return Ok(ads);
+            return Ok(res);
         }
     }
 }
