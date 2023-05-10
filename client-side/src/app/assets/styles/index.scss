@@ -1,9 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+$fullhd_padding-x: 20px;
+$fullhd_padding-y: 50px;
 
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+}
+
+body {
+	position: relative;
+	font-family: 'Open Sans', sans-serif;
+}
+
+body::-webkit-scrollbar {
+	width: 12px; /* ширина всей полосы прокрутки */
+}
+
+body::-webkit-scrollbar-track {
+	@apply bg-stone-300 /* цвет зоны отслеживания */;
+}
+
+body::-webkit-scrollbar-thumb {
+	@apply bg-stone-400; /* цвет бегунка */
+	border-radius: 20px; /* округлось бегунка */
+	@apply shadow-xl;
+}
+
+html {
+	overflow-y: scroll;
 }
