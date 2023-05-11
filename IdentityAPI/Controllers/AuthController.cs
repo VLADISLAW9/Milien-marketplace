@@ -42,8 +42,6 @@ namespace IdentityAPI.Controllers
                     {
                         access_token = token,
                     });
-                case PasswordVerificationResult.Failed:
-                    return Unauthorized();
             }
             return Unauthorized();
 
