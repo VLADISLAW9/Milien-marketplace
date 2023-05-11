@@ -6,6 +6,8 @@ using IdentityAPI.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using MilienAPI.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace IdentityAPI.Controllers
 {
@@ -13,6 +15,7 @@ namespace IdentityAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private PasswordHasher<string> _passwordHasher = new PasswordHasher<string>();
         private Context _context;
         private readonly IOptions<AuthOptions> _options;
 
@@ -20,24 +23,30 @@ namespace IdentityAPI.Controllers
         {
             _context = context;
             _options = authOptions;
-            
+
         }
 
         [Route("login")]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody]Login request)
+        public async Task<IActionResult> Login([FromBody] Login request)
         {
-            var user = AutheticateUser(request.Email, request.Password);
-
-            if (user == null)
-                return Unauthorized();
-
-            var token = GenerateJWt(user);
-
-            return Ok(new
+            var savedHashedPassword = _context.Users.Where(u => u.Pass == request.Password).FirstOrDefault();
+            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(null, savedHashedPassword.Pass, request.Password);
+            switch (passwordVerificationResult)
             {
-                access_token = token,
-            });
+                case PasswordVerificationResult.Success:
+                    var user = AutheticateUser(request.Email, savedHashedPassword.Pass);
+                    var token = GenerateJWt(user);
+
+                    return Ok(new
+                    {
+                        access_token = token,
+                    });
+                case PasswordVerificationResult.Failed:
+                    return Unauthorized();
+            }
+            return Unauthorized();
+
         }
 
         private User AutheticateUser(string email, string password)
@@ -59,7 +68,7 @@ namespace IdentityAPI.Controllers
                 new Claim("role", user.Role.ToString())
             };
 
-            var token = new JwtSecurityToken(authParams.Issuer, 
+            var token = new JwtSecurityToken(authParams.Issuer,
                 authParams.Audience,
                 claims,
                 expires: DateTime.Now.AddSeconds(authParams.TokenLifetime),
