@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MilienAPI", "MilienAPI\MilienAPI.csproj", "{5863A075-8DD0-4A05-9487-32D39BE07FB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilienAPI", "MilienAPI\MilienAPI.csproj", "{5863A075-8DD0-4A05-9487-32D39BE07FB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityAPI", "IdentityAPI\IdentityAPI.csproj", "{B816892E-9035-49FB-8B8B-76008EACDBED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{5863A075-8DD0-4A05-9487-32D39BE07FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5863A075-8DD0-4A05-9487-32D39BE07FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5863A075-8DD0-4A05-9487-32D39BE07FB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B816892E-9035-49FB-8B8B-76008EACDBED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B816892E-9035-49FB-8B8B-76008EACDBED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B816892E-9035-49FB-8B8B-76008EACDBED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B816892E-9035-49FB-8B8B-76008EACDBED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

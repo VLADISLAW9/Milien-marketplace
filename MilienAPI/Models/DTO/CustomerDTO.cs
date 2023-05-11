@@ -24,5 +24,6 @@ namespace MilienAPI.Models.DTO
         [Range(18, 99, ErrorMessage = "Invalid Age")]
         public int Age { get; set; }
         public string PhoneNumber { get; set; }
+        public Role Role { get; set; }
     }
 }

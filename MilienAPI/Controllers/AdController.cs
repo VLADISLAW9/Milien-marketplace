@@ -6,7 +6,7 @@ using MilienAPI.Models;
 
 namespace MilienAPI.Controllers
 {
-    [Route("Ad/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     public class AdController : ControllerBase
     {
@@ -44,6 +44,14 @@ namespace MilienAPI.Controllers
                 return BadRequest();
 
             return Ok(res);
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var result = _context.Ads.ToList();
+
+            return Ok(result);
         }
     }
 }

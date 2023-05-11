@@ -16,7 +16,6 @@ namespace MilienAPI.Models.DTO
         public string Adress { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        [Column(TypeName = "category")]
         public Category Category { get; set; }
     }
 }

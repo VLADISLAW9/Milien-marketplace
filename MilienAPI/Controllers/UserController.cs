@@ -28,6 +28,7 @@ namespace MilienAPI.Controllers
                 return BadRequest(ModelState);
             }
 
+            customer.Pass = md5.hashPassword(customer.Pass);
             var user = _mapper.Map<CustomerDTO, Customer>(customer);
             _context.Customers.Add(user);
             await _context.SaveChangesAsync();
