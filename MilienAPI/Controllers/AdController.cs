@@ -53,5 +53,15 @@ namespace MilienAPI.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAdById(int id)
+        {
+            var res = _context.Ads.Find(id);
+
+            if (res == null)
+                return NotFound();
+            return Ok(res);
+        }
     }
 }

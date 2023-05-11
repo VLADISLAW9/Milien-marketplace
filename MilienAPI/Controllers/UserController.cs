@@ -4,6 +4,7 @@ using MilienAPI.Data;
 using MilienAPI.Models;
 using MilienAPI.Models.DTO;
 using System.Data.Entity;
+using Microsoft.AspNetCore.Identity;
 
 namespace MilienAPI.Controllers
 {
@@ -28,7 +29,8 @@ namespace MilienAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            customer.Pass = md5.hashPassword(customer.Pass);
+            string pass = PasswordHasher.HashPassword(customer.Pass);
+            customer.Pass = pass;
             var user = _mapper.Map<CustomerDTO, Customer>(customer);
             _context.Customers.Add(user);
             await _context.SaveChangesAsync();
