@@ -9,6 +9,7 @@ namespace MilienAPI.Helpers
         public MappingProfile()
         {
             CreateMap<CustomerDTO, Customer>();
+            CreateMap<Customer, Account>();
             CreateMap<AdDTO, Ad>();
         }
     }

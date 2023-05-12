@@ -13,8 +13,12 @@ namespace IdentityAPI.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Ad> Ads { get; set; }
 
         static Context()
-            => NpgsqlConnection.GlobalTypeMapper.MapEnum<Role>();
+        {
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<Role>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<Category>();
+        }
     }
 }

@@ -55,12 +55,22 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAdById(int id)
+        public ActionResult GetAdById(int id)
         {
             var res = _context.Ads.Find(id);
 
             if (res == null)
                 return NotFound();
+            return Ok(res);
+        }
+
+        [HttpGet]
+        public IActionResult GetAdsByCategory(string category)
+        {
+            Category typeOfCategory = (Category)Enum.Parse(typeof(Category), category);
+
+            var res = _context.Ads.Where(a => a.Category.Equals(typeOfCategory));
+
             return Ok(res);
         }
     }

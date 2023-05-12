@@ -11,7 +11,7 @@ namespace MilienAPI.Models.DTO
         [MaxLength(100)]
         public string Login { get; set; }
 
-        [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", ErrorMessage = "Invalid Password")]
+        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,15}$", ErrorMessage = "Invalid Password")]
         [MinLength(8)]
         public string Pass { get; set; }
 

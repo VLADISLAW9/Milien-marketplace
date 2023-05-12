@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore;
 using MilienAPI.Data;
 using System.Text.Json.Serialization;
-using Npgsql;
 using MilienAPI.Helpers;
+using Auth.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +15,8 @@ builder.Services.AddControllers().AddJsonOptions(opt =>
 });
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+var authOptionConfiguration = builder.Configuration.GetSection("Auth");
+builder.Services.Configure<AuthOptions>(authOptionConfiguration);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -31,8 +32,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseCors(builder =>
 {

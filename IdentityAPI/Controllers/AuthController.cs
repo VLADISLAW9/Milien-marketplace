@@ -8,6 +8,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using MilienAPI.Data;
 using Microsoft.AspNetCore.Identity;
+using Auth.Common;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace IdentityAPI.Controllers
 {
@@ -17,20 +21,19 @@ namespace IdentityAPI.Controllers
     {
         private PasswordHasher<string> _passwordHasher = new PasswordHasher<string>();
         private Context _context;
-        private readonly IOptions<AuthOptions> _options;
+        private readonly JwtSettings _options;
 
-        public AuthController(Context context, IOptions<AuthOptions> authOptions)
+        public AuthController(Context context, IOptions<JwtSettings> optAccess)
         {
             _context = context;
-            _options = authOptions;
-
+            _options = optAccess.Value;
         }
 
         [Route("login")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] Login request)
         {
-            var savedHashedPassword = _context.Users.Where(u => u.Pass == request.Password).FirstOrDefault();
+            var savedHashedPassword = _context.Users.Where(u => u.Email == request.Email).FirstOrDefault();
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(null, savedHashedPassword.Pass, request.Password);
             switch (passwordVerificationResult)
             {
@@ -44,7 +47,6 @@ namespace IdentityAPI.Controllers
                     });
             }
             return Unauthorized();
-
         }
 
         private User AutheticateUser(string email, string password)
@@ -54,25 +56,24 @@ namespace IdentityAPI.Controllers
 
         private string GenerateJWt(User user)
         {
-            var authParams = _options.Value;
-
-            var securityKey = authParams.GetSymmetricSecurityKey();
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim("role", user.Role.ToString())
             };
 
-            var token = new JwtSecurityToken(authParams.Issuer,
-                authParams.Audience,
-                claims,
-                expires: DateTime.Now.AddSeconds(authParams.TokenLifetime),
-                signingCredentials: credentials);
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var jwt = new JwtSecurityToken(
+                issuer: _options.Issuer,
+                audience: _options.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.Add(TimeSpan.FromHours(1)),
+                notBefore: DateTime.UtcNow,
+                signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256));
+
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
     }
 }

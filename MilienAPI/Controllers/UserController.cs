@@ -5,6 +5,8 @@ using MilienAPI.Models;
 using MilienAPI.Models.DTO;
 using System.Data.Entity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace MilienAPI.Controllers
 {
@@ -35,7 +37,6 @@ namespace MilienAPI.Controllers
             _context.Customers.Add(user);
             await _context.SaveChangesAsync();
 
-
             return Ok();
         }
 
@@ -47,7 +48,9 @@ namespace MilienAPI.Controllers
             if (result == null)
                 return BadRequest();
 
-            return Ok(result);
+            var res = _mapper.Map<Customer, Account>(result);
+
+            return Ok(res);
         }
 
         [HttpGet]
