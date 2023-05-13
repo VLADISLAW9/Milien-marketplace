@@ -14,6 +14,7 @@ const Header: FC = () => {
 			<HeaderLogo />
 			<HeaderSearch />
 			<AuthorizationButtons />
+			
 		</div>
 	)
 }

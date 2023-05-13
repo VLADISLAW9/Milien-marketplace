@@ -1,15 +1,14 @@
-import { FC, useState, useEffect } from 'react'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-import { FaList } from 'react-icons/fa'
+import { FC, useState } from 'react'
 import { BsFillGrid3X3GapFill } from 'react-icons/bs'
-import AdvertisementItem_list from '../../app/components/ui/Advertisement/AdvertisementItem_list'
+import { FaList } from 'react-icons/fa'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
+import AdvertisementItem_list from '../../app/components/ui/Advertisement/AdvertisementItem_list'
 import { useGetAllAdvrtsQuery } from '../../services/AdvrtsServices'
-import { getPageCount, getPagesArray } from '../../utils/pages'
 
 const HomePage: FC = () => {
-	const [limit, setLimit] = useState(20)
+	const [limit, setLimit] = useState(8)
 	const [page, setPage] = useState(1)
 
 	const {
@@ -30,7 +29,6 @@ const HomePage: FC = () => {
 
 	return (
 		<div>
-			<div className='text-center mt-10 text-3xl'>Тут реклама</div>
 			<h1 className='mt-14 mb-5 text-3xl'>Все объявления</h1>
 			<ToggleButtonGroup
 				orientation='horizontal'
@@ -54,8 +52,8 @@ const HomePage: FC = () => {
 					<ul
 						className={
 							view === 'list'
-								? 'mt-12 flex flex-col justify-center items-center'
-								: 'mt-12 grid grid-cols-4 '
+								? 'mt-12 flex flex-col justify-center items-center gap-5'
+								: 'mt-12 grid grid-cols-4 gap-5 '
 						}
 					>
 						{dataAdvrts.map(advrt =>

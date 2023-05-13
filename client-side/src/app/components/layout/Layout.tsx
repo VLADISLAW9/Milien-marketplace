@@ -8,7 +8,7 @@ interface ILayoutProps {
 
 const Layout: FC<ILayoutProps> = ({ children }) => {
 	return (
-		<div className='flex relative flex-col min-h-[100vh] h-[100%]'>
+		<div className='bg-white flex relative flex-col min-h-[100vh] h-[100%]'>
 			<Header />
 			<main className='flex-[1] px-[50px]'>
 				{children}

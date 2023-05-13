@@ -1,6 +1,9 @@
 export interface IAdvrt {
-	userId: number
+	customerId: number
 	id: number
 	title: string
-	body: string
+	description: string
+	adress: string
+	category: string
+	price: number
 }

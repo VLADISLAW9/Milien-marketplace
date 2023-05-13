@@ -5,7 +5,7 @@ import LogIn from './LogIn'
 const AuthorizationButtons = () => {
 	return (
 		<div className='flex w-[15%] flex-auto justify-end'>
-			<div className='mr-5'>
+			<div className='mr-4'>
 				<SingIn />
 			</div>
 			<LogIn />
