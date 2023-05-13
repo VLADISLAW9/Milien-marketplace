@@ -18,7 +18,7 @@ namespace IdentityAPI.Controllers
         }
 
         [HttpDelete]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public IActionResult GetAd(int id)
         {
             var res = _context.Ads.Find(id);

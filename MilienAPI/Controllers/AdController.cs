@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MilienAPI.Data;
 using MilienAPI.Models.DTO;
 using MilienAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MilienAPI.Controllers
 {
@@ -20,6 +21,7 @@ namespace MilienAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<Ad>> CreateAd([FromBody] AdDTO ad)
         {
             if (!ModelState.IsValid)

@@ -1,68 +1,59 @@
-﻿using AutoMapper;
-using System.IdentityModel.Tokens.Jwt;
+﻿using IdentityUserAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using IdentityAPI.Data;
-using IdentityAPI.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using MilienAPI.Data;
-using Microsoft.AspNetCore.Identity;
-using Auth.Common;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using System.Data;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using IdentityUserAPI.Data;
+using IdentityUserAPI.Helpers;
+using Microsoft.AspNetCore.Identity;
 
-namespace IdentityAPI.Controllers
+namespace IdentityUserAPI.Controllers
 {
-    [Route("[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AccountController : ControllerBase
     {
+        private readonly JWTSettings _options;
+        private readonly Context _context;
         private PasswordHasher<string> _passwordHasher = new PasswordHasher<string>();
-        private Context _context;
-        private readonly JwtSettings _options;
 
-        public AuthController(Context context, IOptions<JwtSettings> optAccess)
+        public AccountController(IOptions<JWTSettings> optAccess, Context context)
         {
-            _context = context;
             _options = optAccess.Value;
+            _context = context;
         }
 
-        [Route("login")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] Login request)
         {
             var savedHashedPassword = _context.Users.Where(u => u.Email == request.Email).FirstOrDefault();
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(null, savedHashedPassword.Pass, request.Password);
-            switch (passwordVerificationResult)
+            if(passwordVerificationResult == PasswordVerificationResult.Success)
             {
-                case PasswordVerificationResult.Success:
-                    var user = AutheticateUser(request.Email, savedHashedPassword.Pass);
-                    var token = GenerateJWt(user);
+                var user = AutheticateUser(request.Email, savedHashedPassword.Pass);
+                var token = GenerateToken(user);
 
-                    return Ok(new
-                    {
-                        access_token = token,
-                    });
+                return Ok(new
+                {
+                    access_token = token
+                });
             }
-            return Unauthorized();
+
+            return BadRequest("User not found!");
         }
 
-        private User AutheticateUser(string email, string password)
+        private string GenerateToken(User user)
         {
-            return _context.Users.SingleOrDefault(u => u.Email == email && u.Pass == password);
-        }
-
-        private string GenerateJWt(User user)
-        {
-            var claims = new List<Claim>
+            List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Email),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_options.SecretKey));
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
 
             var jwt = new JwtSecurityToken(
                 issuer: _options.Issuer,
@@ -73,6 +64,11 @@ namespace IdentityAPI.Controllers
                 signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256));
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
+        }
+
+        private User AutheticateUser(string email, string password)
+        {
+            return _context.Users.SingleOrDefault(u => u.Email == email && u.Pass == password);
         }
     }
 }
