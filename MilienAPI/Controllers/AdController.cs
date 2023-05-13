@@ -4,6 +4,7 @@ using MilienAPI.Data;
 using MilienAPI.Models.DTO;
 using MilienAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Data.Entity;
 
 namespace MilienAPI.Controllers
 {
@@ -36,11 +37,11 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet("{customerId}")]
-        public IActionResult GetAdsByCustomerId(int customerId)
+        public async Task<IActionResult> GetAdsByCustomerId(int customerId)
         {
-            var res = _context.Ads
+            var res = await _context.Ads
                 .Where(ad => ad.CustomerId == customerId)
-                .ToList();
+                .ToListAsync();
 
             if (res.Count == 0)
                 return BadRequest();
@@ -57,9 +58,9 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetAdById(int id)
+        public async Task<IActionResult> GetAdById(int id)
         {
-            var res = _context.Ads.Find(id);
+            var res = await _context.Ads.FindAsync(id);
 
             if (res == null)
                 return NotFound();
@@ -67,11 +68,11 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAdsByCategory(string category)
+        public async Task<IActionResult> GetAdsByCategory(string category)
         {
             Category typeOfCategory = (Category)Enum.Parse(typeof(Category), category);
 
-            var res = _context.Ads.Where(a => a.Category.Equals(typeOfCategory));
+            var res = await _context.Ads.Where(a => a.Category.Equals(typeOfCategory)).ToListAsync();
 
             return Ok(res);
         }
