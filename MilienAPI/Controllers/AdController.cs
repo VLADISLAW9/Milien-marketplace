@@ -4,7 +4,7 @@ using MilienAPI.Data;
 using MilienAPI.Models.DTO;
 using MilienAPI.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace MilienAPI.Controllers
 {
@@ -50,9 +50,9 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var result = _context.Ads.ToList();
+            var result = await _context.Ads.ToListAsync();
 
             return Ok(result);
         }

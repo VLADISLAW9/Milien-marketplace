@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using MilienAPI.Data;
 using MilienAPI.Models;
 using MilienAPI.Models.DTO;
-using System.Data.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace MilienAPI.Controllers
@@ -41,9 +41,9 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _context.Customers.Find(id);
+            var result = await _context.Customers.FindAsync(id);
 
             if (result == null)
                 return BadRequest();
@@ -54,11 +54,24 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var result = _context.Customers.ToList();
+            var result = await _context.Customers.ToListAsync();
 
             return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<Customer> GetCustomerAsync(string login, string password)
+        {
+            Customer customerPassword = _context.Customers.Where(c => c.Login == login)
+                .FirstOrDefault();
+            if (customerPassword == null)
+                return null;
+            if (PasswordHasher.UnHashPassword(customerPassword.Pass))
+                return customerPassword;
+
+            return null;
         }
     }
 }
