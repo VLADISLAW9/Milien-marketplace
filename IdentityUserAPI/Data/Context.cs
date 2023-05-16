@@ -7,13 +7,12 @@ namespace IdentityUserAPI.Data
     public class Context : DbContext
     {
         public Context(DbContextOptions<Context> options) :
-            base(options){ }
-
-        public DbSet<User> Users { get; set; }
-
-        static Context()
+            base(options)
         {
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<Role>();
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
+
+        public DbSet<LoginModel> LoginModels { get; set; }
     }
 }

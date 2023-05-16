@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using MilienAPI.Models;
 using MilienAPI.Models.DTO;
 
-namespace MilienAPI.Data
+namespace MilienAPI.Helpers
 {
     public class PasswordHasher
     {
@@ -20,7 +20,7 @@ namespace MilienAPI.Data
             string hashedPassword = _passwordHasher.HashPassword(null, password);
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(null, hashedPassword, password);
 
-            return (passwordVerificationResult == PasswordVerificationResult.Success);
+            return passwordVerificationResult == PasswordVerificationResult.Success;
 
         }
     }

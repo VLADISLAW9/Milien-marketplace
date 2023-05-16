@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using IdentityUserAPI.Models;
+using Microsoft.EntityFrameworkCore;
 using MilienAPI.Models;
 using Npgsql;
 
@@ -19,5 +20,6 @@ namespace MilienAPI.Data
         }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Ad> Ads { get; set; }
+        public DbSet<LoginModel> LoginModels { get; set; }
     }
 }

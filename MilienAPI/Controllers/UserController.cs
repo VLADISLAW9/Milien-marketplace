@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using MilienAPI.Data;
 using MilienAPI.Models;
 using MilienAPI.Models.DTO;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using IdentityUserAPI.Models;
+using MilienAPI.Helpers;
 
 namespace MilienAPI.Controllers
 {
@@ -33,8 +33,14 @@ namespace MilienAPI.Controllers
 
             string pass = PasswordHasher.HashPassword(customer.Pass);
             customer.Pass = pass;
+            LoginModel loginModel = new LoginModel
+            {
+                Login = customer.Login,
+                Password = customer.Pass,
+            };
             var user = _mapper.Map<CustomerDTO, Customer>(customer);
             _context.Customers.Add(user);
+            _context.LoginModels.Add(loginModel);
             await _context.SaveChangesAsync();
 
             return Ok();

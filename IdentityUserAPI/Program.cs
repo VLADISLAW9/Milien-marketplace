@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using IdentityUserAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using IdentityUserAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 var dataBaseConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<Context>(option => option.UseNpgsql(dataBaseConnection));
 
-builder.Services.Configure<JWTSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.AddTransient<ITokenService, TokenService>();
 
 var secretKey = builder.Configuration.GetSection("JwtSettings:SecretKey").Value;
 var issuer = builder.Configuration.GetSection("JwtSettings:Issuer").Value;
