@@ -1,15 +1,16 @@
-﻿using IdentityUserAPI.Data;
-using IdentityUserAPI.Models;
-using IdentityUserAPI.Services;
+﻿using IdentityAPI.Data;
+using IdentityAPI.Models;
+using IdentityAPI.Models.DTO;
+using IdentityAPI.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 
-namespace IdentityUserAPI.Controllers
+namespace IdentityAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : Controller
+    public class AuthController : ControllerBase
     {
         private readonly Context _context;
         private readonly ITokenService _tokenService;
@@ -21,18 +22,23 @@ namespace IdentityUserAPI.Controllers
         }
 
         [HttpPost, Route("login")]
-        public IActionResult Login([FromBody] LoginModel loginModel)
+        public IActionResult Login([FromBody] LoginModelDTO loginModel)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Мы ебланы!");
             var passwordHasher = new PasswordHasher<string>();
             if (loginModel == null)
                 return BadRequest("Invalid client response");
             var user = _context.LoginModels.FirstOrDefault(u => u.Login == loginModel.Login);
+            if (user == null)
+                return NotFound();
 
             var passwordResult = passwordHasher.VerifyHashedPassword(null, user.Password, loginModel.Password);
 
             if (user is null || passwordResult != PasswordVerificationResult.Success)
                 return Unauthorized();
 
+            Customer customer = _context.Customers.FirstOrDefault(c => c.Login == loginModel.Login);
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, loginModel.Login),
@@ -49,8 +55,22 @@ namespace IdentityUserAPI.Controllers
             return Ok(new AuthenticateResponse
             {
                 Token = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                Customer = customer
             });
+        }
+
+        [HttpGet, Route("getUser")]
+        public IActionResult GetUser(string login)
+        {
+            var res = _context.Customers.FirstOrDefault(c => c.Login == login);
+
+            if (res != null)
+            {
+                return Ok(res);
+            }
+
+            return BadRequest();
         }
     }
 }

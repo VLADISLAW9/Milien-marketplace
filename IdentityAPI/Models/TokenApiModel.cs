@@ -1,4 +1,4 @@
-﻿namespace IdentityUserAPI.Models
+﻿namespace IdentityAPI.Models
 {
     public class TokenApiModel
     {

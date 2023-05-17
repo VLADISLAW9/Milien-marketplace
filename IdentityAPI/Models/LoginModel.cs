@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace IdentityUserAPI.Models
+namespace IdentityAPI.Models
 {
     [Table("Login")]
     public class LoginModel

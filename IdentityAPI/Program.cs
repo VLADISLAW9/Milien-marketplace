@@ -1,10 +1,10 @@
-using IdentityUserAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using IdentityUserAPI.Data;
+using Npgsql;
 using Microsoft.EntityFrameworkCore;
-using IdentityUserAPI.Services;
+using IdentityAPI.Data;
+using IdentityAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +52,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
