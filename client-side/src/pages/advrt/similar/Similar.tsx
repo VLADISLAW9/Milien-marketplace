@@ -1,5 +1,7 @@
 import { FC } from 'react'
 import AdvertisementItem_grid from '../../../app/components/ui/Advertisement/AdvertisementItem_grid'
+import ErrorMessage from '../../../app/components/ui/error/ErrorMessage'
+import Loader from '../../../app/components/ui/spiner/Loader'
 import { IAdvrt } from '../../../types/IAdvrt'
 
 interface ISimilatProps {
@@ -13,12 +15,16 @@ const Similar: FC<ISimilatProps> = ({ isLoading, isError, similar }) => {
 		<div className='mt-9'>
 			<h1 className='text-2xl font-semibold mb-4'>Похожие объявления</h1>
 			{isError ? (
-				<h1>Oh no, there was an error</h1>
+				<div className='flex justify-center items-center mt-10'>
+					<ErrorMessage />
+				</div>
 			) : isLoading ? (
-				<h1>Loading...</h1>
+				<div className='flex justify-center items-center mt-10'>
+					<Loader />
+				</div>
 			) : similar ? (
 				<>
-					<ul className='grid grid-cols-3'>
+					<ul className='grid grid-cols-3 gap-5'>
 						{similar.map(advrt => (
 							<AdvertisementItem_grid
 								key={advrt.id}

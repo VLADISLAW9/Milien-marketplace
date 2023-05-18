@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
+import Loader from '../../app/components/ui/spiner/Loader'
 import {
 	useGetAdvrtByCategoryQuery,
 	useGetAdvrtByIdQuery,
 	useGetAdvrtsByCustomerIdQuery,
-} from '../../services/AdvrtsServices'
-import { useGetCustomerByIdQuery } from '../../services/CustomerServices'
+} from '../../services/AdvrtsService'
+import { useGetCustomerByIdQuery } from '../../services/CustomerService'
 
 import { formatToCurrency } from '../../utils/formatToCurrency'
 import Album from './album/Album'
@@ -77,13 +79,17 @@ const AdvertisementPage = () => {
 	}, [])
 
 	return (
-		<div>
+		<div className='mt-14'>
 			{isLoadingAdvrt ? (
-				<div>Loading...</div>
+				<div className='flex justify-center items-center mt-44'>
+					<Loader />
+				</div>
 			) : isErrorAdvrt ? (
-				<div>Error : (</div>
+				<div className='mt-44'>
+					<ErrorMessage />
+				</div>
 			) : advrt ? (
-				<div className='mt-14'>
+				<div className=''>
 					<div className='flex justify-between'>
 						<div
 							className={

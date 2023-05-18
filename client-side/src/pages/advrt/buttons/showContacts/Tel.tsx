@@ -1,15 +1,15 @@
 import { FC } from 'react'
 import { BsTelephoneFill } from 'react-icons/bs'
+import { RiFileCopy2Fill } from 'react-icons/ri'
+import { ICustomer } from '../../../../types/ICustomer'
 import { convertToPhoneNumber } from '../../../../utils/convertToPhoneNumber'
 import { handleCopyToClipboard } from '../../../../utils/handleCopyToClipboard'
-import {RiFileCopy2Fill} from 'react-icons/ri'
-import { ICustomer } from '../../../../types/ICustomer'
 
 interface ITelProps {
 	customer: ICustomer
 }
 
-const Tel: FC<ITelProps> = ({customer}) => {
+const Tel: FC<ITelProps> = ({ customer }) => {
 	return (
 		<div
 			onClick={() =>

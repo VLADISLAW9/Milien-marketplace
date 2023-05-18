@@ -8,10 +8,9 @@ export const customersApi = createApi({
 	}),
 	tagTypes: ['customer'],
 	endpoints: build => ({
-		getCustomerById: build.query<ICustomer, number | undefined>({
+		getCustomerById: build.query<ICustomer, number | string | undefined>({
 			query: id => ({
 				url: 'Customer/User/GetById/' + id,
-			
 			}),
 			providesTags: result => ['customer'],
 		}),

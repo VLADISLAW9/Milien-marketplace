@@ -1,6 +1,5 @@
-import React from 'react'
-import SingIn from './SingIn'
-import LogIn from './LogIn'
+import LogIn from './LogIn_btn'
+import SingIn from './SingIn_btn'
 
 const AuthorizationButtons = () => {
 	return (
@@ -8,7 +7,9 @@ const AuthorizationButtons = () => {
 			<div className='mr-4'>
 				<SingIn />
 			</div>
-			<LogIn />
+			<div>
+				<LogIn />
+			</div>
 		</div>
 	)
 }

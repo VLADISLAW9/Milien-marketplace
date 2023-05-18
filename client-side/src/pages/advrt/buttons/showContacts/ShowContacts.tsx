@@ -1,5 +1,7 @@
 import { Dialog } from '@mui/material'
 import { FC, useState } from 'react'
+import ErrorMessage from '../../../../app/components/ui/error/ErrorMessage'
+import Loader from '../../../../app/components/ui/spiner/Loader'
 import { ICustomer } from '../../../../types/ICustomer'
 import Email from './Email'
 import Tel from './Tel'
@@ -42,9 +44,13 @@ const ShowContacts: FC<IShowContactsProps> = ({
 				<div className='p-10'>
 					<div className='flex flex-col'>
 						{isLoading ? (
-							<div>Loading...</div>
+							<div className='flex justify-center items-center'>
+								<Loader />
+							</div>
 						) : isError ? (
-							<div>Error</div>
+							<div className='flex justify-center items-center'>
+								<ErrorMessage />
+							</div>
 						) : customer ? (
 							<>
 								<div className='flex text-2xl'>

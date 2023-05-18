@@ -5,7 +5,9 @@ import { BsFillGrid3X3GapFill } from 'react-icons/bs'
 import { FaList } from 'react-icons/fa'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
 import AdvertisementItem_list from '../../app/components/ui/Advertisement/AdvertisementItem_list'
-import { useGetAllAdvrtsQuery } from '../../services/AdvrtsServices'
+import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
+import Loader from '../../app/components/ui/spiner/Loader'
+import { useGetAllAdvrtsQuery } from '../../services/AdvrtsService'
 
 const HomePage: FC = () => {
 	const [limit, setLimit] = useState(8)
@@ -44,9 +46,13 @@ const HomePage: FC = () => {
 				</ToggleButton>
 			</ToggleButtonGroup>
 			{errorAdvrts ? (
-				<h1>Oh no, there was an error</h1>
+				<div className='mt-36'>
+					<ErrorMessage />
+				</div>
 			) : isLoadingAdvrts ? (
-				<h1>Loading...</h1>
+				<div className='flex justify-center items-center mt-36'>
+					<Loader />
+				</div>
 			) : dataAdvrts ? (
 				<>
 					<ul

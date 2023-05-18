@@ -27,7 +27,7 @@ export const advrtsApi = createApi({
 			}),
 			providesTags: result => ['advrt'],
 		}),
-		getAdvrtsByCustomerId: build.query<IAdvrt[], number | undefined>({
+		getAdvrtsByCustomerId: build.query<IAdvrt[], number | string | undefined>({
 			query: customerId => ({
 				url: '/Ad/GetAdsByCustomerId/' + customerId,
 			}),
@@ -49,5 +49,5 @@ export const {
 	useGetAllAdvrtsQuery,
 	useGetAdvrtByIdQuery,
 	useGetAdvrtByCategoryQuery,
-	useGetAdvrtsByCustomerIdQuery
+	useGetAdvrtsByCustomerIdQuery,
 } = advrtsApi

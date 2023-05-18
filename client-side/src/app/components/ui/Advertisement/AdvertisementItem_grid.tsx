@@ -14,18 +14,12 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	mini,
 }) => {
 	const handleClick = () => {
-		window.scrollTo(0,0)
+		window.scrollTo(0, 0)
 	}
 
 	return (
 		<Link onClick={handleClick} to={`/advertisement/${advrt.id}`}>
-			<li
-				className={
-					!mini
-						? 'flex flex-col shadow-stone-200 shadow-xl h-[100%] w-[100%] p-5 cursor-pointer hover:bg-stone-200 hover:shadow-stone-300	 transition-all  rounded-2xl'
-						: 'flex flex-col shadow-stone-200 shadow-xl h-[100%] w-[220px] p-5 cursor-pointer hover:bg-stone-200 hover:shadow-stone-300	 transition-all  rounded-2xl'
-				}
-			>
+			<li className='flex flex-col shadow-stone-200 shadow-xl  p-5 cursor-pointer hover:bg-stone-200 hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'>
 				<div className='flex justify-center '>
 					<CardMedia
 						className='rounded-2xl'
