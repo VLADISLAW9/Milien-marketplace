@@ -1,8 +1,11 @@
-import { FC, useState } from 'react'
+import { Dispatch } from '@reduxjs/toolkit'
+import React, { FC, useEffect, useState } from 'react'
 import { AiFillLock, AiFillMail } from 'react-icons/ai'
 import { BsArrowDown } from 'react-icons/bs'
-import { Link } from 'react-router-dom'
-import { useLoginUserMutation } from '../../../services/AuthService'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { useTypedSelector } from '../../../hooks/use-typed-selector'
+import { login } from '../../../store/slices/userSlice'
 
 interface LoginPayload {
 	login: string
@@ -10,15 +13,27 @@ interface LoginPayload {
 }
 
 const LogInPage: FC = () => {
-	const [login, setLogin] = useState('')
+	const [loginValue, setLogin] = useState('')
 	const [password, setPassword] = useState('')
+	const navigate = useNavigate()
 
-	const [loginUser, { data, isLoading, isError }] = useLoginUserMutation()
+	const { isAuth, user, isLoadingAuth } = useTypedSelector(state => state.user)
 
-	const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+	const dispatch = useDispatch<Dispatch<any>>()
+
+	useEffect(() => {
+		if (isAuth && user) {
+			navigate('/')
+		}
+	}, [isAuth])
+
+	const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-		await loginUser({ login, password })
-		console.log(data)
+		const payload: LoginPayload = {
+			login: loginValue,
+			password: password,
+		}
+		dispatch(login(payload))
 	}
 
 	return (
@@ -34,7 +49,7 @@ const LogInPage: FC = () => {
 					<input
 						className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
 						placeholder='Электронная почта'
-						value={login}
+						value={loginValue}
 						required
 						onChange={e => {
 							setLogin(e.target.value)
@@ -59,14 +74,14 @@ const LogInPage: FC = () => {
 					/>
 				</div>
 				<button
-					disabled={!login || !password}
+					disabled={!loginValue || !password || isLoadingAuth}
 					className={
-						!login || !password
+						!loginValue || !password
 							? 'text-white mt-10 bg-[#166434]/70 px-6 py-3 rounded-md'
 							: 'text-white mt-10 bg-[#166434] px-6 py-3 rounded-md'
 					}
 				>
-					Войти
+					{isLoadingAuth ? 'Загрузка...' : 'Войти'}
 				</button>
 			</form>
 			<div className='flex mt-7 text-[13px] justify-center'>

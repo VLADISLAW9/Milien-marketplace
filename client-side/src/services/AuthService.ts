@@ -1,25 +1,22 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
+import { AxiosResponse } from 'axios'
+import $api from '../store/axios'
 import { IAuthResponse } from '../types/IAuthResponse'
+export default class AuthService {
+	static async login(
+		login: string,
+		password: string
+	): Promise<AxiosResponse<IAuthResponse>> {
+		return $api.post<IAuthResponse>('/api/Auth/login', { login, password })
+	}
 
-export const authApi = createApi({
-	reducerPath: 'auth',
-	baseQuery: fetchBaseQuery({
-		baseUrl: 'http://192.168.0.160:5243',
-	}),
-	tagTypes: ['auth'],
-	endpoints: build => ({
-		loginUser: build.mutation<
-			IAuthResponse,
-			{ login: string; password: string }
-		>({
-			query: auth => ({
-				url: '/api/Auth/login',
-				method: 'POST',
-				body: auth,
-			}),
-			invalidatesTags: ['auth'],
-		}),
-	}),
-})
+	static async registration(
+		login: string,
+		password: string
+	): Promise<AxiosResponse<IAuthResponse>> {
+		return $api.post<IAuthResponse>('/api/Auth/registration', { login, password })
+	}
 
-export const { useLoginUserMutation } = authApi
+	static async logout(): Promise<void> {
+		return $api.post('/api/Token/revoke')
+	}
+}
