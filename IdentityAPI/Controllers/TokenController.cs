@@ -2,6 +2,7 @@
 using IdentityAPI.Models;
 using IdentityAPI.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityAPI.Controllers
@@ -34,9 +35,9 @@ namespace IdentityAPI.Controllers
 
             var user = _context.LoginModels.SingleOrDefault(u => u.Login == username);
 
-            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now )
             {
-                return BadRequest("Invalid client response");
+                return Unauthorized();
             }
 
             var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
@@ -47,7 +48,7 @@ namespace IdentityAPI.Controllers
 
             return Ok(new AuthenticateResponse()
             {
-                Token = newAccessToken,
+                AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken,
             });
         }

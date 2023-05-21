@@ -12,10 +12,10 @@ namespace MilienAPI.Models.DTO
         public string Title { get; set; }
         public string Description { get; set; }
         public double Price { get; set; }
-        public int CustomerId { get; set; }
         public string Adress { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public Category Category { get; set; }
+        //public List<string> Photos { get; set; }
     }
 }

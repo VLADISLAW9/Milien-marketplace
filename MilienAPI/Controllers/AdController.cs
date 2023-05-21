@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using MilienAPI.Data;
 using MilienAPI.Models.DTO;
 using MilienAPI.Models;
@@ -22,15 +23,23 @@ namespace MilienAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "User")]
+        [Authorize]
         public async Task<ActionResult<Ad>> CreateAd([FromBody] AdDTO ad)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            //foreach (var item in images)
+            //{
+            //    var base64 = Convert.ToBase64String(item);
+            //    ad.Photos.Add(Convert.ToBase64String(item));
+            //}
 
             var res = _mapper.Map<AdDTO, Ad>(ad);
+            res.CustomerId = Convert.ToInt32(userId);
             _context.Ads.Add(res);
             await _context.SaveChangesAsync();
             return Ok();

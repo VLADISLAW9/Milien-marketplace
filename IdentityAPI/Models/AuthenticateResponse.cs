@@ -2,8 +2,8 @@
 {
     public class AuthenticateResponse
     {
-        public string? Token { get; set; }
+        public string? AccessToken { get; set; }
         public string? RefreshToken { get; set; }
-        public Customer Customer { get; set; }
+        public User User { get; set; }
     }
 }

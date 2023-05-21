@@ -21,5 +21,6 @@ namespace MilienAPI.Models
         [JsonConverter(typeof(StringEnumConverter))]
         [Column(TypeName = "category")]
         public Category Category { get; set; }
+        //public List<string> Photos { get; set; }
     }
 }

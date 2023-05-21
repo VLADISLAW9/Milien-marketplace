@@ -23,29 +23,6 @@ namespace MilienAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] CustomerDTO customer)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            string pass = PasswordHasher.HashPassword(customer.Pass);
-            customer.Pass = pass;
-            LoginModel loginModel = new LoginModel
-            {
-                Login = customer.Login,
-                Password = customer.Pass,
-            };
-            var user = _mapper.Map<CustomerDTO, Customer>(customer);
-            _context.Customers.Add(user);
-            _context.LoginModels.Add(loginModel);
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
