@@ -29,5 +29,6 @@ namespace IdentityAPI.Models
         public string PhoneNumber { get; set; }
         public Role Role { get; set; }
         public bool ComfimedEmail { get; set; }
+        public string ConfirmedCode { get; set; }
     }
 }

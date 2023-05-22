@@ -89,14 +89,27 @@ namespace IdentityAPI.Controllers
             };
 
             var user = _mapper.Map<UserDTO, User>(customer);
+            EmailService emailService = new EmailService();
+            user.ConfirmedCode = emailService.SendEmailAsync(user.Email, "Подтверждение регистрации");
             _context.Users.Add(user);
             _context.LoginModels.Add(loginModel);
-
-            EmailService emailService = new EmailService();
-            emailService.SendEmailAsync(user.Email, "Confirm your account", user);
             await _context.SaveChangesAsync();
 
             return Content("Для завершения регистрации проверьте электронную почту!");
+        }
+
+        [HttpGet]
+        public IActionResult ConfirmEmail(string code, string email)
+        {
+            var res = _context.Users.FirstOrDefault(c => c.Email == email);
+
+            if(res.ConfirmedCode == code)
+            {
+                res.ComfimedEmail = true;
+                return Ok("Почта подтверждена");
+            }
+
+            return Forbid("Введите код, который вы получили в письме!");
         }
     }
 }

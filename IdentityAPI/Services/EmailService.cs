@@ -7,14 +7,14 @@ namespace IdentityAPI.Services
 {
     public class EmailService
     {
-        public string SendEmailAsync(string email, string subject, User user)
+        public string SendEmailAsync(string email, string subject)
         {
-            string baseUrl = "http://192.168.0.159:3000";
-            string confirm = $"{baseUrl}/login";
+            Guid guid = Guid.NewGuid();
+            string formattedGuid = guid.ToString("N").Substring(0, 6);
             var emailMessage = new MailMessage("rumilien@gmail.com", email);
 
             emailMessage.Subject = subject;
-            emailMessage.Body = $"<p>Пожалуйста, подтвердите ваш адрес электронной почты, перейдя по ссылке:</p><p><a href='{confirm}'>{confirm}</a></p>";
+            emailMessage.Body = $"Для подтверждения регистрация введите данный код: {formattedGuid}";
             emailMessage.IsBodyHtml = true;
 
             using (var client = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587))
@@ -26,12 +26,7 @@ namespace IdentityAPI.Services
                 client.Send(emailMessage);
             }
 
-            return confirm;
-        }
-
-        public bool ConfirmEmail(string url ) 
-        {
-
+            return formattedGuid;
         }
     }
 }
