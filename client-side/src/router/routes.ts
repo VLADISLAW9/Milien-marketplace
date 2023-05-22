@@ -8,9 +8,7 @@ import HomePage from '../pages/home/HomePage'
 export const privateRoutes = [
 	{ path: '/', component: HomePage, exact: true },
 	{ path: '/advertisement/:id', component: AdvertisementPage, exact: true },
-	{ path: '/customer/:id', component: CustomerPage, exact: true },
-	{ path: '/login', component: LogInPage, exact: true },
-	{ path: '/signin', component: SignInPage, exact: true },
+	{ path: '/customer/:id', component: CustomerPage, exact: true }
 ]
 
 export const publicRoutes = [

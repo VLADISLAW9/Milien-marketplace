@@ -5,39 +5,64 @@ import { IAuthResponse } from '../../types/IAuthResponse'
 import { IUser } from '../../types/IUser'
 import { AUTH_URL } from '../axios'
 
-interface LoginPayload {
+export interface LoginPayload {
 	login: string
 	password: string
+}
+
+export interface SignInPayload {
+	login: string,
+	pass: string,
+	email: string,
+	firstName: string,	
+	lastName: string,
+	age: number,
+	phoneNumber: number,
+	role: ['user']
 }
 
 interface UserState {
 	user: IUser
 	isAuth: boolean
 	isLoadingAuth: boolean
+	isErrorAuth: boolean
+	errorMessage: string | null
 }
 
 const initialState: UserState = {
 	user: {} as IUser,
 	isAuth: false,
 	isLoadingAuth: false,
+	isErrorAuth: false,
+	errorMessage: null,
 }
 
 export const login = createAsyncThunk(
 	'user/login',
 	async (payload: LoginPayload) => {
-		const response = await AuthService.login(payload.login, payload.password)
-		console.log('is login in slice', response.data)
-		localStorage.setItem('token', response.data.accessToken)
-		return response.data.user
+		try {
+			const response = await AuthService.login(payload.login, payload.password)
+			localStorage.setItem('token', response.data.accessToken)
+			localStorage.setItem('refresh', response.data.refreshToken)
+			return response.data.user
+		} catch (e: any) {
+			return e
+		}
 	}
 )
 
 export const registration = createAsyncThunk(
 	'user/registration',
-	async (payload: LoginPayload) => {
+	async (payload: SignInPayload) => {
 		const response = await AuthService.registration(
 			payload.login,
-			payload.password
+			payload.pass,
+			payload.age,
+			payload.email,
+			payload.firstName,
+			payload.lastName,
+			payload.phoneNumber,
+			payload.role
 		)
 		localStorage.setItem('token', response.data.accessToken)
 		return response.data.user
@@ -47,19 +72,24 @@ export const registration = createAsyncThunk(
 export const logout = createAsyncThunk('user/logout', async () => {
 	const response = await AuthService.logout()
 	localStorage.removeItem('token')
+	localStorage.removeItem('refresh')
 	return response
 })
 
 export const checkAuth = createAsyncThunk('user/checkAuth', async () => {
+	const accessToken = localStorage.getItem('token')
+	const refreshToken = localStorage.getItem('refresh')
 	try {
-		const response = await axios.get<IAuthResponse>(
+		const response = await axios.post<IAuthResponse>(
 			`${AUTH_URL}/api/Token/refresh`,
+			{ accessToken, refreshToken },
 			{ withCredentials: true }
 		)
 		localStorage.setItem('token', response.data.accessToken)
-		return response.data.user
-	} catch (e) {
-		console.log(e)
+		localStorage.setItem('refresh', response.data.refreshToken)
+		return true
+	} catch (e: any) {
+		return false
 	}
 })
 
@@ -78,34 +108,53 @@ export const userSlice = createSlice({
 		},
 	},
 	extraReducers: builder => {
-		builder.addCase(login.fulfilled, (state, action) => {
-			state.isAuth = true
-			state.user = action.payload
-		})
+		builder.addCase(
+			login.fulfilled,
+			(state, action: PayloadAction<IUser | any>) => {
+				if (action.payload.email) {
+					state.isLoadingAuth = true
+					state.isAuth = true
+					state.user = action.payload
+					state.errorMessage = null
+					state.isErrorAuth = false
+				} else {
+					state.isErrorAuth = true
+					state.errorMessage = action.payload.response.data
+				}
+			}
+		)
+
 		builder.addCase(registration.fulfilled, (state, action) => {
 			state.isAuth = true
 			state.user = action.payload
 		})
 		builder.addCase(logout.fulfilled, state => {
-			state.isAuth = false
 			state.user = {} as IUser
+			state.isErrorAuth = false
+			state.isLoadingAuth = false
+			state.errorMessage = null
+			state.isAuth = false
 		})
-		builder.addCase(checkAuth.fulfilled, (state, action) => {
-			try {
-				state.isLoadingAuth = true
-				state.isAuth = true
+
+		builder.addCase(
+			checkAuth.fulfilled,
+			(state, action: PayloadAction<boolean>) => {
 				if (action.payload) {
-					state.user = action.payload
+					state.isAuth = true
+				} else {
+					state.isAuth = false
+					state.isErrorAuth = false
+					state.isLoadingAuth = false
+					state.errorMessage = null
+					state.user = {} as IUser
+					localStorage.removeItem('token')
+					localStorage.removeItem('refresh')
 				}
-			} catch (e) {
-				console.log(e)
-			} finally {
-				state.isLoadingAuth = false
 			}
-		})
+		)
 	},
 })
 
 export const userActions = userSlice.actions
 
-export const userReducers =  userSlice.reducer
+export const userReducers = userSlice.reducer

@@ -1,9 +1,9 @@
 import { Dispatch } from '@reduxjs/toolkit'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { AiFillLock, AiFillMail } from 'react-icons/ai'
 import { BsArrowDown } from 'react-icons/bs'
 import { useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
 import { login } from '../../../store/slices/userSlice'
 
@@ -15,18 +15,10 @@ interface LoginPayload {
 const LogInPage: FC = () => {
 	const [loginValue, setLogin] = useState('')
 	const [password, setPassword] = useState('')
-	const navigate = useNavigate()
-
-	const { isAuth, user, isLoadingAuth } = useTypedSelector(state => state.user)
+	const { isAuth, user, isLoadingAuth, isErrorAuth, errorMessage } =
+		useTypedSelector(state => state.user)
 
 	const dispatch = useDispatch<Dispatch<any>>()
-
-	useEffect(() => {
-		if (isAuth && user) {
-			navigate('/')
-		}
-	}, [isAuth])
-
 	const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const payload: LoginPayload = {
@@ -72,6 +64,13 @@ const LogInPage: FC = () => {
 							setPassword(e.target.value)
 						}}
 					/>
+				</div>
+				<div className='mt-5'>
+					{isErrorAuth ? (
+						<h1 className='text-red-600'>{errorMessage}</h1>
+					) : (
+						<></>
+					)}
 				</div>
 				<button
 					disabled={!loginValue || !password || isLoadingAuth}

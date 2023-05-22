@@ -18,6 +18,8 @@ $api.interceptors.request.use(
 		return config
 	},
 	async error => {
+		const accessToken = localStorage.getItem('token')
+		const refreshToken = localStorage.getItem('refresh')
 		const originalRequest = error.config
 		if (
 			error.response.status == 401 &&
@@ -26,11 +28,13 @@ $api.interceptors.request.use(
 		) {
 			originalRequest._isRetry = true
 			try {
-				const response = await axios.get<IAuthResponse>(
+				const response = await axios.post<IAuthResponse>(
 					`${AUTH_URL}/api/Token/refresh`,
+					{ accessToken, refreshToken },
 					{ withCredentials: true }
 				)
 				localStorage.setItem('token', response.data.accessToken)
+				localStorage.setItem('refresh', response.data.refreshToken)
 				return $api.request(originalRequest)
 			} catch (e) {
 				console.log('Не авторизован')
