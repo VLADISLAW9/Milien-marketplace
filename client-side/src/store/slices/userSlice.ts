@@ -11,30 +11,13 @@ export interface LoginPayload {
 }
 
 export interface SignInPayload {
-	login: string,
-	pass: string,
-	email: string,
-	firstName: string,	
-	lastName: string,
-	age: number,
-	phoneNumber: number,
+	login: string
+	pass: string
+	email: string
+	firstName: string
+	lastName: string
+	phoneNumber: number
 	role: ['user']
-}
-
-interface UserState {
-	user: IUser
-	isAuth: boolean
-	isLoadingAuth: boolean
-	isErrorAuth: boolean
-	errorMessage: string | null
-}
-
-const initialState: UserState = {
-	user: {} as IUser,
-	isAuth: false,
-	isLoadingAuth: false,
-	isErrorAuth: false,
-	errorMessage: null,
 }
 
 export const login = createAsyncThunk(
@@ -57,7 +40,6 @@ export const registration = createAsyncThunk(
 		const response = await AuthService.registration(
 			payload.login,
 			payload.pass,
-			payload.age,
 			payload.email,
 			payload.firstName,
 			payload.lastName,
@@ -76,6 +58,22 @@ export const logout = createAsyncThunk('user/logout', async () => {
 	return response
 })
 
+export const checkLogin = createAsyncThunk(
+	'user/checkLogin',
+	async (payload: string) => {
+		const response = await AuthService.checkLogin(payload)
+		return response.data
+	}
+)
+
+export const checkPhone = createAsyncThunk(
+	'user/checkPhone',
+	async (payload: string) => {
+		const response = await AuthService.checkPhone(payload)
+		return response.data
+	}
+)
+
 export const checkAuth = createAsyncThunk('user/checkAuth', async () => {
 	const accessToken = localStorage.getItem('token')
 	const refreshToken = localStorage.getItem('refresh')
@@ -92,6 +90,24 @@ export const checkAuth = createAsyncThunk('user/checkAuth', async () => {
 		return false
 	}
 })
+
+interface UserState {
+	user: IUser
+	isAuth: boolean
+	isLoadingAuth: boolean
+	isErrorAuth: boolean
+	isErrorLogin: boolean
+	errorMessage: string | null
+}
+
+const initialState: UserState = {
+	user: {} as IUser,
+	isAuth: false,
+	isLoadingAuth: false,
+	isErrorAuth: false,
+	isErrorLogin: false,
+	errorMessage: null,
+}
 
 export const userSlice = createSlice({
 	name: 'user',

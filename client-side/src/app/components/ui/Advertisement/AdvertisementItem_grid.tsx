@@ -17,6 +17,8 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 		window.scrollTo(0, 0)
 	}
 
+	console.log(advrt.photoPath)
+
 	return (
 		<Link onClick={handleClick} to={`/advertisement/${advrt.id}`}>
 			<li className='flex flex-col shadow-stone-200 shadow-xl  p-5 cursor-pointer hover:bg-stone-200 hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'>
@@ -29,7 +31,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 								? { height: 250, width: '100%' }
 								: { height: 170, width: '100%' }
 						}
-						image='https://10.img.avito.st/image/1/1.JiINILa4iss7iUjOTVBfPjCCiM2zgQjDe4SIyb2JgsG7.6iMTXhfpUhbHJHa3mOOOH07SAs-GjziDqDXJPVQ1yvE'
+						image={advrt.photoPath}
 						alt='cover'
 					/>
 				</div>

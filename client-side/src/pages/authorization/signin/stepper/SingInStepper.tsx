@@ -4,14 +4,29 @@ import StepConnector, {
 } from '@mui/material/StepConnector'
 import { StepIconProps } from '@mui/material/StepIcon'
 import { styled } from '@mui/material/styles'
+import { Dispatch, unwrapResult } from '@reduxjs/toolkit'
 import { FC, useState } from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
 import { IoMdKeypad } from 'react-icons/io'
 import { MdCheck, MdOutlineNavigateNext } from 'react-icons/md'
 import { RiUserSettingsLine } from 'react-icons/ri'
+import { TbSend } from 'react-icons/tb'
+import { useDispatch } from 'react-redux'
+import { checkLogin, checkPhone } from '../../../../store/slices/userSlice'
+import { reformatPhoneNumber } from '../../../../utils/reformatPhoneNumber'
+import EmailAccept from './steps/EmailAccept'
 import LoginPass from './steps/LoginPass'
 import UserData from './steps/UserData'
-import EmailAccept from './steps/EmailAccept'
+
+export interface IUserData {
+	login: string
+	pass: string
+	repeatPass: string
+	firstName: string
+	lastName: string
+	email: string
+	phoneNumber: string
+}
 
 const SingInStepper: FC = () => {
 	const ColorlibConnector = styled(StepConnector)(({ theme, ...props }) => ({
@@ -42,7 +57,7 @@ const SingInStepper: FC = () => {
 			borderRadius: 1,
 			...(activeStep === steps.length - 1 && {
 				backgroundImage:
-					'linear-gradient( 95deg,#165830 0%,#166430 50%,#FEED00 100%)',
+					'linear-gradient( 95deg,#FEED00 0%,#166430 50%,#16530 100%)',
 			}),
 		},
 	}))
@@ -92,10 +107,91 @@ const SingInStepper: FC = () => {
 
 	const steps = ['Логин и пароль', 'Личные данные', 'E-mail']
 
+	const dispatch = useDispatch<Dispatch<any>>()
 	const [activeStep, setActiveStep] = useState(0)
+	const [isLoading, setIsLoading] = useState(false)
+	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-	const handleNext = () => {
-		setActiveStep((prevActiveStep: any) => prevActiveStep + 1)
+	const [userData, setUserData] = useState({
+		login: '',
+		pass: '',
+		repeatPass: '',
+		firstName: '',
+		lastName: '',
+		phoneNumber: '',
+		email: '',
+	} as IUserData)
+
+	console.log(reformatPhoneNumber(userData.phoneNumber))
+
+	const handleNextUserData = async () => {
+		setErrorMessage(null)
+		if (
+			userData.firstName !== '' &&
+			userData.lastName !== '' &&
+			userData.phoneNumber !== ''
+		) {
+			try {
+				setIsLoading(true)
+				const result = await dispatch(
+					checkPhone(reformatPhoneNumber(userData.phoneNumber))
+				)
+				const unwrappedResult = unwrapResult<any>(result)
+
+				if (unwrappedResult) {
+					setActiveStep(prevActiveStep => prevActiveStep + 1)
+					setErrorMessage(null)
+				} else {
+					setErrorMessage(
+						'Пользователь с данным номером телефона уже существует'
+					)
+				}
+			} catch (error: any) {
+				console.error('Error checking login:', error)
+				setErrorMessage('Произошла ошибка при проверке логина')
+			} finally {
+				setIsLoading(false)
+			}
+		} else {
+			setErrorMessage('Пожалуйста заполните все поля')
+		}
+	}
+
+	const handleNextEmail = async () => {}
+
+	const handleNextLogin = async () => {
+		setErrorMessage(null)
+		if (
+			userData.login !== '' &&
+			userData.pass !== '' &&
+			userData.repeatPass !== ''
+		) {
+			if (userData.pass === userData.repeatPass) {
+				try {
+					setIsLoading(true)
+					const result = await dispatch(checkLogin(userData.login))
+					const unwrappedResult = unwrapResult<any>(result)
+
+					if (unwrappedResult) {
+						setActiveStep(prevActiveStep => prevActiveStep + 1)
+						setErrorMessage(null)
+					} else {
+						setErrorMessage(
+							'Данный логин уже занят, пожалуйста придумайте другой'
+						)
+					}
+				} catch (error: any) {
+					console.error('Error checking login:', error)
+					setErrorMessage('Произошла ошибка при проверке логина')
+				} finally {
+					setIsLoading(false)
+				}
+			} else {
+				setErrorMessage('Пароли не совпадают')
+			}
+		} else {
+			setErrorMessage('Пожалуйста заполните все поля')
+		}
 	}
 
 	const handleBack = () => {
@@ -117,49 +213,64 @@ const SingInStepper: FC = () => {
 				))}
 			</Stepper>
 
-			<div>
-				{activeStep === 0 && <LoginPass />}
-				{activeStep === 1 && <UserData />}
+			<div className='flex justify-center items-center h-[250px]'>
+				{activeStep === 0 && (
+					<LoginPass setUserData={setUserData} userData={userData} />
+				)}
+				{activeStep === 1 && (
+					<UserData setUserData={setUserData} userData={userData} />
+				)}
 				{activeStep === 2 && <EmailAccept />}
 			</div>
 
+			{errorMessage && (
+				<div className='flex justify-center'>
+					<h1 className='text-sm text-red-500 w-[300px]'>{errorMessage}</h1>
+				</div>
+			)}
+
 			<div className='grid grid-cols-3 mt-10'>
 				<div className='flex justify-center'>
-					<button
-						onClick={handleBack}
-						disabled={activeStep === 0}
-						className={
-							activeStep !== 0
-								? 'text-white hover:opacity-80 transition-all rounded-full bg-[#166434]'
-								: 'text-white rounded-full bg-[#166434] opacity-30'
-						}
-					>
-						<MdOutlineNavigateNext className='rotate-180 w-[50px] h-[50px]' />
-					</button>
-				</div>
-				<div className='flex justify-center'>
-					{activeStep === steps.length - 1 && (
-						<button className='flex gap-2 h-[50px] px-5 text-white rounded-3xl py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'>
-							<h1>Продолжить</h1>
-							<MdCheck className='w-6 h-6' />
+					{activeStep !== 0 && (
+						<button
+							onClick={handleBack}
+							className='text-white hover:opacity-80 transition-opacity rounded-full bg-[#166434]'
+						>
+							<MdOutlineNavigateNext className='rotate-180 w-[50px] h-[50px]' />
 						</button>
 					)}
 				</div>
 				<div className='flex justify-center'>
-					{activeStep !== steps.length - 1 && (
+					{activeStep === steps.length - 1 ? (
+						<button className='flex gap-2 h-[50px] px-5 text-white rounded-3xl hover:opacity-80 transition-opacity w-[200px] justify-center py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'>
+							<h1>Отправить код</h1>
+							<TbSend className='w-6 h-6' />
+						</button>
+					) : (
 						<button
-							onClick={handleNext}
-							disabled={activeStep === steps.length - 1}
+							onClick={() => {
+								if (activeStep === 0) {
+									handleNextLogin()
+								}
+								if (activeStep === 1) {
+									handleNextUserData()
+								}
+								if (activeStep === 2) {
+									handleNextEmail()
+								}
+							}}
 							className={
-								activeStep !== steps.length - 1
-									? 'text-white hover:opacity-80 transition-all rounded-full bg-[#166434]'
-									: 'text-white rounded-full bg-[#166434] opacity-30'
+								!isLoading
+									? 'flex gap-2 h-[50px] px-5 text-white w-[200px] justify-center  rounded-3xl hover:opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
+									: 'flex gap-2 h-[50px] px-5 text-white w-[200px] justify-center  rounded-3xl opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 							}
 						>
-							<MdOutlineNavigateNext className='w-[50px] h-[50px]' />
+							<h1>{isLoading ? 'Загрузка...' : 'Продолжить'}</h1>
+							{!isLoading && <MdCheck className='w-8 h-8' />}
 						</button>
 					)}
 				</div>
+				<div className='flex justify-center'></div>
 			</div>
 		</div>
 	)

@@ -1,52 +1,59 @@
-import React, { useState } from 'react'
-import { AiFillMail, AiOutlineUser } from 'react-icons/ai'
-import { RiLockPasswordFill, RiLockPasswordLine } from 'react-icons/ri'
+import { FC, useState } from 'react'
+import { formatPhoneNumber } from '../../../../../utils/formatPhoneNumber'
+import { IUserData } from '../SingInStepper'
 
-const UserData = () => {
-	const [login, setLogin] = useState('')
-	const [pass, setPass] = useState('')
-	const [repeatPass, setRepeatPass] = useState('')
+interface IUserDataProps {
+	userData: IUserData
+	setUserData: (data: IUserData) => void
+}
+
+const UserData: FC<IUserDataProps> = ({ setUserData, userData }) => {
+	const [phone, setPhone] = useState('')
+	const phoneNumberPlaceholder = '+7 (000) 000-00-00'
 
 	return (
 		<div className='px-[50px] flex text-center flex-col mt-10'>
 			<div className='flex mb-4 justify-center '>
 				<input
-					className='px-4 py-4 placeholder:text-stone-400 outline-none bg-stone-100 rounded-md w-[310px]'
+					className='px-4 py-4  placeholder:text-stone-400 outline-none bg-stone-100 rounded-md w-[310px]'
 					placeholder='Введите ваше имя'
-					value={login}
+					value={userData.firstName}
 					required
 					onChange={e => {
-						setLogin(e.target.value)
+						setUserData({ ...userData, firstName: e.target.value })
 					}}
 					type='text'
 				/>
 			</div>
 			<div className='flex mb-4 justify-center '>
-				<div className='px-3 py-3 bg-stone-200 rounded-l-md'>
-					<RiLockPasswordLine className='scale-[.6] w-8 h-8 text-stone-400' />
-				</div>
 				<input
-					className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
-					placeholder='Придумайте пароль'
-					value={login}
+					className='px-4 py-4 placeholder:text-stone-400 outline-none bg-stone-100 rounded-md w-[310px]'
+					placeholder='Введите вашу фамилию'
+					value={userData.lastName}
 					required
 					onChange={e => {
-						setLogin(e.target.value)
+						setUserData({ ...userData, lastName: e.target.value })
 					}}
 					type='text'
 				/>
 			</div>
 			<div className='flex mb-4 justify-center '>
-				<div className='px-3 py-3 bg-stone-200 rounded-l-md'>
-					<RiLockPasswordFill className='scale-[.6] w-8 h-8 text-stone-400' />
-				</div>
 				<input
-					className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
-					placeholder='Повторите пароль'
-					value={login}
+					className='px-4 py-4 placeholder:text-stone-400 outline-none bg-stone-100 rounded-md w-[310px]'
+					placeholder={'Введите ваш номер телефона'}
+					value={userData.phoneNumber}
 					required
 					onChange={e => {
-						setLogin(e.target.value)
+						setUserData({
+							...userData,
+							phoneNumber: formatPhoneNumber(e.target.value),
+						})
+					}}
+					onFocus={e => {
+						e.target.placeholder = phoneNumberPlaceholder
+					}}
+					onBlur={e => {
+						e.target.placeholder = 'Введите ваш номер телефона'
 					}}
 					type='text'
 				/>

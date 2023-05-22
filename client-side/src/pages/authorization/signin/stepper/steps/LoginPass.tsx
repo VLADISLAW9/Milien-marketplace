@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
-import { AiFillMail, AiOutlineUser } from 'react-icons/ai'
+import { FC } from 'react'
+import { AiOutlineUser } from 'react-icons/ai'
 import { RiLockPasswordFill, RiLockPasswordLine } from 'react-icons/ri'
+import { IUserData } from '../SingInStepper'
 
-const LoginPass = () => {
-	const [login, setLogin] = useState('')
-	const [pass, setPass] = useState('')
-	const [repeatPass, setRepeatPass] = useState('')
+interface ILoginPassProps {
+	userData: IUserData
+	setUserData: (data: IUserData) => void
+}
 
+const LoginPass: FC<ILoginPassProps> = ({ userData, setUserData }) => {
 	return (
-		<div className='px-[50px] flex text-center flex-col mt-10'>
+		<form className='px-[50px] flex text-center flex-col mt-10'>
 			<div className='flex mb-4 justify-center '>
 				<div className='px-3 py-3 bg-stone-200 rounded-l-md'>
 					<AiOutlineUser className='scale-[.7] w-8 h-8 text-stone-400' />
@@ -16,10 +18,10 @@ const LoginPass = () => {
 				<input
 					className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
 					placeholder='Введите логин'
-					value={login}
+					value={userData.login}
 					required
 					onChange={e => {
-						setLogin(e.target.value)
+						setUserData({ ...userData, login: e.target.value })
 					}}
 					type='text'
 				/>
@@ -31,10 +33,10 @@ const LoginPass = () => {
 				<input
 					className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
 					placeholder='Придумайте пароль'
-					value={login}
+					value={userData.pass}
 					required
 					onChange={e => {
-						setLogin(e.target.value)
+						setUserData({ ...userData, pass: e.target.value })
 					}}
 					type='text'
 				/>
@@ -46,15 +48,15 @@ const LoginPass = () => {
 				<input
 					className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
 					placeholder='Повторите пароль'
-					value={login}
+					value={userData.repeatPass}
 					required
 					onChange={e => {
-						setLogin(e.target.value)
+						setUserData({ ...userData, repeatPass: e.target.value })
 					}}
 					type='text'
 				/>
 			</div>
-		</div>
+		</form>
 	)
 }
 
