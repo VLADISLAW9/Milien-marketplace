@@ -9,6 +9,9 @@ import { AiOutlineMail } from 'react-icons/ai'
 import { IoMdKeypad } from 'react-icons/io'
 import { MdCheck, MdOutlineNavigateNext } from 'react-icons/md'
 import { RiUserSettingsLine } from 'react-icons/ri'
+import LoginPass from './steps/LoginPass'
+import UserData from './steps/UserData'
+import EmailAccept from './steps/EmailAccept'
 
 const SingInStepper: FC = () => {
 	const ColorlibConnector = styled(StepConnector)(({ theme, ...props }) => ({
@@ -114,8 +117,14 @@ const SingInStepper: FC = () => {
 				))}
 			</Stepper>
 
-			<div className='flex justify-between mt-10'>
-				<div>
+			<div>
+				{activeStep === 0 && <LoginPass />}
+				{activeStep === 1 && <UserData />}
+				{activeStep === 2 && <EmailAccept />}
+			</div>
+
+			<div className='grid grid-cols-3 mt-10'>
+				<div className='flex justify-center'>
 					<button
 						onClick={handleBack}
 						disabled={activeStep === 0}
@@ -128,31 +137,28 @@ const SingInStepper: FC = () => {
 						<MdOutlineNavigateNext className='rotate-180 w-[50px] h-[50px]' />
 					</button>
 				</div>
-				<div>
-					<button
-						onClick={handleNext}
-						className={
-							activeStep !== steps.length - 1
-								? 'text-white h-[50px] hover:opacity-80 transition-all px-4 py-2  rounded-full flex justify-center items-center bg-[#EF7E1B]/80'
-								: 'opacity-0'
-						}
-					>
-						<h1>Принять</h1>
-						<MdCheck className='h-6 w-6' />
-					</button>
+				<div className='flex justify-center'>
+					{activeStep === steps.length - 1 && (
+						<button className='flex gap-2 h-[50px] px-5 text-white rounded-3xl py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'>
+							<h1>Продолжить</h1>
+							<MdCheck className='w-6 h-6' />
+						</button>
+					)}
 				</div>
-				<div>
-					<button
-						onClick={handleNext}
-						disabled={activeStep === steps.length - 1}
-						className={
-							activeStep !== steps.length - 1
-								? 'text-white hover:opacity-80 transition-all rounded-full bg-[#166434]'
-								: 'text-white rounded-full bg-[#166434] opacity-30'
-						}
-					>
-						<MdOutlineNavigateNext className='w-[50px] h-[50px]' />
-					</button>
+				<div className='flex justify-center'>
+					{activeStep !== steps.length - 1 && (
+						<button
+							onClick={handleNext}
+							disabled={activeStep === steps.length - 1}
+							className={
+								activeStep !== steps.length - 1
+									? 'text-white hover:opacity-80 transition-all rounded-full bg-[#166434]'
+									: 'text-white rounded-full bg-[#166434] opacity-30'
+							}
+						>
+							<MdOutlineNavigateNext className='w-[50px] h-[50px]' />
+						</button>
+					)}
 				</div>
 			</div>
 		</div>

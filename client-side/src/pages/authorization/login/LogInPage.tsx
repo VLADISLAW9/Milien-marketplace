@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
 import { login } from '../../../store/slices/userSlice'
+import { RiLockPasswordFill, RiLockPasswordLine } from 'react-icons/ri'
 
 interface LoginPayload {
 	login: string
@@ -52,7 +53,7 @@ const LogInPage: FC = () => {
 
 				<div className='flex'>
 					<div className='px-3 py-3 bg-stone-200 rounded-l-md'>
-						<AiFillLock className='scale-[.6] w-8 h-8 text-stone-400' />
+						<RiLockPasswordFill className='scale-[.6] w-8 h-8 text-stone-400' />
 					</div>
 					<input
 						className='pl-4 pr-6 py-3 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
