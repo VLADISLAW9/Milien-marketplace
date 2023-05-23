@@ -4,7 +4,7 @@ import { FC, useState } from 'react'
 import { MdOutlineNavigateNext } from 'react-icons/md'
 
 interface IAlbumsProps {
-	images: any[]
+	images: string[]
 }
 
 const Album: FC<IAlbumsProps> = ({ images }) => {
@@ -40,14 +40,14 @@ const Album: FC<IAlbumsProps> = ({ images }) => {
 					<div
 						className='absolute inset-0'
 						style={{
-							backgroundImage: `url(${images[currentSlide].url})`,
+							backgroundImage: `${images[currentSlide]}`,
 							filter: 'blur(3px)',
 							backgroundRepeat: 'no-repeat',
 							backgroundSize: 'cover',
 						}}
 					></div>
 					<div className='flex justify-center items-center'>
-						<Image className='max-h-[800px]' src={images[currentSlide].url} />
+						<Image className='max-h-[800px]' src={images[currentSlide]} />
 					</div>
 					{isHover && (
 						<div className='absolute top-[42%] left-3'>
@@ -67,20 +67,20 @@ const Album: FC<IAlbumsProps> = ({ images }) => {
 			</div>
 
 			<div className='grid grid-cols-8 gap-2 mt-3'>
-				{images.map(img => (
+				{images.map((img, index) => (
 					<div
 						className={
-							currentSlide === img.id - 1
+							currentSlide === index - 1
 								? 'border-2 border-[#166430]'
 								: 'border-2 cursor-pointer border-white hover:border-[#1d9246]'
 						}
-						onClick={() => setCurrentSlide(img.id - 1)}
+						onClick={() => setCurrentSlide(index - 1)}
 					>
 						<CardMedia
-							key={img.id}
+							key={img}
 							component='img'
 							sx={{ height: 55, width: 80 }}
-							image={img.url}
+							image={img}
 							alt='cover'
 						/>
 					</div>

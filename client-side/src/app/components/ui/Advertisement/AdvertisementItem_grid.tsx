@@ -1,5 +1,6 @@
 import CardMedia from '@mui/material/CardMedia'
 import { FC } from 'react'
+import { MdOutlineNoPhotography } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import { IAdvrt } from '../../../../types/IAdvrt'
 import { formatToCurrency } from '../../../../utils/formatToCurrency'
@@ -17,23 +18,33 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 		window.scrollTo(0, 0)
 	}
 
-	console.log(advrt.photoPath)
-
 	return (
 		<Link onClick={handleClick} to={`/advertisement/${advrt.id}`}>
 			<li className='flex flex-col shadow-stone-200 shadow-xl  p-5 cursor-pointer hover:bg-stone-200 hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'>
-				<div className='flex justify-center '>
-					<CardMedia
-						className='rounded-2xl'
-						component='img'
-						sx={
-							!mini
-								? { height: 250, width: '100%' }
-								: { height: 170, width: '100%' }
-						}
-						image={advrt.photoPath}
-						alt='cover'
-					/>
+				<div className='flex justify-center'>
+					{advrt.photoPath ? (
+						<CardMedia
+							className='rounded-2xl'
+							component='img'
+							sx={
+								!mini
+									? { height: 250, width: '100%' }
+									: { height: 170, width: '100%' }
+							}
+							image={advrt.photoPath[0]}
+							alt='cover'
+						/>
+					) : (
+						<div
+							className={
+								!mini
+									? 'bg-stone-100 rounded-2xl flex justify-center items-center w-[100%] h-[250px]'
+									: 'rounded-2xl flex justify-center items-center w-[100%] h-[170px]'
+							}
+						>
+							<MdOutlineNoPhotography className='text-stone-300 w-20 h-20' />
+						</div>
+					)}
 				</div>
 				<div className='mt-2'>
 					<div className=''>

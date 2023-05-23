@@ -16,8 +16,7 @@ export interface SignInPayload {
 	email: string
 	firstName: string
 	lastName: string
-	phoneNumber: number
-	role: ['user']
+	phoneNumber: string
 }
 
 export const login = createAsyncThunk(
@@ -34,7 +33,7 @@ export const login = createAsyncThunk(
 	}
 )
 
-export const registration = createAsyncThunk(
+export const sendCodeToEmail = createAsyncThunk(
 	'user/registration',
 	async (payload: SignInPayload) => {
 		const response = await AuthService.registration(
@@ -43,11 +42,9 @@ export const registration = createAsyncThunk(
 			payload.email,
 			payload.firstName,
 			payload.lastName,
-			payload.phoneNumber,
-			payload.role
+			payload.phoneNumber
 		)
-		localStorage.setItem('token', response.data.accessToken)
-		return response.data.user
+		return response
 	}
 )
 
@@ -70,6 +67,14 @@ export const checkPhone = createAsyncThunk(
 	'user/checkPhone',
 	async (payload: string) => {
 		const response = await AuthService.checkPhone(payload)
+		return response.data
+	}
+)
+
+export const checkEmail = createAsyncThunk(
+	'user/checkPhone',
+	async (payload: string) => {
+		const response = await AuthService.checkEmail(payload)
 		return response.data
 	}
 )
@@ -139,11 +144,6 @@ export const userSlice = createSlice({
 				}
 			}
 		)
-
-		builder.addCase(registration.fulfilled, (state, action) => {
-			state.isAuth = true
-			state.user = action.payload
-		})
 		builder.addCase(logout.fulfilled, state => {
 			state.user = {} as IUser
 			state.isErrorAuth = false

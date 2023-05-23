@@ -12,7 +12,12 @@ import { MdCheck, MdOutlineNavigateNext } from 'react-icons/md'
 import { RiUserSettingsLine } from 'react-icons/ri'
 import { TbSend } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
-import { checkLogin, checkPhone } from '../../../../store/slices/userSlice'
+import {
+	checkEmail,
+	checkLogin,
+	checkPhone,
+	sendCodeToEmail,
+} from '../../../../store/slices/userSlice'
 import { reformatPhoneNumber } from '../../../../utils/reformatPhoneNumber'
 import EmailAccept from './steps/EmailAccept'
 import LoginPass from './steps/LoginPass'
@@ -26,6 +31,7 @@ export interface IUserData {
 	lastName: string
 	email: string
 	phoneNumber: string
+	role: ['user']
 }
 
 const SingInStepper: FC = () => {
@@ -120,6 +126,7 @@ const SingInStepper: FC = () => {
 		lastName: '',
 		phoneNumber: '',
 		email: '',
+		role: ['user'],
 	} as IUserData)
 
 	console.log(reformatPhoneNumber(userData.phoneNumber))
@@ -157,7 +164,47 @@ const SingInStepper: FC = () => {
 		}
 	}
 
-	const handleNextEmail = async () => {}
+	const handleNextEmail = async () => {
+		setErrorMessage(null)
+		if (userData.email !== '') {
+			try {
+				setIsLoading(true)
+				const result = await dispatch(checkEmail(userData.email))
+				const unwrappedResult = unwrapResult<any>(result)
+				if (unwrappedResult) {
+					try {
+						setErrorMessage(null)
+						const resultEmail = await dispatch(
+							sendCodeToEmail({
+								login: userData.login,
+								pass: userData.pass,
+								email: userData.email,
+								firstName: userData.firstName,
+								lastName: userData.lastName,
+								phoneNumber: reformatPhoneNumber(userData.phoneNumber)
+							})
+						)
+						const unwrappedResultEmail = unwrapResult<any>(resultEmail)
+						if (unwrappedResultEmail) {
+							console.log(unwrappedResultEmail, 'is code')
+						}
+					} catch (error: any) {
+						console.error('Error checking send code:', error)
+						setErrorMessage('Произошла ошибка при отправке письма почты')
+					}
+				} else {
+					setErrorMessage('Данная почта уже зарегистрирована, введите другую')
+				}
+			} catch (error: any) {
+				console.error('Error checking email:', error)
+				setErrorMessage('Произошла ошибка при проверке почты')
+			} finally {
+				setIsLoading(false)
+			}
+		} else {
+			setErrorMessage('Пожалуйста заполните поле')
+		}
+	}
 
 	const handleNextLogin = async () => {
 		setErrorMessage(null)
@@ -220,7 +267,9 @@ const SingInStepper: FC = () => {
 				{activeStep === 1 && (
 					<UserData setUserData={setUserData} userData={userData} />
 				)}
-				{activeStep === 2 && <EmailAccept />}
+				{activeStep === 2 && (
+					<EmailAccept setUserData={setUserData} userData={userData} />
+				)}
 			</div>
 
 			{errorMessage && (
@@ -242,7 +291,15 @@ const SingInStepper: FC = () => {
 				</div>
 				<div className='flex justify-center'>
 					{activeStep === steps.length - 1 ? (
-						<button className='flex gap-2 h-[50px] px-5 text-white rounded-3xl hover:opacity-80 transition-opacity w-[200px] justify-center py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'>
+						<button
+							onClick={handleNextEmail}
+							disabled={isLoading}
+							className={
+								isLoading
+									? 'flex gap-2 h-[50px] px-5 text-white rounded-3xl hover:opacity-80 transition-opacity w-[200px] justify-center py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
+									: 'flex gap-2 h-[50px] px-5 text-white rounded-3xl opacity-80 transition-opacity w-[200px] justify-center py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
+							}
+						>
 							<h1>Отправить код</h1>
 							<TbSend className='w-6 h-6' />
 						</button>

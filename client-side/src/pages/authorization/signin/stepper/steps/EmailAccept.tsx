@@ -1,10 +1,14 @@
-import { useState } from 'react'
+import { FC } from 'react'
 import { AiFillMail } from 'react-icons/ai'
+import { IUserData } from '../SingInStepper'
 
-const EmailAccept = () => {
-	const [email, setEmail] = useState('')
+interface IEmailAccepttProps {
+	userData: IUserData
+	setUserData: (data: IUserData) => void
+}
 
-	const phoneNumberPlaceholder = 'exa mple@mail.ru'
+const EmailAccept: FC<IEmailAccepttProps> = ({ userData, setUserData }) => {
+	const emailPlaceholder = 'example@mail.ru'
 
 	return (
 		<div className='px-[50px] flex text-center mt-10'>
@@ -15,12 +19,18 @@ const EmailAccept = () => {
 				<input
 					className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
 					placeholder='Введите ваш e-mail'
-					value={email}
+					value={userData.email}
 					required
 					onChange={e => {
-						setEmail(e.target.value)
+						setUserData({ ...userData, email: e.target.value })
 					}}
-					type='text'
+					type='email'
+					onFocus={e => {
+						e.target.placeholder = emailPlaceholder
+					}}
+					onBlur={e => {
+						e.target.placeholder = 'Введите ваш e-mail'
+					}}
 				/>
 			</div>
 		</div>

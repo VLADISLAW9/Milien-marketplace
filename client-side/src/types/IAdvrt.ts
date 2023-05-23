@@ -6,5 +6,5 @@ export interface IAdvrt {
 	adress: string
 	category: string
 	price: number
-	photoPath: any
+	photoPath: string[]
 }

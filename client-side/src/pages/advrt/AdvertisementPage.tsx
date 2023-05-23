@@ -17,25 +17,6 @@ import CustomerCard from './customerCard/CustomerCard'
 import Similar from './similar/Similar'
 
 const AdvertisementPage = () => {
-	const images = [
-		{
-			id: 1,
-			url: 'https://80.img.avito.st/image/1/1.ASpSfra4rcNk12_GXA54Nm_cr8Xs3y_LJNqvweLXpcnk.4LnlVolu8CxWZ82fRkLoBlGDOizZ8YfQM2bMYmg7yn4',
-		},
-		{
-			id: 2,
-			url: 'https://80.img.avito.st/image/1/1.NX86sLa4mZYMGVuTXKBGfAASm5CEERueTBSblIoZkZyM.N-B_VbjDPzYGL9vdM0_XugIvzubPL0WT0wAY-y-bt7c',
-		},
-		{
-			id: 3,
-			url: 'https://20.img.avito.st/image/1/1.r-9Tgra4AwZlK8EDAZTc7GkgAQDtI4EOJSYBBOMrCwzl.W7to5pOFwiwqbg679Btyk4SixDdoKAMtvzHlhz6l0EM',
-		},
-		{
-			id: 4,
-			url: 'https://00.img.avito.st/image/1/1.-sKOhLa4Viu4LZQu9p-JwbQmVC0wJdQj-CBUKT4tXiE4.ek0W4QmpeGVP_y_2LOTQPgYOizUuyDaLrXMsL-N3NE8',
-		},
-	]
-
 	const params = useParams()
 	const [visible, setVisible] = useState(false)
 	const {
@@ -97,7 +78,7 @@ const AdvertisementPage = () => {
 							}
 						>
 							<h1 className='text-4xl font-semibold'>{advrt.title}</h1>
-							<Album images={images} />
+							<Album images={advrt.photoPath} />
 							<div className='mt-14'>
 								<h1 className='text-3xl font-semibold mb-4'>Aдрес</h1>
 								<p className=''>{advrt.adress}</p>
