@@ -10,6 +10,7 @@ function App() {
 	const { isAuth, user, isLoadingAuth } = useTypedSelector(state => state.user)
 
 	console.log('is auth', isLoadingAuth)
+	console.log(user.firstName)
 
 	const dispatch = useDispatch<Dispatch<any>>()
 

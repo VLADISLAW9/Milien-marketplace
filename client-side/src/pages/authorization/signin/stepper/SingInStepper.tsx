@@ -12,7 +12,10 @@ import { MdCheck, MdOutlineNavigateNext } from 'react-icons/md'
 import { RiUserSettingsLine } from 'react-icons/ri'
 import { TbSend } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
+
 import {
+	checkCodeEmail,
 	checkEmail,
 	checkLogin,
 	checkPhone,
@@ -32,6 +35,7 @@ export interface IUserData {
 	email: string
 	phoneNumber: string
 	role: ['user']
+	emailCode: string
 }
 
 const SingInStepper: FC = () => {
@@ -116,7 +120,11 @@ const SingInStepper: FC = () => {
 	const dispatch = useDispatch<Dispatch<any>>()
 	const [activeStep, setActiveStep] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
+	const [isSendCodeToEmail, setIsSendCodeToEmail] = useState(false)
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+	const navigate = useNavigate();
+
 
 	const [userData, setUserData] = useState({
 		login: '',
@@ -127,9 +135,8 @@ const SingInStepper: FC = () => {
 		phoneNumber: '',
 		email: '',
 		role: ['user'],
+		emailCode: '',
 	} as IUserData)
-
-	console.log(reformatPhoneNumber(userData.phoneNumber))
 
 	const handleNextUserData = async () => {
 		setErrorMessage(null)
@@ -164,6 +171,32 @@ const SingInStepper: FC = () => {
 		}
 	}
 
+	const acceptCodeFromEmail = async () => {
+		setErrorMessage(null)
+		if (userData.emailCode !== '') {
+			try {
+				const resultCode = await dispatch(
+					checkCodeEmail({ email: userData.email, code: userData.emailCode })
+				)
+				const unwrappedResult = unwrapResult<any>(resultCode)
+
+				if (unwrappedResult) {
+					setErrorMessage(null)
+					navigate('/login');
+					window.location.reload()
+				} else {
+					setErrorMessage('Неверный код подтверждения')
+				}
+			} catch (e) {
+				setErrorMessage('Произошла ошибка при проверке кода')
+			} finally {
+				setIsLoading(false)
+			}
+		} else {
+			setErrorMessage('Пожалуйста заполните поле для ввода кода')
+		}
+	}
+
 	const handleNextEmail = async () => {
 		setErrorMessage(null)
 		if (userData.email !== '') {
@@ -181,12 +214,12 @@ const SingInStepper: FC = () => {
 								email: userData.email,
 								firstName: userData.firstName,
 								lastName: userData.lastName,
-								phoneNumber: reformatPhoneNumber(userData.phoneNumber)
+								phoneNumber: reformatPhoneNumber(userData.phoneNumber),
 							})
 						)
 						const unwrappedResultEmail = unwrapResult<any>(resultEmail)
 						if (unwrappedResultEmail) {
-							console.log(unwrappedResultEmail, 'is code')
+							setIsSendCodeToEmail(true)
 						}
 					} catch (error: any) {
 						console.error('Error checking send code:', error)
@@ -268,7 +301,11 @@ const SingInStepper: FC = () => {
 					<UserData setUserData={setUserData} userData={userData} />
 				)}
 				{activeStep === 2 && (
-					<EmailAccept setUserData={setUserData} userData={userData} />
+					<EmailAccept
+						isSendCodeToEmail={isSendCodeToEmail}
+						setUserData={setUserData}
+						userData={userData}
+					/>
 				)}
 			</div>
 
@@ -292,16 +329,30 @@ const SingInStepper: FC = () => {
 				<div className='flex justify-center'>
 					{activeStep === steps.length - 1 ? (
 						<button
-							onClick={handleNextEmail}
+							onClick={() => {
+								if (!isSendCodeToEmail) {
+									handleNextEmail()
+								} else {
+									acceptCodeFromEmail()
+								}
+							}}
 							disabled={isLoading}
 							className={
-								isLoading
+								!isLoading
 									? 'flex gap-2 h-[50px] px-5 text-white rounded-3xl hover:opacity-80 transition-opacity w-[200px] justify-center py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 									: 'flex gap-2 h-[50px] px-5 text-white rounded-3xl opacity-80 transition-opacity w-[200px] justify-center py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 							}
 						>
-							<h1>Отправить код</h1>
-							<TbSend className='w-6 h-6' />
+							<h1>
+								{isLoading
+									? 'Загрузка...'
+									: isSendCodeToEmail
+									? 'Подтвердить код'
+									: 'Отправить код'}
+							</h1>
+							{!isLoading && !isSendCodeToEmail && (
+								<TbSend className='w-6 h-6' />
+							)}
 						</button>
 					) : (
 						<button
@@ -311,9 +362,6 @@ const SingInStepper: FC = () => {
 								}
 								if (activeStep === 1) {
 									handleNextUserData()
-								}
-								if (activeStep === 2) {
-									handleNextEmail()
 								}
 							}}
 							className={

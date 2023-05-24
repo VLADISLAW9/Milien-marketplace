@@ -19,6 +19,11 @@ export interface SignInPayload {
 	phoneNumber: string
 }
 
+interface ICheckCode {
+	email: string
+	code: string
+}
+
 export const login = createAsyncThunk(
 	'user/login',
 	async (payload: LoginPayload) => {
@@ -34,7 +39,7 @@ export const login = createAsyncThunk(
 )
 
 export const sendCodeToEmail = createAsyncThunk(
-	'user/registration',
+	'user/sendCodeToEmail',
 	async (payload: SignInPayload) => {
 		const response = await AuthService.registration(
 			payload.login,
@@ -75,6 +80,17 @@ export const checkEmail = createAsyncThunk(
 	'user/checkPhone',
 	async (payload: string) => {
 		const response = await AuthService.checkEmail(payload)
+		return response.data
+	}
+)
+
+export const checkCodeEmail = createAsyncThunk(
+	'user/checkPhone',
+	async (payload: ICheckCode) => {
+		const response = await AuthService.checkEmailCode(
+			payload.email,
+			payload.code
+		)
 		return response.data
 	}
 )

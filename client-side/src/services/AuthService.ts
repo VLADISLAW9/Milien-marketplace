@@ -16,8 +16,7 @@ export default class AuthService {
 		email: string,
 		firstName: string,
 		lastName: string,
-		phoneNumber: string,
-	
+		phoneNumber: string
 	): Promise<AxiosResponse> {
 		return $api.post('/api/Auth/register', {
 			login,
@@ -26,12 +25,20 @@ export default class AuthService {
 			firstName,
 			lastName,
 			phoneNumber,
-			
 		})
 	}
 
 	static async checkLogin(login: string): Promise<AxiosResponse<boolean>> {
 		return $api.get('/api/Auth/check_login', { params: { login: login } })
+	}
+
+	static async checkEmailCode(
+		email: string,
+		code: string
+	): Promise<AxiosResponse<boolean>> {
+		return $api.get('/api/Auth', {
+			params: { email: email, code: code },
+		})
 	}
 
 	static async checkPhone(
