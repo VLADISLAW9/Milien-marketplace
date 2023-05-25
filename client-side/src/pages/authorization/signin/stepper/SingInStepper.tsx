@@ -12,7 +12,7 @@ import { MdCheck, MdOutlineNavigateNext } from 'react-icons/md'
 import { RiUserSettingsLine } from 'react-icons/ri'
 import { TbSend } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 import {
 	checkCodeEmail,
@@ -123,8 +123,7 @@ const SingInStepper: FC = () => {
 	const [isSendCodeToEmail, setIsSendCodeToEmail] = useState(false)
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-	const navigate = useNavigate();
-
+	const navigate = useNavigate()
 
 	const [userData, setUserData] = useState({
 		login: '',
@@ -182,13 +181,11 @@ const SingInStepper: FC = () => {
 
 				if (unwrappedResult) {
 					setErrorMessage(null)
-					navigate('/login');
 					window.location.reload()
-				} else {
-					setErrorMessage('Неверный код подтверждения')
+					navigate('/login')
 				}
-			} catch (e) {
-				setErrorMessage('Произошла ошибка при проверке кода')
+			} catch (e: any) {
+				setErrorMessage('Неверный код подтверждения')
 			} finally {
 				setIsLoading(false)
 			}

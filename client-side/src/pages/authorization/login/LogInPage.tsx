@@ -1,6 +1,6 @@
 import { Dispatch } from '@reduxjs/toolkit'
 import React, { FC, useState } from 'react'
-import { AiFillLock, AiFillMail } from 'react-icons/ai'
+import { AiFillLock, AiFillMail, AiOutlineUser } from 'react-icons/ai'
 import { BsArrowDown } from 'react-icons/bs'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -37,11 +37,11 @@ const LogInPage: FC = () => {
 			<form onSubmit={handleLogin} className='flex flex-col mt-10'>
 				<div className='flex mb-4'>
 					<div className='px-3 py-3 bg-stone-200 rounded-l-md'>
-						<AiFillMail className='scale-[.6] w-8 h-8 text-stone-400' />
+						<AiOutlineUser className='scale-[.8] w-8 h-8 text-stone-400' />
 					</div>
 					<input
 						className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
-						placeholder='Электронная почта'
+						placeholder='Логин'
 						value={loginValue}
 						required
 						onChange={e => {

@@ -35,7 +35,7 @@ export default class AuthService {
 	static async checkEmailCode(
 		email: string,
 		code: string
-	): Promise<AxiosResponse<boolean>> {
+	): Promise<AxiosResponse> {
 		return $api.get('/api/Auth', {
 			params: { email: email, code: code },
 		})

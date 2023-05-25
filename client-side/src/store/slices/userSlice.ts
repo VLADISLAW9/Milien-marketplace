@@ -85,13 +85,13 @@ export const checkEmail = createAsyncThunk(
 )
 
 export const checkCodeEmail = createAsyncThunk(
-	'user/checkPhone',
+	'user/checkCodeEmail',
 	async (payload: ICheckCode) => {
 		const response = await AuthService.checkEmailCode(
 			payload.email,
 			payload.code
 		)
-		return response.data
+		return response
 	}
 )
 

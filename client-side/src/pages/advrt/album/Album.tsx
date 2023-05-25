@@ -70,11 +70,11 @@ const Album: FC<IAlbumsProps> = ({ images }) => {
 				{images.map((img, index) => (
 					<div
 						className={
-							currentSlide === index - 1
+							currentSlide === index 
 								? 'border-2 border-[#166430]'
 								: 'border-2 cursor-pointer border-white hover:border-[#1d9246]'
 						}
-						onClick={() => setCurrentSlide(index - 1)}
+						onClick={() => setCurrentSlide(index)}
 					>
 						<CardMedia
 							key={img}
