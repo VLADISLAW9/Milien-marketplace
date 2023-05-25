@@ -6,6 +6,7 @@ using MilienAPI.Models.DTO;
 using MilienAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace MilienAPI.Controllers
 {
@@ -15,16 +16,17 @@ namespace MilienAPI.Controllers
     {
         private Context _context;
         private IMapper _mapper;
+        private IWebHostEnvironment _hostingEnvironment;
 
-        public AdController(Context context, IMapper mapper)
+        public AdController(Context context, IMapper mapper, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _mapper = mapper;
+            _hostingEnvironment = hostEnvironment;
         }
 
         [HttpPost]
-        [Authorize]
-        public async Task<ActionResult<Ad>> CreateAd([FromBody] AdDTO ad)
+        public async Task<ActionResult<Ad>> CreateAd([FromForm] AdResponse ad)
         {
             if (!ModelState.IsValid)
             {
@@ -32,14 +34,24 @@ namespace MilienAPI.Controllers
             }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            //foreach (var item in images)
-            //{
-            //    var base64 = Convert.ToBase64String(item);
-            //    ad.Photos.Add(Convert.ToBase64String(item));
-            //}
+            List<string> uniqueFileNames = new List<string>();
+            string uniqueFileName = null;
 
-            var res = _mapper.Map<AdDTO, Ad>(ad);
-            res.CustomerId = Convert.ToInt32(userId);
+            if (ad.Images != null && ad.Images.Count > 0)
+            {
+                foreach (var item in ad.Images)
+                {
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + item.FileName;
+                    string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                    item.CopyTo(new FileStream(filePath, FileMode.Create));
+                    uniqueFileNames.Add("http://192.168.0.160:5137/images/" + uniqueFileName);
+                }
+            }
+            var res = _mapper.Map<AdResponse, Ad>(ad);
+            res.PhotoPath = uniqueFileNames.ToArray();
+            //res.CustomerId = Convert.ToInt32(userId);
+            res.CustomerId = 10;
             _context.Ads.Add(res);
             await _context.SaveChangesAsync();
             return Ok();

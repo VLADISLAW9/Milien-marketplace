@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MilienAPI.Models.DTO
 {
     [Table("Customers")]
-    public class CustomerDTO
+    public class CustomerResponse
     {
         [MaxLength(100)]
         public string Login { get; set; }

@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper.Configuration.Annotations;
+using Microsoft.EntityFrameworkCore;
 using MilienAPI.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.Metadata;
 
 namespace MilienAPI.Models
 {
@@ -21,6 +23,6 @@ namespace MilienAPI.Models
         [JsonConverter(typeof(StringEnumConverter))]
         [Column(TypeName = "category")]
         public Category Category { get; set; }
-        //public List<string> Photos { get; set; }
+        public string[]? PhotoPath { get; set; }
     }
 }

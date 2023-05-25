@@ -90,7 +90,8 @@ namespace IdentityAPI.Controllers
 
             var user = _mapper.Map<UserDTO, User>(customer);
             EmailService emailService = new EmailService();
-            user.ConfirmedCode = emailService.SendEmailAsync(user.Email, "Подтверждение регистрации");
+            user.ConfirmedCode = emailService.SendEmailAsync(user.Email, "Подтверждение регистрации", user);
+            user.Role = Role.User;
             _context.Users.Add(user);
             _context.LoginModels.Add(loginModel);
             await _context.SaveChangesAsync();
@@ -106,10 +107,38 @@ namespace IdentityAPI.Controllers
             if(res.ConfirmedCode == code)
             {
                 res.ComfimedEmail = true;
-                return Ok("Почта подтверждена");
+                _context.SaveChanges();
+                return Ok("Почта подтверждена!");
             }
 
-            return Forbid("Введите код, который вы получили в письме!");
+            return BadRequest(new {Message = "Неверный код подтверждения!"});
+        }
+
+        [HttpGet]
+        [Route("check_login")]
+        public bool CheckLogin(string login)
+        {
+            var loginDB = _context.Users.FirstOrDefault(l => l.Login == login);
+
+            return loginDB == null ? true : false;
+        }
+
+        [HttpGet]
+        [Route("check_phone")]
+        public bool CheckPhoneNumber(string phoneNumber)
+        {
+            var phone = _context.Users.FirstOrDefault(p => p.PhoneNumber == phoneNumber);
+
+            return phone == null ? true : false;
+        }
+
+        [HttpGet]
+        [Route("check_email")]
+        public bool CheckPhoneEmail(string email)
+        {
+            var emailDB = _context.Users.FirstOrDefault(p => p.Email == email);
+
+            return emailDB == null ? true : false;
         }
     }
 }

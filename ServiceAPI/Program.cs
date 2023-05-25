@@ -1,27 +1,19 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
-using IdentityAPI.Data;
-using IdentityAPI.Services;
-using IdentityAPI.Helpers;
+using Microsoft.IdentityModel.Tokens;
+using ServiceAPI.Data;
 using System.Text.Json.Serialization;
-using IdentityAPI.Models;
-using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.AspNetCore.Identity;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var dataBaseConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<Context>(option => option.UseNpgsql(dataBaseConnection));
-
 builder.Services.AddControllers().AddJsonOptions(opt =>
 {
     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
-
-builder.Services.AddTransient<ITokenService, TokenService>();
 
 var secretKey = builder.Configuration.GetSection("JwtSettings:SecretKey").Value;
 var issuer = builder.Configuration.GetSection("JwtSettings:Issuer").Value;
@@ -48,10 +40,6 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true
         };
     });
-
-
-builder.Services.AddControllers();
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -65,25 +53,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
-
-app.UseStaticFiles();
-
-app.UseCors(builder =>
-{
-    builder.WithOrigins("http://localhost:3000")
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials();  
-    
-    builder.WithOrigins("http://192.168.0.159:3000")
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials();
-});
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors(builder =>
+{
+    builder.AllowAnyOrigin();
+    builder.AllowAnyMethod();
+    builder.AllowAnyHeader();
+});
 
 app.MapControllers();
 

@@ -56,6 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -68,6 +69,7 @@ app.UseCors(builder =>
     builder.AllowAnyHeader();
 });
 
+app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();
