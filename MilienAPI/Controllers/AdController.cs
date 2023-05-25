@@ -26,6 +26,7 @@ namespace MilienAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Ad>> CreateAd([FromForm] AdResponse ad)
         {
             if (!ModelState.IsValid)
@@ -50,8 +51,7 @@ namespace MilienAPI.Controllers
             }
             var res = _mapper.Map<AdResponse, Ad>(ad);
             res.PhotoPath = uniqueFileNames.ToArray();
-            //res.CustomerId = Convert.ToInt32(userId);
-            res.CustomerId = 10;
+            res.CustomerId = Convert.ToInt32(userId);
             _context.Ads.Add(res);
             await _context.SaveChangesAsync();
             return Ok();
@@ -91,9 +91,7 @@ namespace MilienAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAdsByCategory(string category)
         {
-            Category typeOfCategory = (Category)Enum.Parse(typeof(Category), category);
-
-            var res = await _context.Ads.Where(a => a.Category.Equals(typeOfCategory)).ToListAsync();
+            var res = await _context.Ads.Where(a => a.Category == category).ToListAsync();
 
             return Ok(res);
         }

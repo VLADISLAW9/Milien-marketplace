@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MilienAPI.Models
+namespace ServiceAPI.Models.DTO
 {
-    [Table("Ads")]
-    public class Ad
+    public class AdDTO
     {
         [Key]
         public int Id { get; set; }

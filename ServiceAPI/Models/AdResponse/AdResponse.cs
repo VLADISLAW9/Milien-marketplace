@@ -1,9 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Metadata;
-
-namespace MilienAPI.Models.DTO
+﻿namespace ServiceAPI.Models.AdResponse
 {
-    [Table("Ads")]
     public class AdResponse
     {
         public string Title { get; set; }

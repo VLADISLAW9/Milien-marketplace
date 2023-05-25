@@ -16,10 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 var dataBaseConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<Context>(option => option.UseNpgsql(dataBaseConnection));
 
-builder.Services.AddControllers().AddJsonOptions(opt =>
-{
-    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
+builder.Services.AddControllers();
 
 builder.Services.AddTransient<ITokenService, TokenService>();
 

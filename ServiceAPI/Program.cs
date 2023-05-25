@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using ServiceAPI.Data;
 using System.Text.Json.Serialization;
 using System.Text;
+using ServiceAPI.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,7 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true
         };
     });
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

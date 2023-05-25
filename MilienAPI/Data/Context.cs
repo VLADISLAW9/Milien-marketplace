@@ -16,7 +16,6 @@ namespace MilienAPI.Data
         static Context()
         {
             NpgsqlConnection.GlobalTypeMapper.MapEnum<Role>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<Category>();
         }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Ad> Ads { get; set; }
