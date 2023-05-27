@@ -15,5 +15,6 @@ namespace MilienAPI.Models
         public string Adress { get; set; }
         public string Category { get; set; }
         public string[]? PhotoPath { get; set; }
+        public string Subcategory { get; set; }
     }
 }

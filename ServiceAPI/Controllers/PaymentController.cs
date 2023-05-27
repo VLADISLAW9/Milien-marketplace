@@ -10,6 +10,7 @@ namespace ServiceAPI.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
+    [Authorize]
     public class PaymentController : ControllerBase
     {
         static private readonly Client _client = new Client("985078", "test_RU37ABpXDmq91JZq5iJ1ts5jRORUoh3L0_I1DgHFxTI");
@@ -39,13 +40,14 @@ namespace ServiceAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> CreatePaidAd([FromBody] PaidAdDTO paidAd, [FromBody] AdResponse ad)
+        public async Task<IActionResult> CreatePaidAd([FromBody]AdResponse ad)
         {
+            PaidAdDTO paidAd = new PaidAdDTO();
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var res = _context.Ads.Where(a => a.Title == ad.Title && a.CustomerId == Convert.ToInt32(userId)).LastOrDefault();
-            paidAd.ExpiryTime = DateTime.Now;
-            paidAd.AdId = res.Id;
+            var lastCreatedAdFromUser = _context.Ads.Where(a => a.Title == ad.Title && a.CustomerId == Convert.ToInt32(userId))
+                .LastOrDefault();
+            paidAd.ExpiryTime = DateTime.Now.AddDays(10);
+            paidAd.AdId = lastCreatedAdFromUser.Id;
             await _context.PaidAds.AddAsync(paidAd);
 
             await _context.SaveChangesAsync();

@@ -17,23 +17,26 @@ namespace MilienAPI.Controllers
         private Context _context;
         private IMapper _mapper;
         private IWebHostEnvironment _hostingEnvironment;
+        private IConfiguration _configuration;
 
-        public AdController(Context context, IMapper mapper, IWebHostEnvironment hostEnvironment)
+        public AdController(Context context, IMapper mapper, IWebHostEnvironment hostEnvironment,
+            IConfiguration configuration)
         {
             _context = context;
             _mapper = mapper;
             _hostingEnvironment = hostEnvironment;
+            _configuration = configuration;
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<Ad>> CreateAd([FromForm] AdResponse ad)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var pathToServer = _configuration.GetSection("Endpoints:Http:Url").Value;
+            ///var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             List<string> uniqueFileNames = new List<string>();
             string uniqueFileName = null;
@@ -46,13 +49,13 @@ namespace MilienAPI.Controllers
                     uniqueFileName = Guid.NewGuid().ToString() + "_" + item.FileName;
                     string filePath = Path.Combine(uploadFolder, uniqueFileName);
                     item.CopyTo(new FileStream(filePath, FileMode.Create));
-                    uniqueFileNames.Add("http://192.168.0.160:5137/images/" + uniqueFileName);
+                    uniqueFileNames.Add($"{pathToServer}/images/{uniqueFileName}");
                 }
             }
-            var res = _mapper.Map<AdResponse, Ad>(ad);
-            res.PhotoPath = uniqueFileNames.ToArray();
-            res.CustomerId = Convert.ToInt32(userId);
-            _context.Ads.Add(res);
+            var createdAd = _mapper.Map<AdResponse, Ad>(ad);
+            createdAd.PhotoPath = uniqueFileNames.ToArray();
+            createdAd.CustomerId = 25;
+            _context.Ads.Add(createdAd);
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -60,40 +63,46 @@ namespace MilienAPI.Controllers
         [HttpGet("{customerId}")]
         public async Task<IActionResult> GetAdsByCustomerId(int customerId)
         {
-            var res = await _context.Ads
+            var allAdsForCurrentCustomers = await _context.Ads
                 .Where(ad => ad.CustomerId == customerId)
                 .ToListAsync();
 
-            if (res.Count == 0)
+            if (allAdsForCurrentCustomers.Count == 0)
                 return BadRequest();
 
-            return Ok(res);
+            return Ok(allAdsForCurrentCustomers);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _context.Ads.ToListAsync();
+            var allAds = await _context.Ads.ToListAsync();
 
-            return Ok(result);
+            return Ok(allAds);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAdById(int id)
         {
-            var res = await _context.Ads.FindAsync(id);
+            var adWithIndividualId = await _context.Ads.FindAsync(id);
 
-            if (res == null)
+            if (adWithIndividualId == null)
                 return NotFound();
-            return Ok(res);
+            return Ok(adWithIndividualId);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAdsByCategory(string category)
         {
-            var res = await _context.Ads.Where(a => a.Category == category).ToListAsync();
+            var allAdsWithSelectedCategory = await _context.Ads.Where(a => a.Category == category).ToListAsync();
 
-            return Ok(res);
+            return Ok(allAdsWithSelectedCategory);
+        }
+
+        [HttpGet]
+        public IActionResult Test()
+        {
+            return Ok(_configuration.GetSection("Endpoints:Http:Url").Value);
         }
     }
 }

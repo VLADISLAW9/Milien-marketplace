@@ -26,35 +26,22 @@ namespace MilienAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _context.Customers.FindAsync(id);
+            var userWiithIndividualId = await _context.Customers.FindAsync(id);
 
-            if (result == null)
+            if (userWiithIndividualId == null)
                 return BadRequest();
 
-            var res = _mapper.Map<Customer, Account>(result);
+            var dataForAccount = _mapper.Map<Customer, Account>(userWiithIndividualId);
 
-            return Ok(res);
+            return Ok(dataForAccount);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _context.Customers.ToListAsync();
+            var allCusomers = await _context.Customers.ToListAsync();
 
-            return Ok(result);
-        }
-
-        [HttpGet]
-        public async Task<Customer> GetCustomerAsync(string login, string password)
-        {
-            Customer customerPassword = _context.Customers.Where(c => c.Login == login)
-                .FirstOrDefault();
-            if (customerPassword == null)
-                return null;
-            if (PasswordHasher.UnHashPassword(customerPassword.Pass))
-                return customerPassword;
-
-            return null;
+            return Ok(allCusomers);
         }
     }
 }

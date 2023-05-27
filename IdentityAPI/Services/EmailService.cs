@@ -9,8 +9,8 @@ namespace IdentityAPI.Services
     {
         public string SendEmailAsync(string email, string subject, User user)
         {
-            Guid guid = Guid.NewGuid();
-            string formattedGuid = guid.ToString("N").Substring(0, 6);
+            Guid uniqueCode = Guid.NewGuid();
+            string formattedGuid = uniqueCode.ToString("N").Substring(0, 6);
             var fromAddress = new MailAddress("rumilien@gmail.com", "Milien");
             var toAddress = new MailAddress(email);
             var emailMessage = new MailMessage(fromAddress, toAddress);

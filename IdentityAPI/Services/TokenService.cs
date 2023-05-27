@@ -33,11 +33,11 @@ namespace IdentityAPI.Services
 
         public string GenerateRefreshToken()
         {
-            var randomNumber = new byte[32];
+            var uniqueRefreshToken = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
             {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
+                rng.GetBytes(uniqueRefreshToken);
+                return Convert.ToBase64String(uniqueRefreshToken);
             }
         }
 

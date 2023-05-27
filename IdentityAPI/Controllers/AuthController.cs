@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityAPI.Controllers
 {
@@ -36,18 +37,18 @@ namespace IdentityAPI.Controllers
             if (loginModel == null)
                 return BadRequest("Invalid client response");
 
-            var user = _context.LoginModels.FirstOrDefault(u => u.Login == loginModel.Login);
+            var userFromLoginModel = _context.LoginModels.FirstOrDefault(u => u.Login == loginModel.Login);
 
-            if (user == null)
+            if (userFromLoginModel == null)
                 return NotFound("Неверный логин или пароль!");
 
-            var passwordResult = passwordHasher.VerifyHashedPassword(null, user.Password, loginModel.Password);
+            var passwordResult = passwordHasher.VerifyHashedPassword(null, userFromLoginModel.Password, loginModel.Password);
 
-            if (user is null || passwordResult != PasswordVerificationResult.Success)
+            if (userFromLoginModel is null || passwordResult != PasswordVerificationResult.Success)
                 return Unauthorized("Неверный логин или пароль!");
 
 
-            User userForLogin = _context.Users.FirstOrDefault(c => c.Login == loginModel.Login);
+            User userForLogin = await _context.Users.FirstOrDefaultAsync(c => c.Login == loginModel.Login);
 
             var claims = new List<Claim>
             {
@@ -58,10 +59,10 @@ namespace IdentityAPI.Controllers
             var accessToken = _tokenService.GenerateAccessToken(claims);
             var refreshToken = _tokenService.GenerateRefreshToken();
 
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(15);
+            userFromLoginModel.RefreshToken = refreshToken;
+            userFromLoginModel.RefreshTokenExpiryTime = DateTime.Now.AddDays(15);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(new AuthenticateResponse
             {
@@ -79,8 +80,8 @@ namespace IdentityAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            string pass = PasswordHasher.HashPassword(customer.Pass);
-            customer.Pass = pass;
+            string passForCustomer = PasswordHasher.HashPassword(customer.Pass);
+            customer.Pass = passForCustomer;
 
             LoginModel loginModel = new LoginModel
             {
@@ -88,11 +89,11 @@ namespace IdentityAPI.Controllers
                 Password = customer.Pass,
             };
 
-            var user = _mapper.Map<UserDTO, User>(customer);
+            var createdUser = _mapper.Map<UserDTO, User>(customer);
             EmailService emailService = new EmailService();
-            user.ConfirmedCode = emailService.SendEmailAsync(user.Email, "Подтверждение регистрации", user);
-            user.Role = Role.User;
-            _context.Users.Add(user);
+            createdUser.ConfirmedCode = emailService.SendEmailAsync(createdUser.Email, "Подтверждение регистрации", user);
+            createdUser.Role = Role.User;
+            _context.Users.Add(createdUser);
             _context.LoginModels.Add(loginModel);
             await _context.SaveChangesAsync();
 
@@ -102,11 +103,11 @@ namespace IdentityAPI.Controllers
         [HttpGet]
         public IActionResult ConfirmEmail(string code, string email)
         {
-            var res = _context.Users.FirstOrDefault(c => c.Email == email);
+            var userForCheckingEmail = _context.Users.FirstOrDefault(c => c.Email == email);
 
-            if(res.ConfirmedCode == code)
+            if(userForCheckingEmail.ConfirmedCode == code)
             {
-                res.ComfimedEmail = true;
+                userForCheckingEmail.ComfimedEmail = true;
                 _context.SaveChanges();
                 return Ok("Почта подтверждена!");
             }
@@ -118,27 +119,27 @@ namespace IdentityAPI.Controllers
         [Route("check_login")]
         public bool CheckLogin(string login)
         {
-            var loginDB = _context.Users.FirstOrDefault(l => l.Login == login);
+            var loginForCheck = _context.Users.FirstOrDefault(l => l.Login == login);
 
-            return loginDB == null ? true : false;
+            return loginForCheck == null ? true : false;
         }
 
         [HttpGet]
         [Route("check_phone")]
         public bool CheckPhoneNumber(string phoneNumber)
         {
-            var phone = _context.Users.FirstOrDefault(p => p.PhoneNumber == phoneNumber);
+            var phoneForCheck = _context.Users.FirstOrDefault(p => p.PhoneNumber == phoneNumber);
 
-            return phone == null ? true : false;
+            return phoneForCheck == null ? true : false;
         }
 
         [HttpGet]
         [Route("check_email")]
         public bool CheckPhoneEmail(string email)
         {
-            var emailDB = _context.Users.FirstOrDefault(p => p.Email == email);
+            var emailForChekc = _context.Users.FirstOrDefault(p => p.Email == email);
 
-            return emailDB == null ? true : false;
+            return emailForChekc == null ? true : false;
         }
     }
 }

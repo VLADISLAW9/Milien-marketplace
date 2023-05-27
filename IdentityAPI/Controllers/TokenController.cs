@@ -2,8 +2,8 @@
 using IdentityAPI.Models;
 using IdentityAPI.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityAPI.Controllers
 {
@@ -33,9 +33,10 @@ namespace IdentityAPI.Controllers
             var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
             var username = principal.Identity.Name;
 
-            var user = _context.LoginModels.SingleOrDefault(u => u.Login == username);
+            var currentIdentityUser = _context.LoginModels.SingleOrDefault(u => u.Login == username);
 
-            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now )
+            if (currentIdentityUser is null || currentIdentityUser.RefreshToken != refreshToken
+                || currentIdentityUser.RefreshTokenExpiryTime <= DateTime.Now )
             {
                 return Unauthorized();
             }
@@ -43,7 +44,7 @@ namespace IdentityAPI.Controllers
             var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
 
-            user.RefreshToken = newRefreshToken;
+            currentIdentityUser.RefreshToken = newRefreshToken;
             _context.SaveChanges();
 
             return Ok(new AuthenticateResponse()
@@ -55,21 +56,21 @@ namespace IdentityAPI.Controllers
 
         [HttpPost, Authorize]
         [Route("revoke")]
-        public IActionResult Revoke()
+        public async Task<IActionResult> Revoke()
         {
-            var username = User.Identity.Name;
+            var currentIdentityUser = User.Identity.Name;
 
-            var user = _context.LoginModels.SingleOrDefault(u => u.Login == username);
+            var loginedUser = await _context.LoginModels.SingleOrDefaultAsync(u => u.Login == currentIdentityUser);
 
-            if (user is null)
+            if (loginedUser is null)
             {
                 return BadRequest();
             }
 
-            user.RefreshToken = null;
-            user.RefreshTokenExpiryTime = null;
+            loginedUser.RefreshToken = null;
+            loginedUser.RefreshTokenExpiryTime = null;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
