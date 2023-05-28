@@ -29,6 +29,7 @@ namespace MilienAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Ad>> CreateAd([FromForm] AdResponse ad)
         {
             if (!ModelState.IsValid)
@@ -36,7 +37,7 @@ namespace MilienAPI.Controllers
                 return BadRequest(ModelState);
             }
             var pathToServer = _configuration.GetSection("Endpoints:Http:Url").Value;
-            ///var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             List<string> uniqueFileNames = new List<string>();
             string uniqueFileName = null;
@@ -54,7 +55,9 @@ namespace MilienAPI.Controllers
             }
             var createdAd = _mapper.Map<AdResponse, Ad>(ad);
             createdAd.PhotoPath = uniqueFileNames.ToArray();
-            createdAd.CustomerId = 25;
+            createdAd.CustomerId = Convert.ToInt32(userId);
+            //createdAd.CustomerId = 53;
+
             _context.Ads.Add(createdAd);
             await _context.SaveChangesAsync();
             return Ok();
@@ -103,6 +106,18 @@ namespace MilienAPI.Controllers
         public IActionResult Test()
         {
             return Ok(_configuration.GetSection("Endpoints:Http:Url").Value);
+        }
+
+        [HttpGet]
+        public IActionResult Search(string query)
+        {
+            List<Ad> adList = _context.Ads
+                .Where(a => a.Title.Contains(query))
+                .OrderBy(x => EF.Functions.Random())
+                .Take(5)
+                .ToList();
+
+            return Ok(adList);
         }
     }
 }
