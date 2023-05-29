@@ -14,13 +14,13 @@ import { TbCategory2 } from 'react-icons/tb'
 import Address from './stepper/steps/Address'
 import CaseSelector from './stepper/steps/CaseSelector'
 import Category from './stepper/steps/Category'
-import MoreInfo from './stepper/steps/MoreInfo'
+import MoreInfo from './stepper/steps/MoreInfo/MoreInfo'
 import Params from './stepper/steps/Params'
 
-interface IAdvrtData {
+export interface IAdvrtData {
 	title: null | string
 	description: null | string
-	price: null | number
+	price: null | string
 	adress: null | string
 	category: null | string
 	subcategory: null | string
@@ -113,6 +113,7 @@ const CreateAdvrtPage: FC = () => {
 		'Адрес',
 		'Продвижение',
 	]
+	const [errorMessage, setErrorMessage] = useState('')
 	const [activeStep, setActiveStep] = useState(0)
 	const [advrtData, setAdvrtDate] = useState({
 		title: null,
@@ -123,12 +124,32 @@ const CreateAdvrtPage: FC = () => {
 		images: null,
 	} as IAdvrtData)
 
-	const handleNext = () => {
-		setActiveStep(prevActiveStep => prevActiveStep + 1)
+	const handleNextParams = () => {
+		if (advrtData.title !== null && advrtData.price !== null) {
+			setErrorMessage('')
+			setActiveStep(prevActiveStep => prevActiveStep + 1)
+		} else {
+			setErrorMessage('Пожалуйста заполните все поля')
+		}
+	}
+
+	const handleNextCategory = () => {
+		if (advrtData.category !== null) {
+			if (advrtData.subcategory === null) {
+				setErrorMessage('Пожалуйста выберите подкатегорию')
+			} else {
+				setActiveStep(prevActiveStep => prevActiveStep + 1)
+				setErrorMessage('')
+			}
+		} else {
+			setErrorMessage('Пожалуйста выберите категорию')
+		}
 	}
 
 	const handleBack = () => {
-		setActiveStep(activeStep)
+		if (activeStep - 1 !== -1) {
+			setActiveStep(prevActiveStep => prevActiveStep - 1)
+		}
 	}
 
 	return (
@@ -156,12 +177,24 @@ const CreateAdvrtPage: FC = () => {
 			</Stepper>
 
 			<div className='flex px-28 mt-10 flex-col min-h-[200px]'>
-				{activeStep === 0 && <Category />}
-				{activeStep === 1 && <Params />}
-				{activeStep === 2 && <MoreInfo />}
+				{activeStep === 0 && (
+					<Category advrtData={advrtData} setAdvrtData={setAdvrtDate} />
+				)}
+				{activeStep === 1 && (
+					<Params advrtData={advrtData} setAdvrtData={setAdvrtDate} />
+				)}
+				{activeStep === 2 && (
+					<MoreInfo advrtData={advrtData} setAdvrtData={setAdvrtDate} />
+				)}
 				{activeStep === 3 && <Address />}
 				{activeStep === 4 && <CaseSelector />}
+				{errorMessage && (
+					<div className='mt-5 px-4 w-[350px] bg-red-200 text-center flex justify-center rounded-md py-2'>
+						<h1 className='text-[16px] text-red-600 '>{errorMessage}</h1>
+					</div>
+				)}
 			</div>
+
 			{activeStep === steps.length ? (
 				<div></div>
 			) : (
@@ -174,7 +207,14 @@ const CreateAdvrtPage: FC = () => {
 					</button>
 					<button
 						className='px-4 py-2 bg-gradient-to-r from-[#166430] via-[#168430] h-[50px] to-[#FEED00]  text-white translate-x-4 rounded-3xl hover:opacity-80 transition-opacity w-[150px]'
-						onClick={handleNext}
+						onClick={() => {
+							if (activeStep === 0) {
+								handleNextCategory()
+							}
+							if (activeStep === 1) {
+								handleNextParams()
+							}
+						}}
 					>
 						Продолжить
 					</button>

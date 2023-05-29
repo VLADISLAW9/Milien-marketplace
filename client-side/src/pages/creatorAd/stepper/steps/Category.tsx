@@ -1,17 +1,19 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import { categories } from '../../../../app/data/category'
+import { IAdvrtData } from '../../CreateAdvrtPage'
 
-const Category = () => {
-	const [selectedCategory, setSelectedCategory] = useState('')
-	const [subSelectedCategory, setSubSelectedCategory] = useState('')
+interface ICategoryProps {
+	advrtData: IAdvrtData
+	setAdvrtData: (data: IAdvrtData) => void
+}
 
+const Category: FC<ICategoryProps> = ({ advrtData, setAdvrtData }) => {
 	const handleCategoryClick = (category: string) => {
-		setSelectedCategory(category)
-		setSubSelectedCategory('')
+		setAdvrtData({ ...advrtData, category: category, subcategory: null })
 	}
 
 	const handleSubCategoryClick = (subcategory: string) => {
-		setSubSelectedCategory(subcategory)
+		setAdvrtData({ ...advrtData, subcategory: subcategory })
 	}
 
 	return (
@@ -20,14 +22,14 @@ const Category = () => {
 				<div className='w-26 mr-4'>
 					<h1 className='font-semibold'>Выберите категорию: </h1>
 				</div>
-				{selectedCategory !== '' && (
-					<div className='flex'>
-						<h1 className='text-stone-400'>{selectedCategory}</h1>
+				{advrtData.category !== null && (
+					<div className='flex mr-2'>
+						<h1 className='text-stone-400'>{advrtData.category}</h1>
 					</div>
 				)}
-				{subSelectedCategory !== '' && (
+				{advrtData.subcategory !== null && (
 					<div className='flex'>
-						<h1 className='text-stone-400'>, {subSelectedCategory}</h1>
+						<h1 className='text-stone-400'> {advrtData.subcategory}</h1>
 					</div>
 				)}
 			</div>
@@ -36,7 +38,7 @@ const Category = () => {
 					{categories.map(category => (
 						<li
 							className={
-								category.name === selectedCategory
+								category.name === advrtData.category
 									? 'mb-3	text-lg border-b-2 border-[#166430]   cursor-pointer font-medium'
 									: 'mb-3	text-lg hover:text-stone-500 transition-colors border-b-2 border-[#fff] cursor-pointer font-medium'
 							}
@@ -47,14 +49,14 @@ const Category = () => {
 						</li>
 					))}
 				</ul>
-				{selectedCategory && (
+				{advrtData.category && (
 					<ul className='ml-60 grid grid-rows-6 grid-flow-col gap-x-10'>
 						{categories
-							.find(category => category.name === selectedCategory)
+							.find(category => category.name === advrtData.category)
 							?.subcategories.map(subcategory => (
 								<li
 									className={
-										subcategory !== subSelectedCategory
+										subcategory !== advrtData.subcategory
 											? 'mb-3 hover:text-black transition-colors cursor-pointer   text-lg font-normal text-stone-500'
 											: 'mb-3 text-black transition-colors cursor-pointer  text-lg '
 									}
