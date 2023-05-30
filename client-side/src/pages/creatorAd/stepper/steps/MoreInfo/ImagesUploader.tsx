@@ -1,96 +1,93 @@
-import React, { useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
-import { Modal, Upload } from 'antd'
+import { message, Modal, Upload } from 'antd'
 import type { RcFile, UploadProps } from 'antd/es/upload'
 import type { UploadFile } from 'antd/es/upload/interface'
+import { FC, useState } from 'react'
+import { IAdvrtData } from '../../../CreateAdvrtPage'
 
-const getBase64 = (file: RcFile): Promise<string> =>
-	new Promise((resolve, reject) => {
-		const reader = new FileReader()
-		reader.readAsDataURL(file)
-		reader.onload = () => resolve(reader.result as string)
-		reader.onerror = error => reject(error)
-	})
+interface IImagesUploader {
+	advrtData: IAdvrtData
+	setAdvrtData: (data: IAdvrtData) => void
+}
 
-const ImagesUploader: React.FC = () => {
+const ImagesUploader: FC<IImagesUploader> = ({ advrtData, setAdvrtData }) => {
 	const [previewOpen, setPreviewOpen] = useState(false)
 	const [previewImage, setPreviewImage] = useState('')
 	const [previewTitle, setPreviewTitle] = useState('')
-	const [fileList, setFileList] = useState<UploadFile[]>([
-		{
-			uid: '-1',
-			name: 'image.png',
-			status: 'done',
-			url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-		},
-		{
-			uid: '-2',
-			name: 'image.png',
-			status: 'done',
-			url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-		},
-		{
-			uid: '-3',
-			name: 'image.png',
-			status: 'done',
-			url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-		},
-		{
-			uid: '-4',
-			name: 'image.png',
-			status: 'done',
-			url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-		},
-		{
-			uid: '-xxx',
-			percent: 50,
-			name: 'image.png',
-			status: 'uploading',
-			url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-		},
-		{
-			uid: '-5',
-			name: 'image.png',
-			status: 'error',
-		},
-	])
+	const [fileList, setFileList] = useState<UploadFile[]>([])
+
+	console.log(fileList)
 
 	const handleCancel = () => setPreviewOpen(false)
 
-	const handlePreview = async (file: UploadFile) => {
-		if (!file.url && !file.preview) {
-			file.preview = await getBase64(file.originFileObj as RcFile)
+	const beforeUpload = (file: RcFile) => {
+		const isImage = file.type.startsWith('image/')
+		if (!isImage) {
+			message.error('Можно загружать только изображения!')
 		}
-
-		setPreviewImage(file.url || (file.preview as string))
-		setPreviewOpen(true)
-		setPreviewTitle(
-			file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1)
-		)
+		return isImage
 	}
 
-	const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+	const handleRemove = (file: UploadFile) => {
+		const newFileList = fileList.filter(item => item.uid !== file.uid)
 		setFileList(newFileList)
+	}
+
+	const handlePreview = (file: UploadFile) => {
+		const reader = new FileReader()
+		reader.onload = () => {
+			setPreviewImage(reader.result as string)
+			setPreviewOpen(true)
+			setPreviewTitle(file.name || '')
+		}
+		reader.readAsDataURL(file.originFileObj as RcFile)
+	}
+
+	const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+		const updatedFileList: any[] = newFileList.map(file => {
+			if (file.status === 'uploading' || file.status === 'removed') {
+				return file
+			}
+			// Создаем новый экземпляр File на основе исходного файла
+			const blobFile = new File([file.originFileObj as Blob], file.name, {
+				type: file.type,
+			})
+			return { ...file, status: 'done', originFileObj: blobFile }
+		})
+		setFileList(updatedFileList)
+	}
 
 	const uploadButton = (
 		<div>
 			<PlusOutlined />
-			<div style={{ marginTop: 8 }}>Upload</div>
+			<div style={{ marginTop: 8 }}>
+				<h1>
+					Загрузить <br /> фото
+				</h1>
+			</div>
 		</div>
 	)
+
 	return (
 		<>
 			<Upload
-				action='https://www.mocky.io/v2/5cc8019d300000980a055e76'
 				listType='picture-card'
 				fileList={fileList}
 				onPreview={handlePreview}
 				onChange={handleChange}
+				beforeUpload={beforeUpload}
+				accept='image/*'
+				onRemove={handleRemove}
+				showUploadList={{
+					showRemoveIcon: true,
+					showPreviewIcon: true,
+				}}
+				maxCount={15}
 			>
-				{fileList.length >= 8 ? null : uploadButton}
+				{fileList.length >= 15 ? null : uploadButton}
 			</Upload>
 			<Modal
-				open={previewOpen}
+				visible={previewOpen}
 				title={previewTitle}
 				footer={null}
 				onCancel={handleCancel}

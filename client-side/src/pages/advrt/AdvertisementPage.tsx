@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { MdOutlineNoPhotography } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
@@ -78,7 +79,14 @@ const AdvertisementPage = () => {
 							}
 						>
 							<h1 className='text-4xl font-semibold'>{advrt.title}</h1>
-							<Album images={advrt.photoPath} />
+							{advrt.photoPath.length > 0 ? (
+								<Album images={advrt.photoPath} />
+							) : (
+								<div className='mt-10 rounded-2xl h-[396px] bg-stone-100 flex justify-center items-center w-[100%] '>
+									<MdOutlineNoPhotography className='text-stone-300 w-20 h-20' />
+								</div>
+							)}
+
 							<div className='mt-14'>
 								<h1 className='text-3xl font-semibold mb-4'>Aдрес</h1>
 								<p className=''>{advrt.adress}</p>

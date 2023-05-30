@@ -11,7 +11,7 @@ import { BsFillGeoAltFill, BsTextParagraph } from 'react-icons/bs'
 import { FaMagic } from 'react-icons/fa'
 import { MdOutlineDriveFileRenameOutline } from 'react-icons/md'
 import { TbCategory2 } from 'react-icons/tb'
-import Address from './stepper/steps/Address'
+import Address from './stepper/steps/Adress/Address'
 import CaseSelector from './stepper/steps/CaseSelector'
 import Category from './stepper/steps/Category'
 import MoreInfo from './stepper/steps/MoreInfo/MoreInfo'
@@ -133,6 +133,24 @@ const CreateAdvrtPage: FC = () => {
 		}
 	}
 
+	const handleNextAddress = () => {
+		if (advrtData.adress !== null) {
+			setErrorMessage('')
+			setActiveStep(prevActiveStep => prevActiveStep + 1)
+		} else {
+			setErrorMessage('Пожалуйста найдите свой адрес на карте')
+		}
+	}
+
+	const handleNextMoreInfo = () => {
+		if (advrtData.description !== (null && '')) {
+			setErrorMessage('')
+			setActiveStep(prevActiveStep => prevActiveStep + 1)
+		} else {
+			setErrorMessage('Пожалуйста заполните поле')
+		}
+	}
+
 	const handleNextCategory = () => {
 		if (advrtData.category !== null) {
 			if (advrtData.subcategory === null) {
@@ -186,7 +204,7 @@ const CreateAdvrtPage: FC = () => {
 				{activeStep === 2 && (
 					<MoreInfo advrtData={advrtData} setAdvrtData={setAdvrtDate} />
 				)}
-				{activeStep === 3 && <Address />}
+				{activeStep === 3 && <Address advrtData={advrtData} setAdvrtData={setAdvrtDate} />}
 				{activeStep === 4 && <CaseSelector />}
 				{errorMessage && (
 					<div className='mt-5 px-4 w-[350px] bg-red-200 text-center flex justify-center rounded-md py-2'>
@@ -213,6 +231,12 @@ const CreateAdvrtPage: FC = () => {
 							}
 							if (activeStep === 1) {
 								handleNextParams()
+							}
+							if (activeStep === 2) {
+								handleNextMoreInfo()
+							}
+							if(activeStep === 3){
+								handleNextAddress()
 							}
 						}}
 					>

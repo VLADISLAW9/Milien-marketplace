@@ -1,6 +1,6 @@
-import { FC, ChangeEvent } from 'react'
-import { IAdvrtData } from '../../CreateAdvrtPage'
+import { ChangeEvent, FC } from 'react'
 import { FaRubleSign } from 'react-icons/fa'
+import { IAdvrtData } from '../../CreateAdvrtPage'
 
 interface IParamsProps {
 	advrtData: IAdvrtData
@@ -48,7 +48,7 @@ const Params: FC<IParamsProps> = ({ advrtData, setAdvrtData }) => {
 							className='px-4 py-3 border w-[300px] pr-10 outline-none rounded-3xl border-stone-400'
 						/>
 						<div className='absolute top-[17px] right-6'>
-							<FaRubleSign className='text-stone-600' />
+							<FaRubleSign className='text-stone-400' />
 						</div>
 					</div>
 				</div>

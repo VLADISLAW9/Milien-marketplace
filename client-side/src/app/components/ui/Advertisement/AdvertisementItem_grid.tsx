@@ -22,7 +22,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 		<Link onClick={handleClick} to={`/advertisement/${advrt.id}`}>
 			<li className='flex flex-col shadow-stone-200 shadow-xl  p-5 cursor-pointer hover:bg-stone-200 hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'>
 				<div className='flex justify-center'>
-					{advrt.photoPath ? (
+					{advrt.photoPath.length >	 0 ? (
 						<CardMedia
 							className='rounded-2xl'
 							component='img'

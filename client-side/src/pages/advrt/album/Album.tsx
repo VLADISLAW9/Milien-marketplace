@@ -4,7 +4,7 @@ import { FC, useState } from 'react'
 import { MdOutlineNavigateNext } from 'react-icons/md'
 
 interface IAlbumsProps {
-	images: string[]
+	images: string[] 
 }
 
 const Album: FC<IAlbumsProps> = ({ images }) => {
@@ -67,10 +67,10 @@ const Album: FC<IAlbumsProps> = ({ images }) => {
 			</div>
 
 			<div className='grid grid-cols-8 gap-2 mt-3'>
-				{images.map((img, index) => (
+				{images?.map((img, index) => (
 					<div
 						className={
-							currentSlide === index 
+							currentSlide === index
 								? 'border-2 border-[#166430]'
 								: 'border-2 cursor-pointer border-white hover:border-[#1d9246]'
 						}
