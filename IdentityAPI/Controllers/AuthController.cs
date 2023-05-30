@@ -91,7 +91,7 @@ namespace IdentityAPI.Controllers
 
             var createdUser = _mapper.Map<UserDTO, User>(customer);
             EmailService emailService = new EmailService();
-            createdUser.ConfirmedCode = emailService.SendEmailAsync(createdUser.Email, "Подтверждение регистрации", user);
+            createdUser.ConfirmedCode = emailService.SendEmailAsync(createdUser.Email, "Подтверждение регистрации", createdUser);
             createdUser.Role = Role.User;
             _context.Users.Add(createdUser);
             _context.LoginModels.Add(loginModel);
@@ -108,6 +108,7 @@ namespace IdentityAPI.Controllers
             if(userForCheckingEmail.ConfirmedCode == code)
             {
                 userForCheckingEmail.ComfimedEmail = true;
+                userForCheckingEmail.ConfirmedCode = null;
                 _context.SaveChanges();
                 return Ok("Почта подтверждена!");
             }

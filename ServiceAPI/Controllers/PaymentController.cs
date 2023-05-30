@@ -10,7 +10,7 @@ namespace ServiceAPI.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    [Authorize]
+    //[Authorize]
     public class PaymentController : ControllerBase
     {
         static private readonly Client _client = new Client("985078", "test_RU37ABpXDmq91JZq5iJ1ts5jRORUoh3L0_I1DgHFxTI");
@@ -21,8 +21,8 @@ namespace ServiceAPI.Controllers
             _context = context;
         }
 
-        [HttpPost]
-        public IActionResult CreatePayment()
+        [HttpGet]
+        public RedirectResult CreatePayment()
         {
             var newPayment = new NewPayment
             {
@@ -30,13 +30,13 @@ namespace ServiceAPI.Controllers
                 Confirmation = new Confirmation
                 {
                     Type = ConfirmationType.Redirect,
-                    ReturnUrl = "http://localhost:3000/payment/success"
+                    ReturnUrl = "https://localhost:3000/payment/success"
                 }
             };
 
             Payment payment = _client.CreatePayment(newPayment);
             string paymentUrl = payment.Confirmation.ConfirmationUrl;
-            return Ok(paymentUrl);
+            return Redirect(paymentUrl);
         }
 
         [HttpPost]
