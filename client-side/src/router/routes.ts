@@ -10,7 +10,7 @@ export const privateRoutes = [
 	{ path: '/', component: HomePage, exact: true },
 	{ path: '/advertisement/:id', component: AdvertisementPage, exact: true },
 	{ path: '/customer/:id', component: CustomerPage, exact: true },
-	{ path: '/createAdvrt', component: CreateAdvrtPage, exact: true }
+	{ path: '/createAdvrt', component: CreateAdvrtPage, exact: true },
 ]
 
 export const publicRoutes = [
@@ -19,6 +19,4 @@ export const publicRoutes = [
 	{ path: '/customer/:id', component: CustomerPage, exact: true },
 	{ path: '/login', component: LogInPage, exact: true },
 	{ path: '/signin', component: SignInPage, exact: true },
-	// Убери потом! =>
-	{ path: '/createAdvrt', component: CreateAdvrtPage, exact: true }
 ]

@@ -3,7 +3,7 @@ import axios from 'axios'
 import AuthService from '../../services/AuthService'
 import { IAuthResponse } from '../../types/IAuthResponse'
 import { IUser } from '../../types/IUser'
-import { AUTH_URL } from '../axios'
+import { AUTH_URL } from '../axios/auth-api'
 
 export interface LoginPayload {
 	login: string

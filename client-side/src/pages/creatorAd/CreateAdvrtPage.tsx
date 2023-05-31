@@ -6,13 +6,17 @@ import { StepIconProps } from '@mui/material/StepIcon'
 import StepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
 import { styled } from '@mui/material/styles'
+import { Dispatch } from '@reduxjs/toolkit'
 import { FC, useState } from 'react'
 import { BsFillGeoAltFill, BsTextParagraph } from 'react-icons/bs'
 import { FaMagic } from 'react-icons/fa'
 import { MdOutlineDriveFileRenameOutline } from 'react-icons/md'
 import { TbCategory2 } from 'react-icons/tb'
+import { useDispatch } from 'react-redux'
+import CreateAdvrtService from '../../services/CreatorAdvrtService'
+import { removeSpacesFromString } from '../../utils/removeSpacesFromString'
 import Address from './stepper/steps/Adress/Address'
-import CaseSelector from './stepper/steps/CaseSelector'
+import CaseSelector from './stepper/steps/CaseSelector/CaseSelector'
 import Category from './stepper/steps/Category'
 import MoreInfo from './stepper/steps/MoreInfo/MoreInfo'
 import Params from './stepper/steps/Params'
@@ -24,7 +28,8 @@ export interface IAdvrtData {
 	adress: null | string
 	category: null | string
 	subcategory: null | string
-	images: null | string[]
+	images: File[]
+	case: string | null
 }
 
 const CreateAdvrtPage: FC = () => {
@@ -115,14 +120,21 @@ const CreateAdvrtPage: FC = () => {
 	]
 	const [errorMessage, setErrorMessage] = useState('')
 	const [activeStep, setActiveStep] = useState(0)
+	const [isLoading, setIsLoading] = useState(false)
 	const [advrtData, setAdvrtDate] = useState({
 		title: null,
 		description: null,
+		subcategory: null,
 		price: null,
 		adress: null,
 		category: null,
-		images: null,
+		images: [],
+		case: null,
 	} as IAdvrtData)
+
+	const dispatch = useDispatch<Dispatch<any>>()
+
+	console.log(advrtData)
 
 	const handleNextParams = () => {
 		if (advrtData.title !== null && advrtData.price !== null) {
@@ -161,6 +173,56 @@ const CreateAdvrtPage: FC = () => {
 			}
 		} else {
 			setErrorMessage('Пожалуйста выберите категорию')
+		}
+	}
+
+	const handleNextCaseSelector = async () => {
+		if (advrtData.case !== null) {
+			setErrorMessage('')
+			if (advrtData.case === 'free') {
+				if (
+					advrtData.adress &&
+					advrtData.category &&
+					advrtData.description &&
+					advrtData.images &&
+					advrtData.price &&
+					advrtData.subcategory &&
+					advrtData.title
+				) {
+					try {
+						setErrorMessage('')
+						setIsLoading(true)
+						const result = await CreateAdvrtService.createAdvrt(
+							advrtData.title,
+							advrtData.description,
+							removeSpacesFromString(advrtData.price),
+							advrtData.adress,
+							advrtData.category,
+							advrtData.subcategory,
+							advrtData.images
+						)
+						window.location.href = '/'
+					} catch (e) {
+						console.log(e)
+						setErrorMessage('Произошла ошибка при создании')
+					} finally {
+						setIsLoading(false)
+					}
+				}
+			} else if (advrtData.case === 'prem') {
+				try {
+					setErrorMessage('')
+					const navigate = await CreateAdvrtService.navigateToYookassa()
+					console.log(navigate)
+					setErrorMessage('Все ок')
+				} catch (e) {
+					setErrorMessage('Произошла ошибка при оплате')
+					console.log(e)
+				} finally {
+				}
+			}
+		} else {
+			setErrorMessage('Пожалуйста выберите пакет услуг')
 		}
 	}
 
@@ -204,8 +266,12 @@ const CreateAdvrtPage: FC = () => {
 				{activeStep === 2 && (
 					<MoreInfo advrtData={advrtData} setAdvrtData={setAdvrtDate} />
 				)}
-				{activeStep === 3 && <Address advrtData={advrtData} setAdvrtData={setAdvrtDate} />}
-				{activeStep === 4 && <CaseSelector />}
+				{activeStep === 3 && (
+					<Address advrtData={advrtData} setAdvrtData={setAdvrtDate} />
+				)}
+				{activeStep === 4 && (
+					<CaseSelector advrtData={advrtData} setAdvrtData={setAdvrtDate} />
+				)}
 				{errorMessage && (
 					<div className='mt-5 px-4 w-[350px] bg-red-200 text-center flex justify-center rounded-md py-2'>
 						<h1 className='text-[16px] text-red-600 '>{errorMessage}</h1>
@@ -223,8 +289,14 @@ const CreateAdvrtPage: FC = () => {
 					>
 						Назад
 					</button>
+
 					<button
-						className='px-4 py-2 bg-gradient-to-r from-[#166430] via-[#168430] h-[50px] to-[#FEED00]  text-white translate-x-4 rounded-3xl hover:opacity-80 transition-opacity w-[150px]'
+						disabled={isLoading}
+						className={
+							isLoading
+								? 'px-4 py-2 bg-gradient-to-r from-[#166430] via-[#168430] h-[50px] to-[#FEED00]  text-white translate-x-4 rounded-3xl opacity-50 transition-opacity w-[150px]'
+								: 'px-4 py-2 bg-gradient-to-r from-[#166430] via-[#168430] h-[50px] to-[#FEED00]  text-white translate-x-4 rounded-3xl hover:opacity-50 transition-opacity w-[150px]'
+						}
 						onClick={() => {
 							if (activeStep === 0) {
 								handleNextCategory()
@@ -235,12 +307,23 @@ const CreateAdvrtPage: FC = () => {
 							if (activeStep === 2) {
 								handleNextMoreInfo()
 							}
-							if(activeStep === 3){
+							if (activeStep === 3) {
 								handleNextAddress()
+							}
+							if (activeStep === 4) {
+								handleNextCaseSelector()
 							}
 						}}
 					>
-						Продолжить
+						{activeStep === 4 && advrtData.case === 'free' ? (
+							<>Создать</>
+						) : activeStep === 4 && advrtData.case === 'prem' ? (
+							<>Оплатить</>
+						) : isLoading ? (
+							<>Загрузка</>
+						) : (
+							<>Продолжить</>
+						)}
 					</button>
 				</div>
 			)}

@@ -13,7 +13,7 @@ const MapComponent: FC<IMapProps> = ({ advrtData, setAdvrtData }) => {
 	)
 	const [selectedPlacemark, setSelectedPlacemark] = useState(null)
 	const [placemarkGeometry, setPlacemarkGeometry] = useState([
-		55.751574, 37.573856,
+		56.49771, 84.97437,
 	])
 
 	const searchControlRef = useRef<any>(null)
@@ -73,7 +73,7 @@ const MapComponent: FC<IMapProps> = ({ advrtData, setAdvrtData }) => {
 			<div>
 				<Map
 					onClick={handleMapClick}
-					defaultState={{ center: placemarkGeometry, zoom: 9 }}
+					defaultState={{ center: placemarkGeometry, zoom: 10 }}
 					style={{ width: '100%', height: '400px' }}
 				>
 					<SearchControl

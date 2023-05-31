@@ -1,6 +1,6 @@
 import { Step, StepLabel, Stepper } from '@mui/material'
 import StepConnector, {
-	stepConnectorClasses,
+	stepConnectorClasses
 } from '@mui/material/StepConnector'
 import { StepIconProps } from '@mui/material/StepIcon'
 import { styled } from '@mui/material/styles'
@@ -19,7 +19,7 @@ import {
 	checkEmail,
 	checkLogin,
 	checkPhone,
-	sendCodeToEmail,
+	sendCodeToEmail
 } from '../../../../store/slices/userSlice'
 import { reformatPhoneNumber } from '../../../../utils/reformatPhoneNumber'
 import EmailAccept from './steps/EmailAccept'
@@ -181,8 +181,7 @@ const SingInStepper: FC = () => {
 
 				if (unwrappedResult) {
 					setErrorMessage(null)
-					window.location.reload()
-					navigate('/login')
+					window.location.href = '/login'
 				}
 			} catch (e: any) {
 				setErrorMessage('Неверный код подтверждения')

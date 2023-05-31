@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
 import { IAdvrt } from '../types/IAdvrt'
+import { ICreateAdvrtRequest } from '../types/ICreateAdvrtRequest'
 
 export const advrtsApi = createApi({
 	reducerPath: 'advrtsApi',
@@ -42,6 +43,7 @@ export const advrtsApi = createApi({
 			}),
 			providesTags: result => ['advrt'],
 		}),
+		
 	}),
 })
 

@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { IAdvrtData } from '../../../CreateAdvrtPage'
-import ImagesUploader from './ImagesUploader'
+import PhotoUploader from './PhotoUploder'
 
 interface IMoreInfoProps {
 	advrtData: IAdvrtData
@@ -8,25 +8,24 @@ interface IMoreInfoProps {
 }
 
 const MoreInfo: FC<IMoreInfoProps> = ({ advrtData, setAdvrtData }) => {
-
 	return (
 		<div className='flex justify-center flex-col'>
 			<div className='py-4 border-b text-[22px]'>
 				<h1 className='font-semibold'>Подробности</h1>
 			</div>
 
-			<div className='flex justify-center flex-col items-center mt-5'>
-				<div>
-					<ImagesUploader advrtData={advrtData} setAdvrtData={setAdvrtData} />
+			<div className='flex justify-center flex-col items-center mt-5 '>
+				<div className='flex justify-center'>
+					<PhotoUploader advrtData={advrtData} setAdvrtData={setAdvrtData} />
 				</div>
-				<div className='mt-3'>
+				<div className='mt-5'>
 					<textarea
 						value={advrtData.description ? advrtData.description : ''}
 						onChange={e => {
 							setAdvrtData({ ...advrtData, description: e.target.value })
 						}}
-						placeholder='Введите описание объявлению'
-						className='border-2 w-[800px] h-[250px] rounded-lg p-3'
+						placeholder='Введите описание объявления'
+						className='border-2 w-[848px] h-[250px] rounded-lg p-3'
 					/>
 				</div>
 			</div>
