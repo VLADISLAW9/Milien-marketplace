@@ -1,6 +1,6 @@
 import axios from 'axios'
+
 export const CREATEADVT_URL = 'http://192.168.0.160:5137'
-export const CREATEPAYED_URL = 'http://192.168.0.160:5255'
 
 const $createAdvrt_api = axios.create({
 	withCredentials: true,
@@ -13,4 +13,3 @@ $createAdvrt_api.interceptors.request.use(config => {
 })
 
 export default $createAdvrt_api
-

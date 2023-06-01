@@ -16,7 +16,9 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 
 	return (
 		<>
-			{location.pathname === '/signin' || location.pathname === '/login' ? (
+			{location.pathname === '/signin' ||
+			location.pathname === '/login' ||
+			location.pathname === '/payment-success' ? (
 				<main className='flex items-center justify-center h-screen'>
 					{children}
 				</main>

@@ -13,6 +13,8 @@ import { FaMagic } from 'react-icons/fa'
 import { MdOutlineDriveFileRenameOutline } from 'react-icons/md'
 import { TbCategory2 } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
+import { useActions } from '../../hooks/use-actions'
+import { useTypedSelector } from '../../hooks/use-typed-selector'
 import CreateAdvrtService from '../../services/CreatorAdvrtService'
 import { removeSpacesFromString } from '../../utils/removeSpacesFromString'
 import Address from './stepper/steps/Adress/Address'
@@ -133,8 +135,8 @@ const CreateAdvrtPage: FC = () => {
 	} as IAdvrtData)
 
 	const dispatch = useDispatch<Dispatch<any>>()
-
-	console.log(advrtData)
+	const { addPaymentId } = useActions()
+	const { paymentId } = useTypedSelector(state => state.payment)
 
 	const handleNextParams = () => {
 		if (advrtData.title !== null && advrtData.price !== null) {
@@ -211,14 +213,19 @@ const CreateAdvrtPage: FC = () => {
 				}
 			} else if (advrtData.case === 'prem') {
 				try {
+					setIsLoading(true)
 					setErrorMessage('')
-					const navigate = await CreateAdvrtService.navigateToYookassa()
-					console.log(navigate)
-					setErrorMessage('Все ок')
+					const navigate = await CreateAdvrtService.navigateToYookassa().then(
+						res => {
+							dispatch(addPaymentId(res.data.paymentId))
+							window.location.href = res.data.paymentUrl
+						}
+					)
 				} catch (e) {
 					setErrorMessage('Произошла ошибка при оплате')
 					console.log(e)
 				} finally {
+					setIsLoading(false)
 				}
 			}
 		} else {

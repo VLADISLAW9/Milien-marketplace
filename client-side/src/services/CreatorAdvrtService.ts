@@ -33,7 +33,33 @@ export default class CreateAdvrtService {
 		return $createPremiumAdvrt_api.get('/Payment/CreatePayment')
 	}
 
-	static async createPaidAdvrt(): Promise<AxiosResponse> {
-		return $createPremiumAdvrt_api.post('/Payment/CreatePaidAd')
+	static async cheakPayment(paymentId: string): Promise<AxiosResponse> {
+		return $createPremiumAdvrt_api.get('/Payment/CheckPayment', {
+			params: { paymentid: paymentId },
+		})
+	}
+
+	static async createPaidAdvrt(
+		title: string,
+		description: string,
+		price: number,
+		adress: string,
+		category: string,
+		subcategory: string,
+		images: File[]
+	): Promise<AxiosResponse> {
+		const formData = new FormData()
+		formData.append('title', title)
+		formData.append('description', description)
+		formData.append('price', String(price))
+		formData.append('adress', adress)
+		formData.append('category', category)
+		formData.append('subcategory', subcategory)
+
+		images.forEach(image => {
+			formData.append(`images`, image)
+		})
+
+		return $createAdvrt_api.post('/Ad/CreatePaidAd', formData)
 	}
 }
