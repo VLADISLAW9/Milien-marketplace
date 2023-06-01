@@ -3,39 +3,63 @@ import { BiCheck, BiError } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
 import { useTypedSelector } from '../../hooks/use-typed-selector'
 import CreateAdvrtService from '../../services/CreatorAdvrtService'
+import { removeSpacesFromString } from '../../utils/removeSpacesFromString'
+import Loader from '../../app/components/ui/spiner/Loader'
 
 const PaymentPage: FC = () => {
 	const { paymentId } = useTypedSelector(state => state.payment)
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [check, setCheck] = useState(false)
+	const { advt: advrtData } = useTypedSelector(state => state.payment)
+	const [isPaymentChecked, setIsPaymentChecked] = useState(false)
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				setIsLoading(true)
 				const response = await CreateAdvrtService.cheakPayment(paymentId)
-				setCheck(response.data)
-				if (check) {
-					try {
-						const addPaid = await CreateAdvrtService.createPaidAdvrt()
-					} catch (e) {
-						console.log(e)
+				if (response.data) {
+					setCheck(response.data)
+					if (
+						advrtData &&
+						advrtData.adress &&
+						advrtData.category &&
+						advrtData.description &&
+						advrtData.images &&
+						advrtData.price &&
+						advrtData.subcategory &&
+						advrtData.title
+					) {
+						const addPaid = await CreateAdvrtService.createPaidAdvrt(
+							advrtData.title,
+							advrtData.description,
+							removeSpacesFromString(advrtData.price),
+							advrtData.adress,
+							advrtData.category,
+							advrtData.subcategory,
+							advrtData.images
+						)
 					}
 				}
 			} catch (e) {
 				console.log(e)
 			} finally {
 				setIsLoading(false)
+				setIsPaymentChecked(true)
 			}
 		}
 
 		fetchData()
 	}, [])
 
-	if (isLoading) {
-		// Render loading state if still fetching the result
-		return <div>Loading...</div>
+	if (isLoading || !isPaymentChecked) {
+		// Render loading state if still fetching the result or payment check is not completed yet
+		return (
+			<div>
+				<Loader />
+			</div>
+		)
 	}
 
 	if (check) {

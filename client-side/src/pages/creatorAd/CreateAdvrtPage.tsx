@@ -135,8 +135,8 @@ const CreateAdvrtPage: FC = () => {
 	} as IAdvrtData)
 
 	const dispatch = useDispatch<Dispatch<any>>()
-	const { addPaymentId } = useActions()
-	const { paymentId } = useTypedSelector(state => state.payment)
+	const { addPaymentId, addAdvrtToStorage } = useActions()
+	const { paymentId, advt } = useTypedSelector(state => state.payment)
 
 	const handleNextParams = () => {
 		if (advrtData.title !== null && advrtData.price !== null) {
@@ -218,6 +218,7 @@ const CreateAdvrtPage: FC = () => {
 					const navigate = await CreateAdvrtService.navigateToYookassa().then(
 						res => {
 							dispatch(addPaymentId(res.data.paymentId))
+							dispatch(addAdvrtToStorage(advrtData))
 							window.location.href = res.data.paymentUrl
 						}
 					)
