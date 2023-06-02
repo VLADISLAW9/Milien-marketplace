@@ -1,12 +1,12 @@
 import { Dispatch } from '@reduxjs/toolkit'
 import React, { FC, useState } from 'react'
-import { AiFillLock, AiFillMail, AiOutlineUser } from 'react-icons/ai'
+import { AiOutlineUser } from 'react-icons/ai'
 import { BsArrowDown } from 'react-icons/bs'
+import { RiLockPasswordFill } from 'react-icons/ri'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
 import { login } from '../../../store/slices/userSlice'
-import { RiLockPasswordFill, RiLockPasswordLine } from 'react-icons/ri'
 
 interface LoginPayload {
 	login: string

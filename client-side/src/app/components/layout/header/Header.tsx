@@ -6,12 +6,24 @@ import HeaderSearch from './search/HeaderSearch'
 import UserHeader from './user/UserHeader'
 
 const Header: FC = () => {
-	const { isAuth } = useTypedSelector(state => state.user)
+	const { isAuth, user, isLoadingAuth } = useTypedSelector(state => state.user)
+
+	if (isLoadingAuth) {
+		return (
+			<div className='px-[50px] py-[20px] flex items-center'>
+				<HeaderLogo />
+				<HeaderSearch />
+				<div className='flex w-[15%]  items-center flex-auto justify-end'></div>
+			</div>
+		)
+	}
+
 	return (
 		<div className='px-[50px] py-[20px] flex items-center'>
 			<HeaderLogo />
 			<HeaderSearch />
-			{isAuth ? <UserHeader /> : <AuthorizationButtons />}
+
+			{isAuth && user ? <UserHeader /> : <AuthorizationButtons />}
 		</div>
 	)
 }

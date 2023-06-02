@@ -1,11 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import axios from 'axios'
 import AuthService from '../../services/AuthService'
 import { IAdvrt } from '../../types/IAdvrt'
-import { IAuthResponse } from '../../types/IAuthResponse'
 import { IUser } from '../../types/IUser'
-import { IUserResponse } from '../../types/IUserResponse'
-import { AUTH_URL } from '../axios/auth-api'
 
 export interface LoginPayload {
 	login: string
@@ -97,25 +93,6 @@ export const checkCodeEmail = createAsyncThunk(
 	}
 )
 
-export const checkAuth = createAsyncThunk('user/checkAuth', async () => {
-	const accessToken = localStorage.getItem('token')
-	const refreshToken = localStorage.getItem('refresh')
-	try {
-		const response = await axios.post<IAuthResponse>(
-			`${AUTH_URL}/api/Token/refresh`,
-			{ accessToken, refreshToken },
-			{ withCredentials: true }
-		)
-		localStorage.setItem('token', response.data.accessToken)
-		localStorage.setItem('refresh', response.data.refreshToken)
-		return true
-	} catch (e: any) {
-		return false
-	}finally{
-
-	}
-})
-
 interface UserState {
 	user: IUser
 	userAds: IAdvrt[] | null
@@ -129,7 +106,7 @@ interface UserState {
 const initialState: UserState = {
 	user: {} as IUser,
 	userAds: null,
-	isAuth: false,
+	isAuth: !!localStorage.getItem('token'),
 	isLoadingAuth: false,
 	isErrorAuth: false,
 	isErrorLogin: false,
@@ -152,13 +129,20 @@ export const userSlice = createSlice({
 		setUserAds(state, action: PayloadAction<IAdvrt[]>) {
 			state.userAds = action.payload
 		},
+		removeUser(state) {
+			state.user = {} as IUser
+			state.isAuth = false
+			state.isErrorAuth = false
+			state.isLoadingAuth = false
+			state.errorMessage = null
+			state.user = {} as IUser
+		},
 	},
 	extraReducers: builder => {
 		builder.addCase(
 			login.fulfilled,
 			(state, action: PayloadAction<IUser | any>) => {
 				if (action.payload.email) {
-					state.isLoadingAuth = true
 					state.isAuth = true
 					state.user = action.payload
 					state.errorMessage = null
@@ -176,23 +160,6 @@ export const userSlice = createSlice({
 			state.errorMessage = null
 			state.isAuth = false
 		})
-
-		builder.addCase(
-			checkAuth.fulfilled,
-			(state, action: PayloadAction<boolean>) => {
-				if (action.payload) {
-					state.isAuth = true
-				} else {
-					state.isAuth = false
-					state.isErrorAuth = false
-					state.isLoadingAuth = false
-					state.errorMessage = null
-					state.user = {} as IUser
-					localStorage.removeItem('token')
-					localStorage.removeItem('refresh')
-				}
-			}
-		)
 	},
 })
 

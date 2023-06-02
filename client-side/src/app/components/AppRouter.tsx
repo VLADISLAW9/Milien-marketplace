@@ -3,11 +3,11 @@ import { useTypedSelector } from '../../hooks/use-typed-selector'
 import { privateRoutes, publicRoutes } from '../../router/routes'
 
 const AppRouter = () => {
-	const { isAuth } = useTypedSelector(state => state.user)
+	const { isAuth, user, isLoadingAuth } = useTypedSelector(state => state.user)
 
 	return (
 		<Routes>
-			{isAuth ? (
+			{isAuth && user ? (
 				<>
 					{privateRoutes.map(route => (
 						<Route
