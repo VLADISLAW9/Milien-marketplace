@@ -1,12 +1,13 @@
 import { Dispatch } from '@reduxjs/toolkit'
 import React, { FC, useState } from 'react'
-import { AiOutlineUser } from 'react-icons/ai'
+import { AiFillEye, AiFillEyeInvisible, AiOutlineUser } from 'react-icons/ai'
 import { BsArrowDown } from 'react-icons/bs'
 import { RiLockPasswordFill } from 'react-icons/ri'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { useActions } from '../../../hooks/use-actions'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
-import { login } from '../../../store/slices/userSlice'
+import AuthService from '../../../services/AuthService'
 
 interface LoginPayload {
 	login: string
@@ -16,17 +17,33 @@ interface LoginPayload {
 const LogInPage: FC = () => {
 	const [loginValue, setLogin] = useState('')
 	const [password, setPassword] = useState('')
+	const [error, setError] = useState('')
+	const [loading, setLoading] = useState(false)
 	const { isAuth, user, isLoadingAuth, isErrorAuth, errorMessage } =
 		useTypedSelector(state => state.user)
+	const { setAuth, setUser } = useActions()
+	const [isHide, setIsHide] = useState(true)
 
 	const dispatch = useDispatch<Dispatch<any>>()
-	const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+	const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const payload: LoginPayload = {
 			login: loginValue,
 			password: password,
 		}
-		dispatch(login(payload))
+		try {
+			setLoading(true)
+			const response = await AuthService.login(payload.login, payload.password)
+			localStorage.setItem('token', response.data.accessToken)
+			localStorage.setItem('refresh', response.data.refreshToken)
+			dispatch(setAuth(true))
+			dispatch(setUser(response.data.user))
+		} catch (e: any) {
+			console.log(e)
+			setError(e.response.data)
+		} finally {
+			setLoading(false)
+		}
 	}
 
 	return (
@@ -51,7 +68,7 @@ const LogInPage: FC = () => {
 					/>
 				</div>
 
-				<div className='flex'>
+				<div className='flex relative'>
 					<div className='px-3 py-3 bg-stone-200 rounded-l-md'>
 						<RiLockPasswordFill className='scale-[.6] w-8 h-8 text-stone-400' />
 					</div>
@@ -59,29 +76,38 @@ const LogInPage: FC = () => {
 						className='pl-4 pr-6 py-3 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
 						placeholder='Пароль'
 						required
-						type='password'
+						type={isHide ? 'password' : 'text'}
 						value={password}
 						onChange={e => {
 							setPassword(e.target.value)
 						}}
 					/>
+					<button
+						type='button'
+						onClick={() => {
+							setIsHide(!isHide)
+						}}
+						className='absolute top-[14.5px] right-[16px]'
+					>
+						{!isHide ? (
+							<AiFillEyeInvisible className='w-7 h-7 text-stone-400' />
+						) : (
+							<AiFillEye className='w-7 h-7 text-stone-400' />
+						)}
+					</button>
 				</div>
 				<div className='mt-5'>
-					{isErrorAuth ? (
-						<h1 className='text-red-600'>{errorMessage}</h1>
-					) : (
-						<></>
-					)}
+					{error ? <h1 className='text-red-600'>{error}</h1> : <></>}
 				</div>
 				<button
-					disabled={!loginValue || !password || isLoadingAuth}
+					disabled={!loginValue || !password || loading}
 					className={
-						!loginValue || !password
+						!loginValue || !password || loading
 							? 'text-white mt-10 bg-[#166434]/70 px-6 py-3 rounded-md'
 							: 'text-white mt-10 bg-[#166434] px-6 py-3 rounded-md'
 					}
 				>
-					{isLoadingAuth ? 'Загрузка...' : 'Войти'}
+					{loading ? 'Загрузка...' : 'Войти'}
 				</button>
 			</form>
 			<div className='flex mt-7 text-[13px] justify-center'>

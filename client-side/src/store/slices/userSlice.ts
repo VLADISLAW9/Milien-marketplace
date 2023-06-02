@@ -22,20 +22,6 @@ interface ICheckCode {
 	code: string
 }
 
-export const login = createAsyncThunk(
-	'user/login',
-	async (payload: LoginPayload) => {
-		try {
-			const response = await AuthService.login(payload.login, payload.password)
-			localStorage.setItem('token', response.data.accessToken)
-			localStorage.setItem('refresh', response.data.refreshToken)
-			return response.data.user
-		} catch (e: any) {
-			return e
-		}
-	}
-)
-
 export const sendCodeToEmail = createAsyncThunk(
 	'user/sendCodeToEmail',
 	async (payload: SignInPayload) => {
@@ -139,20 +125,6 @@ export const userSlice = createSlice({
 		},
 	},
 	extraReducers: builder => {
-		builder.addCase(
-			login.fulfilled,
-			(state, action: PayloadAction<IUser | any>) => {
-				if (action.payload.email) {
-					state.isAuth = true
-					state.user = action.payload
-					state.errorMessage = null
-					state.isErrorAuth = false
-				} else {
-					state.isErrorAuth = true
-					state.errorMessage = action.payload.response.data
-				}
-			}
-		)
 		builder.addCase(logout.fulfilled, state => {
 			state.user = {} as IUser
 			state.isErrorAuth = false
