@@ -18,10 +18,10 @@ const HeaderSearch = () => {
 				<AiOutlineSearch className=' mr-1 w-6 h-6' />
 				<h1>Найти</h1>
 			</button>
-			<button className='hover:text-[#166430] cursor-pointer ml-5 transition-all flex items-center'>
+			{/* <button className='hover:text-[#166430] cursor-pointer ml-5 transition-all flex items-center'>
 				<BsGeoAlt className='mr-1' />
 				<h1>Томск</h1>
-			</button>
+			</button> */}
 		</div>
 	)
 }

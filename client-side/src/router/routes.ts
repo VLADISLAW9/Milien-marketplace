@@ -6,6 +6,7 @@ import CreateAdvrtPage from '../pages/creatorAd/CreateAdvrtPage'
 import CustomerPage from '../pages/customer/CustomerPage'
 import HomePage from '../pages/home/HomePage'
 import PaymentPage from '../pages/payment/PaymentPage'
+import ProfilePage from '../pages/profile/ProfilePage'
 
 export const privateRoutes = [
 	{ path: '/', component: HomePage, exact: true },
@@ -13,6 +14,7 @@ export const privateRoutes = [
 	{ path: '/customer/:id', component: CustomerPage, exact: true },
 	{ path: '/createAdvrt', component: CreateAdvrtPage, exact: true },
 	{ path: '/payment-success', component: PaymentPage, exact: true },
+	{ path: '/my-profile', component: ProfilePage, exact: true },
 ]
 
 export const publicRoutes = [

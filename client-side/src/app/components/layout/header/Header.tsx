@@ -1,8 +1,5 @@
-import { Dispatch } from '@reduxjs/toolkit'
 import { FC } from 'react'
-import { useDispatch } from 'react-redux'
 import { useTypedSelector } from '../../../../hooks/use-typed-selector'
-import { logout } from '../../../../store/slices/userSlice'
 import AuthorizationButtons from './buttons/AuthorizationButtons'
 import HeaderLogo from './logo/HeaderLogo'
 import HeaderSearch from './search/HeaderSearch'
@@ -14,12 +11,7 @@ const Header: FC = () => {
 		<div className='px-[50px] py-[20px] flex items-center'>
 			<HeaderLogo />
 			<HeaderSearch />
-			{isAuth ? (
-				<UserHeader/>
-				
-			) : (
-				<AuthorizationButtons />
-			)}
+			{isAuth ? <UserHeader /> : <AuthorizationButtons />}
 		</div>
 	)
 }

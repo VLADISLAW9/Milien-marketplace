@@ -1,4 +1,5 @@
 import CardMedia from '@mui/material/CardMedia'
+import { Carousel } from 'antd'
 import { FC } from 'react'
 import { MdOutlineNoPhotography } from 'react-icons/md'
 import { Link } from 'react-router-dom'
@@ -20,20 +21,46 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 
 	return (
 		<Link onClick={handleClick} to={`/advertisement/${advrt.id}`}>
-			<li className='flex flex-col shadow-stone-200 shadow-xl  p-5 cursor-pointer hover:bg-stone-200 hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'>
+			<li
+				className={
+					advrt.premium
+						? 'flex flex-col justify-between shadow-stone-200 shadow-xl  p-5 cursor-pointer bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]	  hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'
+						: 'flex flex-col justify-between  shadow-stone-200 shadow-xl  p-5 cursor-pointer hover:bg-stone-200 hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'
+				}
+			>
 				<div className='flex justify-center'>
-					{advrt.photoPath.length >	 0 ? (
-						<CardMedia
-							className='rounded-2xl'
-							component='img'
-							sx={
-								!mini
-									? { height: 250, width: '100%' }
-									: { height: 170, width: '100%' }
-							}
-							image={advrt.photoPath[0]}
-							alt='cover'
-						/>
+					{advrt.photoPath.length > 0 ? (
+						advrt.premium && !mini ? (
+							<Carousel dots={false} className='w-[297px] h-[250px]' autoplay>
+								{advrt.photoPath.map(img => (
+									<div className='flex justify-center'>
+										<CardMedia
+											className='rounded-2xl'
+											component='img'
+											sx={
+												!mini
+													? { height: 250, width: '100%' }
+													: { height: 170, width: '100%' }
+											}
+											image={img}
+											alt='cover'
+										/>
+									</div>
+								))}
+							</Carousel>
+						) : (
+							<CardMedia
+								className='rounded-2xl'
+								component='img'
+								sx={
+									!mini
+										? { height: 250, width: '100%' }
+										: { height: 170, width: '100%' }
+								}
+								image={advrt.photoPath[0]}
+								alt='cover'
+							/>
+						)
 					) : (
 						<div
 							className={
@@ -46,38 +73,74 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 						</div>
 					)}
 				</div>
-				<div className='mt-2'>
+				<div className='mt-2 h-[50%]'>
 					<div className=''>
 						<div>
 							<h1
 								className={
 									!mini
-										? 'font-semibold line-clamp-1  text-[#166430] text-xl'
-										: 'font-semibold line-clamp-2  text-[#166430] text-base'
+										? advrt.premium
+											? 'font-semibold line-clamp-1  text-stone-200  text-xl'
+											: 'font-semibold line-clamp-1  text-[#166430] text-base'
+										: advrt.premium
+										? 'font-semibold line-clamp-1  text-white text-base'
+										: 'font-semibold line-clamp-1  text-[#166430] text-base'
 								}
 							>
 								{advrt.title}
 							</h1>
-							<h2
-								className={
-									!mini
-										? 'text-black text-xl font-semibold mt-1'
-										: 'text-black text-base font-semibold mt-1'
-								}
-							>
-								{formatToCurrency(advrt.price)}
-							</h2>
+							<div>
+								<h2
+									className={
+										!mini
+											? advrt.premium
+												? 'text-stone-200 rounded-2xl text-xl font-semibold mt-1 line-clamp-1'
+												: 'text-black text-xl font-semibold mt-1 line-clamp-'
+											: advrt.premium
+											? 'text-white text-base font-semibold mt-1 line-clamp-'
+											: 'text-black text-base font-semibold mt-1 line-clamp-'
+									}
+								>
+									{formatToCurrency(advrt.price)}
+								</h2>
+							</div>
 						</div>
 						{!mini && (
-							<p className='text-gray-400 mt-3 line-clamp-4 text-sm font-normal'>
-								{advrt.description}
-							</p>
+							<div className='h-[62px]'>
+								<p
+									className={
+										advrt.premium
+											? 'text-stone-200  mt-3 line-clamp-3 text-sm font-normal'
+											: 'text-gray-400 mt-3 line-clamp-3 text-sm font-normal'
+									}
+								>
+									{advrt.description}
+								</p>
+							</div>
 						)}
 						<div className={!mini ? 'mt-3' : 'mt-2'}>
-							<h1 className='text-gray-400 text-sm font-normal'>
+							<h1
+								className={
+									advrt.premium
+										? mini
+											? 'text-stone-200   text-sm line-clamp-2 font-normal'
+											: 'text-stone-200   text-sm line-clamp-1 font-normal'
+										: mini
+										? 'text-gray-400 line-clamp-2 text-sm font-normal'
+										: 'text-gray-400 line-clamp-1 text-sm font-normal'
+								}
+							>
 								{advrt.adress}
 							</h1>
-							<p className='text-gray-400 text-sm font-normal'>3 дня назад</p>
+							<p
+								className={
+									advrt.premium
+										? 'text-stone-200 mt-3 text-sm font-normal'
+										: 'text-gray-400 mt-3 text-sm font-normal'
+								}
+							>
+								3 дня назад
+							</p>
 						</div>
 					</div>
 				</div>

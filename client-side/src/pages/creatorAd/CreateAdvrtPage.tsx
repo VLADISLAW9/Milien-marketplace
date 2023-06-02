@@ -215,6 +215,25 @@ const CreateAdvrtPage: FC = () => {
 				try {
 					setIsLoading(true)
 					setErrorMessage('')
+					if (
+						advrtData.adress &&
+						advrtData.category &&
+						advrtData.description &&
+						advrtData.images &&
+						advrtData.price &&
+						advrtData.subcategory &&
+						advrtData.title
+					) {
+						const createAd = await CreateAdvrtService.createAdvrt(
+							advrtData.title,
+							advrtData.description,
+							removeSpacesFromString(advrtData.price),
+							advrtData.adress,
+							advrtData.category,
+							advrtData.subcategory,
+							advrtData.images
+						)
+					}
 					const navigate = await CreateAdvrtService.navigateToYookassa().then(
 						res => {
 							dispatch(addPaymentId(res.data.paymentId))

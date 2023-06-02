@@ -7,4 +7,5 @@ export interface IAdvrt {
 	category: string
 	price: number
 	photoPath: string[]
+	premium: boolean
 }

@@ -39,9 +39,15 @@ const CustomerPage = () => {
 					<div className='flex flex-auto w-[25%] flex-col'>
 						<Avatar sx={{ width: 150, height: 150 }} />
 						<div className='flex mt-10 text-3xl text-center items-center'>
-							<h1 className='mr-2'>{customer.firstName}</h1>
-							<h1>{customer.lastName}</h1>
+							<h1>{customer.login}</h1>
 						</div>
+						<div className='mt-2
+						'>
+							<h1 className='text-stone-400'>
+								{customer.firstName} {customer.lastName}
+							</h1>
+						</div>
+						<div></div>
 						<div className='mt-3'>
 							<p>
 								<span className='text-stone-500 font-bold'>Обо мне: </span>

@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from 'react'
 import { BiCheck, BiError } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
+import Loader from '../../app/components/ui/spiner/Loader'
 import { useTypedSelector } from '../../hooks/use-typed-selector'
 import CreateAdvrtService from '../../services/CreatorAdvrtService'
 import { removeSpacesFromString } from '../../utils/removeSpacesFromString'
-import Loader from '../../app/components/ui/spiner/Loader'
 
 const PaymentPage: FC = () => {
 	const { paymentId } = useTypedSelector(state => state.payment)
@@ -19,6 +19,7 @@ const PaymentPage: FC = () => {
 			try {
 				setIsLoading(true)
 				const response = await CreateAdvrtService.cheakPayment(paymentId)
+				// ЕСЛИ ВСЕ ОК ТО ПЛАТНАЯ ОБЪЯВА, ЕСЛИ НЕТ ТО СОЗДАЕМ ДЕФОЛТНОЕ
 				if (response.data) {
 					setCheck(response.data)
 					if (

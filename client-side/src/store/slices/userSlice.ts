@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
 import AuthService from '../../services/AuthService'
+import { IAdvrt } from '../../types/IAdvrt'
 import { IAuthResponse } from '../../types/IAuthResponse'
 import { IUser } from '../../types/IUser'
+import { IUserResponse } from '../../types/IUserResponse'
 import { AUTH_URL } from '../axios/auth-api'
 
 export interface LoginPayload {
@@ -109,11 +111,14 @@ export const checkAuth = createAsyncThunk('user/checkAuth', async () => {
 		return true
 	} catch (e: any) {
 		return false
+	}finally{
+
 	}
 })
 
 interface UserState {
 	user: IUser
+	userAds: IAdvrt[] | null
 	isAuth: boolean
 	isLoadingAuth: boolean
 	isErrorAuth: boolean
@@ -123,6 +128,7 @@ interface UserState {
 
 const initialState: UserState = {
 	user: {} as IUser,
+	userAds: null,
 	isAuth: false,
 	isLoadingAuth: false,
 	isErrorAuth: false,
@@ -142,6 +148,9 @@ export const userSlice = createSlice({
 		},
 		setUser(state, action: PayloadAction<IUser>) {
 			state.user = action.payload
+		},
+		setUserAds(state, action: PayloadAction<IAdvrt[]>) {
+			state.userAds = action.payload
 		},
 	},
 	extraReducers: builder => {

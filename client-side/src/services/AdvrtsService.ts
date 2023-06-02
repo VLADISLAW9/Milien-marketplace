@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
 import { IAdvrt } from '../types/IAdvrt'
-import { ICreateAdvrtRequest } from '../types/ICreateAdvrtRequest'
 
 export const advrtsApi = createApi({
 	reducerPath: 'advrtsApi',
@@ -28,7 +27,10 @@ export const advrtsApi = createApi({
 			}),
 			providesTags: result => ['advrt'],
 		}),
-		getAdvrtsByCustomerId: build.query<IAdvrt[], number | string | undefined>({
+		getAdvrtsByCustomerId: build.query<
+			IAdvrt[],
+			number | string | undefined | null
+		>({
 			query: customerId => ({
 				url: '/Ad/GetAdsByCustomerId/' + customerId,
 			}),
@@ -43,7 +45,6 @@ export const advrtsApi = createApi({
 			}),
 			providesTags: result => ['advrt'],
 		}),
-		
 	}),
 })
 
