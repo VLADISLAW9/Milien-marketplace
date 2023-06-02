@@ -3,6 +3,7 @@ import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import ErrorMessage from '../../../app/components/ui/error/ErrorMessage'
 import Loader from '../../../app/components/ui/spiner/Loader'
+import { useTypedSelector } from '../../../hooks/use-typed-selector'
 import { IAdvrt } from '../../../types/IAdvrt'
 import { ICustomer } from '../../../types/ICustomer'
 
@@ -23,6 +24,8 @@ const CustomerCard: FC<ICustomerCardProps> = ({
 		window.scrollTo(0, 0)
 	}
 
+	const { user } = useTypedSelector(state => state.user)
+
 	return (
 		<div>
 			<>
@@ -35,12 +38,19 @@ const CustomerCard: FC<ICustomerCardProps> = ({
 						<ErrorMessage />
 					</div>
 				) : customer ? (
-					<Link onClick={handleClick} to={`/customer/${customer.id}`}>
+					<Link
+						onClick={handleClick}
+						to={
+							user.id === customer.id
+								? `/my-profile`
+								: `/customer/${customer.id}`
+						}
+					>
 						<div className='mt-14  p-5 w-[320px] rounded-md hover:shadow-xl hover:shadow-stone-200 transition-all cursor-pointer '>
 							<div className='flex items-center'>
 								<Avatar sx={{ width: 60, height: 60 }} />
 								<h1 className='text-xl ml-3 text-stone-500'>
-									{customer?.firstName} {customer?.lastName}
+									{customer.login}
 								</h1>
 							</div>
 							<div className='mt-5 text-stone-500 text-center px-4 py-2 border'>

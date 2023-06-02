@@ -3,6 +3,7 @@ import { MdOutlineNoPhotography } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
+import { useTypedSelector } from '../../hooks/use-typed-selector'
 import {
 	useGetAdvrtByCategoryQuery,
 	useGetAdvrtByIdQuery,
@@ -19,6 +20,7 @@ import Similar from './similar/Similar'
 
 const AdvertisementPage = () => {
 	const params = useParams()
+	const { user } = useTypedSelector(state => state.user)
 	const [visible, setVisible] = useState(false)
 	const {
 		data: advrt,
@@ -112,12 +114,25 @@ const AdvertisementPage = () => {
 								{formatToCurrency(advrt.price)}
 							</h1>
 							<div className='mt-10'>
-								<AddToFav />
-								<ShowContacts
-									isLoading={isLoadingCustomer}
-									isError={isErrorCustomer}
-									customer={customer}
-								/>
+								{user.id === customer?.id ? (
+									<>
+										<button className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex w-[320px] justify-center  items-center text-xl text-white'>
+											Продвинуть объявление
+										</button>
+										<button className='mt-4 rounded-md px-4 bg-[#EF7E1B]/40 py-5 w-[320px] justify-center flex items-center text-xl text-[#EF7E1B]'>
+											Редактировать
+										</button>
+									</>
+								) : (
+									<>
+										<AddToFav />
+										<ShowContacts
+											isLoading={isLoadingCustomer}
+											isError={isErrorCustomer}
+											customer={customer}
+										/>
+									</>
+								)}
 							</div>
 							<CustomerCard
 								customer_advrts={customer_advrts}

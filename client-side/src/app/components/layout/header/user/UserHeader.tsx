@@ -4,8 +4,8 @@ import MenuItem from '@mui/material/MenuItem'
 import { alpha, styled } from '@mui/material/styles'
 import { Dispatch } from '@reduxjs/toolkit'
 import * as React from 'react'
-import { AiOutlineUser } from 'react-icons/ai'
-import { FaHeart } from 'react-icons/fa'
+import { AiOutlineHeart, AiOutlineUser } from 'react-icons/ai'
+import { BsSuitHeartFill } from 'react-icons/bs'
 import { FiEdit } from 'react-icons/fi'
 import { MdLogout } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
@@ -74,8 +74,12 @@ const CustomizedMenus = () => {
 
 	return (
 		<div className='flex w-[15%]  items-center flex-auto justify-end'>
-			<Link className='' to='/'>
-				<FaHeart className='w-[25px] h-[25px] text-stone-400 hover:text-red-500 transition-colors' />
+			<Link
+				className='flex border-2 border-[#166430] rounded-3xl px-5 py-[11px] justify-center items-center'
+				to='/'
+			>
+				<BsSuitHeartFill className='text-[#166430] w-[22px] h-[22px]  hover:text-red-500 transition-colors' />
+				<h1 className='text-[#166430] font-semibold ml-2'>Избранное</h1>
 			</Link>
 			<IconButton
 				onClick={handleClick}

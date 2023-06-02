@@ -13,10 +13,6 @@ import { IAuthResponse } from './types/IAuthResponse'
 function App() {
 	const { isAuth, user, isLoadingAuth } = useTypedSelector(state => state.user)
 
-	console.log(isAuth)
-
-	console.log(isLoadingAuth, 'loading')
-
 	const { setUser, setUserAds, setAuth, setLoading, removeUser } = useActions()
 
 	const dispatch = useDispatch<Dispatch<any>>()
@@ -36,15 +32,6 @@ function App() {
 					localStorage.setItem('token', response.data.accessToken)
 					localStorage.setItem('refresh', response.data.refreshToken)
 					dispatch(setAuth(true))
-					const getUser = async () => {
-						const userDate = await userService.getUserData().then(res => {
-							dispatch(setUser(res.data.user))
-							if (res.data.userAds) {
-								dispatch(setUserAds(res.data.userAds))
-							}
-						})
-					}
-					getUser()
 				} catch (e: any) {
 					console.log(e)
 				} finally {
@@ -52,6 +39,25 @@ function App() {
 				}
 			}
 			checker()
+		}
+	}, [])
+
+	useEffect(() => {
+		if (isAuth) {
+			try {
+				const getUser = async () => {
+					const userDate = await userService.getUserData().then(res => {
+						dispatch(setUser(res.data.user))
+						if (res.data.userAds) {
+							dispatch(setUserAds(res.data.userAds))
+						}
+					})
+				}
+				getUser()
+			} catch (e) {
+				console.log(e)
+			} finally {
+			}
 		}
 	}, [])
 
