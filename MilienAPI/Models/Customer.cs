@@ -17,6 +17,5 @@ namespace MilienAPI.Models
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
         public Role Role { get; set; }
-        public ICollection<Ad> Ads { get; set; }
     }
 }

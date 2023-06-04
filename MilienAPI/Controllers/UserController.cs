@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using MilienAPI.Data;
 using MilienAPI.Models;
-using MilienAPI.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using IdentityUserAPI.Models;
-using MilienAPI.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Net;
 
 namespace MilienAPI.Controllers
 {
@@ -37,11 +37,36 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [Authorize]
+        public async Task<IActionResult> GetOwnAds()
         {
-            var allCusomers = await _context.Customers.ToListAsync();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var authorizedUser = await _context.Customers.FindAsync(Convert.ToInt32(userId));
 
-            return Ok(allCusomers);
+            var userAds = await _context.Ads.Where(a => a.CustomerId == authorizedUser.Id).ToListAsync();
+
+            return Ok(new { User = authorizedUser, UserAds = userAds });
+        }
+
+        [HttpPut]
+        //[Authorize]
+        public async Task<IActionResult> EditProfile([FromBody] Account accountDetail)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var userDto = _context.Customers.Find(25);
+
+            if (userDto != null)
+            {
+                userDto.Login = accountDetail.Login;
+                userDto.FirstName = accountDetail.FirstName;
+                userDto.LastName = accountDetail.LastName;
+
+                _context.SaveChanges();
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

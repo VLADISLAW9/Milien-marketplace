@@ -54,7 +54,7 @@ namespace IdentityAPI.Controllers
             });
         }
 
-        [HttpPost, Authorize]
+        [HttpPost]
         [Route("revoke")]
         public async Task<IActionResult> Revoke()
         {

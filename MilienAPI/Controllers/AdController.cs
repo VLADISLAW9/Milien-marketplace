@@ -7,6 +7,8 @@ using MilienAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore.Internal;
+using MilienAPI.Models.Responses;
 
 namespace MilienAPI.Controllers
 {
@@ -56,7 +58,6 @@ namespace MilienAPI.Controllers
             var createdAd = _mapper.Map<AdResponse, Ad>(ad);
             createdAd.PhotoPath = uniqueFileNames.ToArray();
             createdAd.CustomerId = Convert.ToInt32(userId);
-            //createdAd.CustomerId = 53;
 
             _context.Ads.Add(createdAd);
             await _context.SaveChangesAsync();
@@ -77,9 +78,9 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public IActionResult GetAll()
         {
-            var allAds = await _context.Ads.ToListAsync();
+            var allAds = _context.Ads.ToList();
 
             return Ok(allAds);
         }
@@ -103,12 +104,6 @@ namespace MilienAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Test()
-        {
-            return Ok(_configuration.GetSection("Endpoints:Http:Url").Value);
-        }
-
-        [HttpGet]
         public IActionResult Search(string query)
         {
             List<Ad> adList = _context.Ads
@@ -118,6 +113,82 @@ namespace MilienAPI.Controllers
                 .ToList();
 
             return Ok(adList);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddToFavorite(int adId)
+        {
+            var authorizedUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            FavoriteAdResponse favoriteAd = new FavoriteAdResponse
+            {
+                AdId = adId,
+                CustomerId = Convert.ToInt32(authorizedUser)
+            };
+
+            var favoriteAdDB = _mapper.Map<FavoriteAdResponse, FavoriteAd>(favoriteAd);
+            await _context.FavoriteAds.AddAsync(favoriteAdDB);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetFavoritesAds()
+        {
+            var authorizedUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var ads = _context.Ads.Join(_context.FavoriteAds,
+                                        ad => ad.Id,
+                                        favorite => favorite.AdId,
+                                        (ad, favorite) => new { Ad = ad, Favorite = favorite })
+                                  .Where(joinResult => joinResult.Favorite.CustomerId == Convert.ToInt32(authorizedUser))
+                                  .Select(joinResult => joinResult.Ad)
+                                  .ToList();
+            return Ok(ads);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CreatePaidAd([FromForm] AdResponse ad)
+        {
+            PaidAdDTO paidAd = new PaidAdDTO();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var res = _context.Ads
+                              .Where(a => a.Title == ad.Title && a.CustomerId == Convert.ToInt32(userId))
+                              .OrderByDescending(a => a.Id)
+                              .FirstOrDefault();
+
+            res.Premium = true;
+            paidAd.ExpiryTime = DateTime.Now.AddDays(10);
+            paidAd.AdId = res.Id;
+            await _context.PaidAds.AddAsync(paidAd);
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> EditAd(Ad ad)
+        {
+            var currentAd = _context.Ads.Find(ad.Id);
+
+            if(currentAd != null)
+            {
+                currentAd.Title = ad.Title;
+                currentAd.Description = ad.Description;
+                currentAd.Price = ad.Price;
+                currentAd.Adress = ad.Adress;
+                currentAd.Category = ad.Category;
+                currentAd.Subcategory = ad.Subcategory;
+
+                _context.SaveChanges();
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

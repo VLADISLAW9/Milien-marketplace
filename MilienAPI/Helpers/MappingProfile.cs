@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MilienAPI.Models;
 using MilienAPI.Models.DTO;
+using MilienAPI.Models.Responses;
 
 namespace MilienAPI.Helpers
 {
@@ -12,6 +13,7 @@ namespace MilienAPI.Helpers
             CreateMap<Customer, Account>();
             CreateMap<AdResponse, Ad>();
             CreateMap<Ad, AdResponse>();
+            CreateMap<FavoriteAdResponse, FavoriteAd>();
         }
     }
 }

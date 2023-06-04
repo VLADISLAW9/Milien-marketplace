@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ServiceAPI.Models.AdResponse;
 using ServiceAPI.Models.DTO;
 
 namespace ServiceAPI.Helpers
@@ -9,6 +10,7 @@ namespace ServiceAPI.Helpers
         {
             CreateMap<PaidAdDTO, AdDTO>();
             CreateMap<AdDTO, PaidAdDTO>();
+            CreateMap<AdResponse, AdDTO>();
         }
     }
 }

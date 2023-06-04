@@ -12,6 +12,6 @@ namespace MilienAPI.Models.DTO
         public string Adress { get; set; }
         public string Category { get; set; }
         public string Subcategory { get; set; }
-        public List<IFormFile>? Images { get; set; }
+        public IFormFileCollection? Images { get; set; }
     }
 }

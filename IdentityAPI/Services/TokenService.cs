@@ -23,7 +23,7 @@ namespace IdentityAPI.Services
                 issuer: _configuration["JwtSettings:Issuer"],
                 audience: _configuration["JwtSettings:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddSeconds(15),
+                expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: signingKey
                 );
 
@@ -49,7 +49,7 @@ namespace IdentityAPI.Services
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"])),
-                ValidateLifetime = true
+                ValidateLifetime = false
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

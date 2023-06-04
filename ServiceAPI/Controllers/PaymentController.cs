@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceAPI.Data;
 using ServiceAPI.Models.AdResponse;
@@ -15,14 +16,16 @@ namespace ServiceAPI.Controllers
     {
         static private readonly Client _client = new Client("985078", "test_RU37ABpXDmq91JZq5iJ1ts5jRORUoh3L0_I1DgHFxTI");
         private readonly Context _context;
+        private IMapper _mapper;
 
-        public PaymentController(Context context)
+        public PaymentController(Context context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public RedirectResult CreatePayment()
+        public IActionResult CreatePayment()
         {
             var newPayment = new NewPayment
             {
@@ -30,29 +33,32 @@ namespace ServiceAPI.Controllers
                 Confirmation = new Confirmation
                 {
                     Type = ConfirmationType.Redirect,
-                    ReturnUrl = "https://localhost:3000/payment/success"
-                }
+                    ReturnUrl = "http://localhost:3000/payment-success"
+                },
+                Capture = true
             };
 
             Payment payment = _client.CreatePayment(newPayment);
             string paymentUrl = payment.Confirmation.ConfirmationUrl;
-            return Redirect(paymentUrl);
+            return Ok(new { PaymentUrl = paymentUrl, PaymentId = payment.Id });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreatePaidAd([FromBody]AdResponse ad)
+        [HttpGet]
+        public bool CheckPayment(string paymentId)
         {
-            PaidAdDTO paidAd = new PaidAdDTO();
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var lastCreatedAdFromUser = _context.Ads.Where(a => a.Title == ad.Title && a.CustomerId == Convert.ToInt32(userId))
-                .LastOrDefault();
-            paidAd.ExpiryTime = DateTime.Now.AddDays(10);
-            paidAd.AdId = lastCreatedAdFromUser.Id;
-            await _context.PaidAds.AddAsync(paidAd);
+            try
+            {
+                var paymentInfo = _client.GetPayment(paymentId);
 
-            await _context.SaveChangesAsync();
-
-            return Ok();
+                if (paymentInfo.Status == PaymentStatus.Succeeded)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

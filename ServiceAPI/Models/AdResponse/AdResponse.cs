@@ -7,6 +7,7 @@
         public double Price { get; set; }
         public string Adress { get; set; }
         public string Category { get; set; }
-        public List<IFormFile>? Images { get; set; }
+        public string Subcategory { get; set; }
+        public IFormFileCollection? Images { get; set; }
     }
 }
