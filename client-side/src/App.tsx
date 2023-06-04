@@ -33,7 +33,8 @@ function App() {
 					localStorage.setItem('refresh', response.data.refreshToken)
 					dispatch(setAuth(true))
 				} catch (e: any) {
-					console.log(e)
+					localStorage.removeItem('token')
+					localStorage.removeItem('refresh')
 				} finally {
 					setLoading(false)
 				}
@@ -43,7 +44,7 @@ function App() {
 	}, [])
 
 	useEffect(() => {
-		if (isAuth) {
+		if (isAuth === true) {
 			try {
 				const getUser = async () => {
 					const userDate = await userService.getUserData().then(res => {

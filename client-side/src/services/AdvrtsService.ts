@@ -14,7 +14,7 @@ export const advrtsApi = createApi({
 				params: {
 					_limit: limit,
 					_page: page,
-				},
+				}, 
 			}),
 			providesTags: result => ['advrt'],
 		}),

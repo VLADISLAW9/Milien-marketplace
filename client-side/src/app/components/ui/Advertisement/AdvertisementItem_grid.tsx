@@ -1,8 +1,9 @@
-import CardMedia from '@mui/material/CardMedia'
+import { CardMedia, Checkbox } from '@mui/material'
 import { Carousel } from 'antd'
-import { FC } from 'react'
-import { MdOutlineNoPhotography } from 'react-icons/md'
+import { FC, useState } from 'react'
+import { MdFavoriteBorder, MdOutlineNoPhotography } from 'react-icons/md'
 import { Link } from 'react-router-dom'
+import FavoriteAdvrtService from '../../../../services/FavouriteAdvrtService'
 import { IAdvrt } from '../../../../types/IAdvrt'
 import { formatToCurrency } from '../../../../utils/formatToCurrency'
 
@@ -18,17 +19,56 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	const handleClick = () => {
 		window.scrollTo(0, 0)
 	}
+	const [isHover, setIsHover] = useState(false)
+	const [checked, setChecked] = useState(false)
+
+	const handleCheckboxChange = async () => {
+		setChecked(true)
+		try {
+			const response = await FavoriteAdvrtService.AddToFavourite(advrt.id)
+			console.log('it isadd ')
+		} catch (e) {
+			console.log(e)
+		}
+	}
 
 	return (
-		<Link onClick={handleClick} to={`/advertisement/${advrt.id}`}>
+		<div
+			onMouseEnter={() => {
+				setIsHover(true)
+			}}
+			onMouseLeave={() => {
+				setIsHover(false)
+			}}
+			className='relative'
+		>
+			<div className='absolute z-50 bottom-5 right-5'>
+				{isHover && (
+					<Checkbox
+						checked={checked}
+						onChange={handleCheckboxChange}
+						color='default'
+						icon={<MdFavoriteBorder className='text w-6 h-6' />}
+						checkedIcon={<MdFavoriteBorder className='w-6 h-6' />}
+						sx={{
+							color: '#A8A29E',
+							'&.Mui-checked': {
+								color: 'red',
+							},
+						}}
+					/>
+				)}
+			</div>
 			<li
 				className={
 					advrt.premium
-						? 'flex flex-col justify-between shadow-stone-200 shadow-xl  p-5 cursor-pointer bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]	  hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'
-						: 'flex flex-col justify-between  shadow-stone-200 shadow-xl  p-5 cursor-pointer hover:bg-stone-200 hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'
+						? 'flex flex-col justify-between shadow-stone-200 shadow-xl  p-5 bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00] relative	  hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'
+						: isHover
+						? 'flex flex-col relative justify-between  shadow-stone-200 shadow-xl  p-5 bg-stone-200 shadow-stone-300 h-[100%]  transition-all  rounded-2xl'
+						: 'flex flex-col relative justify-between  shadow-stone-200 shadow-xl  p-5 hover:bg-stone-200 hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'
 				}
 			>
-				<div className='flex justify-center'>
+				<Link to={`/advertisement/${advrt.id}`} className='flex justify-center'>
 					{advrt.photoPath.length > 0 ? (
 						advrt.premium && !mini ? (
 							<Carousel dots={false} className='w-[297px] h-[250px]' autoplay>
@@ -72,23 +112,25 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 							<MdOutlineNoPhotography className='text-stone-300 w-20 h-20' />
 						</div>
 					)}
-				</div>
+				</Link>
 				<div className='mt-2 h-[50%]'>
 					<div className=''>
 						<div>
-							<h1
+							<Link
+								to={`/advertisement/${advrt.id}`}
+								onClick={handleClick}
 								className={
 									!mini
 										? advrt.premium
 											? 'font-semibold line-clamp-1  text-stone-200  text-xl'
-											: 'font-semibold line-clamp-1  text-[#166430] text-base'
+											: 'font-semibold line-clamp-1 text-xl  text-[#166430] text-base'
 										: advrt.premium
 										? 'font-semibold line-clamp-1  text-white text-base'
 										: 'font-semibold line-clamp-1  text-[#166430] text-base'
 								}
 							>
 								{advrt.title}
-							</h1>
+							</Link>
 							<div>
 								<h2
 									className={
@@ -123,7 +165,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 								className={
 									advrt.premium
 										? mini
-											? 'text-stone-200   text-sm line-clamp-2 font-normal'
+											? 'text-stone-200   text-sm line-clamp-2	 font-normal'
 											: 'text-stone-200   text-sm line-clamp-1 font-normal'
 										: mini
 										? 'text-gray-400 line-clamp-2 text-sm font-normal'
@@ -145,7 +187,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 					</div>
 				</div>
 			</li>
-		</Link>
+		</div>
 	)
 }
 

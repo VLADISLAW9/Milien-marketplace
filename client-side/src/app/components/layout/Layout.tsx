@@ -12,7 +12,7 @@ interface ILayoutProps {
 const Layout: FC<ILayoutProps> = ({ children }) => {
 	const location = useLocation()
 
-	const { isAuth } = useTypedSelector(state => state.user)
+	const { isAuth, user } = useTypedSelector(state => state.user)
 
 	return (
 		<>
@@ -25,7 +25,7 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 			) : (
 				<div className='bg-white flex relative flex-col min-h-[100vh] h-[100%]'>
 					<Header />
-					{isAuth && (
+					{isAuth && user && (
 						<div className='fixed right-14 bottom-16	'>
 							<AddAdvrt />
 						</div>
