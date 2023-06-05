@@ -115,6 +115,9 @@ export const userSlice = createSlice({
 		setUserAds(state, action: PayloadAction<IAdvrt[]>) {
 			state.userAds = action.payload
 		},
+		setError(state, action: PayloadAction<string>){
+			state.errorMessage = action.payload
+		},
 		removeUser(state) {
 			state.user = {} as IUser
 			state.isAuth = false

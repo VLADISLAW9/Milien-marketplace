@@ -10,6 +10,7 @@ import { FiEdit } from 'react-icons/fi'
 import { MdLogout } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { useTypedSelector } from '../../../../../hooks/use-typed-selector'
 import { logout } from '../../../../../store/slices/userSlice'
 
 const StyledMenu = styled((props: MenuProps) => (
@@ -57,6 +58,7 @@ const StyledMenu = styled((props: MenuProps) => (
 
 const CustomizedMenus = () => {
 	const dispatch = useDispatch<Dispatch<any>>()
+	const { user } = useTypedSelector(state => state.user)
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 	const open = Boolean(anchorEl)
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -85,7 +87,9 @@ const CustomizedMenus = () => {
 				aria-haspopup='true'
 				aria-expanded={open ? 'true' : undefined}
 			>
-				<Avatar sx={{ width: 50, height: 50 }}>M</Avatar>
+				<Avatar sx={{ width: 50, height: 50 }}>
+					{user.login?.slice(0, 1)}
+				</Avatar>
 			</IconButton>
 			<StyledMenu
 				id='demo-customized-menu'

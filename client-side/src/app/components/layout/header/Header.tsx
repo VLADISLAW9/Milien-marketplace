@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { useTypedSelector } from '../../../../hooks/use-typed-selector'
+import DotsLoader from '../../ui/spiner/DotsLoader'
 import AuthorizationButtons from './buttons/AuthorizationButtons'
 import HeaderLogo from './logo/HeaderLogo'
 import HeaderSearch from './search/HeaderSearch'
@@ -13,7 +14,9 @@ const Header: FC = () => {
 			<div className='px-[50px] py-[20px] flex items-center'>
 				<HeaderLogo />
 				<HeaderSearch />
-				<div className='flex w-[15%]  items-center flex-auto justify-end'></div>
+				<div className='flex w-[15%] items-center flex-auto justify-end'>
+					<DotsLoader />
+				</div>
 			</div>
 		)
 	}

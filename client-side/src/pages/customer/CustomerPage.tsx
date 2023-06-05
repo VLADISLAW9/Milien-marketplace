@@ -41,20 +41,23 @@ const CustomerPage = () => {
 						<div className='flex mt-10 text-3xl text-center items-center'>
 							<h1>{customer.login}</h1>
 						</div>
-						<div className='mt-2
-						'>
+						<div
+							className='mt-2
+						'
+						>
 							<h1 className='text-stone-400'>
 								{customer.firstName} {customer.lastName}
 							</h1>
 						</div>
 						<div></div>
 						<div className='mt-3'>
-							<p>
-								<span className='text-stone-500 font-bold'>Обо мне: </span>
-								Вообще у меня бизнес свой, а продаю эти дырявые старые вещи,
-								потому что моя бабка сдохла и это все некому отдать, и вообще
-								купите зайбли
-							</p>
+							{customer.aboutMe && (
+								<p>
+									<span className='text-stone-500 font-bold'>Обо мне: </span>
+									{customer.aboutMe}
+								</p>
+							)}
+
 							<div className='mt-5 text-stone-500 flex items-center'>
 								<BsTelephoneFill className='mr-2 ' />
 								<p>{convertToPhoneNumber(customer.phoneNumber)}</p>

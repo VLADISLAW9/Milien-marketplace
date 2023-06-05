@@ -68,7 +68,11 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 						: 'flex flex-col relative justify-between  shadow-stone-200 shadow-xl  p-5 hover:bg-stone-200 hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'
 				}
 			>
-				<Link to={`/advertisement/${advrt.id}`} className='flex justify-center'>
+				<Link
+					onClick={handleClick}
+					to={`/advertisement/${advrt.id}`}
+					className='flex justify-center'
+				>
 					{advrt.photoPath.length > 0 ? (
 						advrt.premium && !mini ? (
 							<Carousel dots={false} className='w-[297px] h-[250px]' autoplay>

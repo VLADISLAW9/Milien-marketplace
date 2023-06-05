@@ -2,6 +2,7 @@ import { Dispatch } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import AppRouter from './app/components/AppRouter'
 import Layout from './app/components/layout/Layout'
 import { useActions } from './hooks/use-actions'
@@ -14,6 +15,8 @@ function App() {
 	const { isAuth, user, isLoadingAuth } = useTypedSelector(state => state.user)
 
 	const { setUser, setUserAds, setAuth, setLoading, removeUser } = useActions()
+
+	const location = useLocation() // Get the current location
 
 	const dispatch = useDispatch<Dispatch<any>>()
 

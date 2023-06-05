@@ -14,6 +14,8 @@ export const customersApi = createApi({
 			}),
 			providesTags: result => ['customer'],
 		}),
+
+		
 	}),
 })
 
