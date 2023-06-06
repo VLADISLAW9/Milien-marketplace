@@ -3,7 +3,7 @@ import $user_api from '../store/axios/user-api'
 import { ICustomer } from '../types/ICustomer'
 import { IUserResponse } from '../types/IUserResponse'
 
-export default class userService {
+export default class UserService {
 	static async getUserData(): Promise<AxiosResponse<IUserResponse>> {
 		return $user_api.get<IUserResponse>('/Customer/User/GetOwnAds')
 	}
@@ -22,7 +22,7 @@ export default class userService {
 			firstName,
 			lastName,
 			email,
-			phoneNumber
+			phoneNumber,
 		})
 	}
 }

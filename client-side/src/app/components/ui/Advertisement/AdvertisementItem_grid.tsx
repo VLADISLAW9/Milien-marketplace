@@ -26,9 +26,8 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 		setChecked(true)
 		try {
 			const response = await FavoriteAdvrtService.AddToFavourite(advrt.id)
-			console.log('it isadd ')
-		} catch (e) {
-			console.log(e)
+		} catch (e: any) {
+			console.log(e.response)
 		}
 	}
 

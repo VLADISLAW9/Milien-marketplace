@@ -16,10 +16,12 @@ import Album from './album/Album'
 import AddToFav from './buttons/AddToFav'
 import ShowContacts from './buttons/showContacts/ShowContacts'
 import CustomerCard from './customerCard/CustomerCard'
+import EditAdvrtModal from './editModal/EditAdvrtModal'
 import Similar from './similar/Similar'
 
 const AdvertisementPage = () => {
 	const params = useParams()
+	const [openEdit, setOpenEdit] = useState(false)
 	const { user } = useTypedSelector(state => state.user)
 	const [visible, setVisible] = useState(false)
 	const {
@@ -48,7 +50,13 @@ const AdvertisementPage = () => {
 
 	const [scrollPosition, setScrollPosition] = useState(window.pageYOffset)
 
-	console.log(scrollPosition)
+	const handleOpenEdit = () => {
+		setOpenEdit(true)
+	}
+
+	const handleCloseEdit = () => {
+		setOpenEdit(false)
+	}
 
 	useEffect(() => {
 		function handleScroll() {
@@ -80,7 +88,12 @@ const AdvertisementPage = () => {
 								scrollPosition >= 135 ? 'relative w-[50%]' : 'relative w-[55%]'
 							}
 						>
-							<h1 className='text-4xl font-semibold'>{advrt.title}</h1>
+							<div className='max-w-[700px]'>
+								<h1 className='text-4xl break-words font-semibold max-w-[700px]'>
+									{advrt.title}
+								</h1>
+							</div>
+
 							{advrt.photoPath.length > 0 ? (
 								<Album images={advrt.photoPath} />
 							) : (
@@ -93,7 +106,7 @@ const AdvertisementPage = () => {
 								<h1 className='text-3xl font-semibold mb-4'>Aдрес</h1>
 								<p className=''>{advrt.adress}</p>
 							</div>
-							<div className='mt-14 border-b pb-12'>
+							<div className='mt-14 border-b pb-12' style={{ whiteSpace: 'pre-wrap' }}>
 								<h1 className='text-3xl font-semibold mb-4'>Описание</h1>
 								<p className=''>{advrt.description}</p>
 							</div>
@@ -119,9 +132,17 @@ const AdvertisementPage = () => {
 										<button className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex w-[320px] justify-center  items-center text-xl text-white'>
 											Продвинуть объявление
 										</button>
-										<button className='mt-4 rounded-md px-4 bg-[#EF7E1B]/40 py-5 w-[320px] justify-center flex items-center text-xl text-[#EF7E1B]'>
+										<button
+											onClick={handleOpenEdit}
+											className='mt-4 rounded-md px-4 bg-[#EF7E1B]/40 py-5 w-[320px] justify-center flex items-center text-xl text-[#EF7E1B]'
+										>
 											Редактировать
 										</button>
+										<EditAdvrtModal
+											advrt={advrt}
+											open={openEdit}
+											handleCloseEdit={handleCloseEdit}
+										/>
 									</>
 								) : (
 									<>

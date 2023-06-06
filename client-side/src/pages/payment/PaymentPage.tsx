@@ -1,14 +1,18 @@
+import { Dispatch } from '@reduxjs/toolkit'
 import { FC, useEffect, useState } from 'react'
 import { BiCheck, BiError } from 'react-icons/bi'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Loader from '../../app/components/ui/spiner/Loader'
+import { useActions } from '../../hooks/use-actions'
 import { useTypedSelector } from '../../hooks/use-typed-selector'
 import CreateAdvrtService from '../../services/CreatorAdvrtService'
 import { removeSpacesFromString } from '../../utils/removeSpacesFromString'
 
 const PaymentPage: FC = () => {
 	const { paymentId } = useTypedSelector(state => state.payment)
-
+	const dispatch = useDispatch<Dispatch<any>>()
+	const { removeAdvrtFromStorage } = useActions()
 	const [isLoading, setIsLoading] = useState(false)
 	const [check, setCheck] = useState(false)
 	const { advt: advrtData } = useTypedSelector(state => state.payment)
@@ -48,6 +52,7 @@ const PaymentPage: FC = () => {
 			} finally {
 				setIsLoading(false)
 				setIsPaymentChecked(true)
+				dispatch(removeAdvrtFromStorage())
 			}
 		}
 

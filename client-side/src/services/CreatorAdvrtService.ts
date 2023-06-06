@@ -3,6 +3,37 @@ import $createAdvrt_api from '../store/axios/createAdvrt-api'
 import $createPremiumAdvrt_api from '../store/axios/createPaidAdvrt-api'
 
 export default class CreateAdvrtService {
+	static async editAdvrtData(
+		title: string,
+		description: string,
+		price: number,
+		id: number,
+		adress: string,
+		category: string,
+		subcategory: string,
+		images: File[],
+		urls: string[]
+	): Promise<AxiosResponse> {
+		const formData = new FormData()
+		formData.append('title', title)
+		formData.append('description', description)
+		formData.append('price', String(price))
+		formData.append('adress', adress)
+		formData.append('category', category)
+		formData.append('subcategory', subcategory)
+		formData.append('id', String(id))
+
+		urls.forEach(urls => {
+			formData.append(`urls`, urls)
+		})
+
+		images.forEach(image => {
+			formData.append(`images`, image)
+		})
+
+		return $createAdvrt_api.put('/Ad/EditAd', formData)
+	}
+
 	static async createAdvrt(
 		title: string,
 		description: string,

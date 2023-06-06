@@ -15,15 +15,10 @@ const ProfilePage = () => {
 	const { user, isAuth, errorMessage, isLoadingAuth, userAds } = useTypedSelector(
 		state => state.user
 	)
-
 	const location = useLocation()
-
 	const [isLoading, setIsLoading] = useState(false)
-
 	const dispatch = useDispatch<Dispatch<any>>()
-
 	const { setUser, setUserAds } = useActions()
-
 	const [open, setOpen] = useState(false)
 
 	const handleOpenEdit = () => {
@@ -33,8 +28,6 @@ const ProfilePage = () => {
 	const handleCloseEdit = () => {
 		setOpen(false)
 	}
-
-
 
 	if (isLoading || isLoadingAuth || !user) {
 		return (
