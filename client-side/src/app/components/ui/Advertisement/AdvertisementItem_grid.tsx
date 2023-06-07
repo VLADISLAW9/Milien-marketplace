@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import FavoriteAdvrtService from '../../../../services/FavouriteAdvrtService'
 import { IAdvrt } from '../../../../types/IAdvrt'
 import { formatToCurrency } from '../../../../utils/formatToCurrency'
+import { useTypedSelector } from '../../../../hooks/use-typed-selector'
 
 interface IAdvrtProps {
 	advrt_data: IAdvrt
@@ -21,6 +22,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	}
 	const [isHover, setIsHover] = useState(false)
 	const [isFav, setIsFav] = useState(false)
+	const { isAuth } = useTypedSelector(state => state.user)
 
 	const handleCheckboxChange = async () => {
 		if (!isFav) {
@@ -45,14 +47,18 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	}
 
 	useEffect(() => {
-		try {
-			const fetchData = async () => {
-				const isFav: any = await FavoriteAdvrtService.CheckIsFavourite(advrt.id)
-				setIsFav(isFav.data)
+		if (isAuth) {
+			try {
+				const fetchData = async () => {
+					const isFav: any = await FavoriteAdvrtService.CheckIsFavourite(
+						advrt.id
+					)
+					setIsFav(isFav.data)
+				}
+				fetchData() // Add this line to invoke the fetch function
+			} catch (e) {
+				console.log(e)
 			}
-			fetchData() // Add this line to invoke the fetch function
-		} catch (e) {
-			console.log(e)
 		}
 	}, [])
 
@@ -67,7 +73,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 			className='relative'
 		>
 			<div className='absolute z-50 bottom-5 right-5'>
-				{isHover && (
+				{(isHover && isAuth) && (
 					<Checkbox
 						checked={isFav}
 						onChange={handleCheckboxChange}
@@ -86,7 +92,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 			<li
 				className={
 					advrt.premium
-						? 'flex flex-col justify-between shadow-stone-200 shadow-xl  p-5 bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00] relative	  hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'
+						? 'flex flex-col justify-between shadow-stone-200 shadow-xl  p-5 bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00] relative	  hover:shadow-stone-300 h-[100%]	 transition-all  rounded-2xl'
 						: isHover
 						? 'flex flex-col relative justify-between  shadow-stone-200 shadow-xl  p-5 bg-stone-200 shadow-stone-300 h-[100%]  transition-all  rounded-2xl'
 						: 'flex flex-col relative justify-between  shadow-stone-200 shadow-xl  p-5 hover:bg-stone-200 hover:shadow-stone-300 h-[100%] 	 transition-all  rounded-2xl'
@@ -99,32 +105,35 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 				>
 					{advrt.photoPath.length > 0 ? (
 						advrt.premium && !mini ? (
-							<Carousel dots={false} className='w-[297px] h-[250px]' autoplay>
-								{advrt.photoPath.map(img => (
-									<div className='flex justify-center'>
+							<div className='w-[100%]  rounded-2xl'>
+								<Carousel
+									style={{ borderRadius: '16px' }}
+									dots={false}
+									className='h-[250px] rounded-2xl'
+									autoplay
+								>
+									{advrt.photoPath.map((img, index) => (
 										<CardMedia
 											className='rounded-2xl'
 											component='img'
-											sx={
-												!mini
-													? { height: 250, width: '100%' }
-													: { height: 170, width: '100%' }
-											}
+											sx={{
+												height: 250,
+												width: '100%',
+											}}
 											image={img}
 											alt='cover'
 										/>
-									</div>
-								))}
-							</Carousel>
+									))}
+								</Carousel>
+							</div>
 						) : (
 							<CardMedia
 								className='rounded-2xl'
 								component='img'
-								sx={
-									!mini
-										? { height: 250, width: '100%' }
-										: { height: 170, width: '100%' }
-								}
+								sx={{
+									height: !mini ? 250 : 170,
+									width: '100%',
+								}}
 								image={advrt.photoPath[0]}
 								alt='cover'
 							/>

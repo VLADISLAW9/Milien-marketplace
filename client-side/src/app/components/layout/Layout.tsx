@@ -26,7 +26,7 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 				<div className='bg-white flex relative flex-col min-h-[100vh] h-[100%]'>
 					<Header />
 					{isAuth && user && (
-						<div className='fixed right-14 bottom-16	'>
+						<div className='fixed z-50 right-14 bottom-16	'>
 							<AddAdvrt />
 						</div>
 					)}
