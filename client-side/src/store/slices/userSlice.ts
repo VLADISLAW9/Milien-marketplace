@@ -81,6 +81,7 @@ export const checkCodeEmail = createAsyncThunk(
 
 interface UserState {
 	user: IUser
+
 	userAds: IAdvrt[] | null
 	isAuth: boolean
 	isLoadingAuth: boolean
@@ -91,6 +92,7 @@ interface UserState {
 
 const initialState: UserState = {
 	user: {} as IUser,
+
 	userAds: null,
 	isAuth: !!localStorage.getItem('token'),
 	isLoadingAuth: false,
@@ -106,6 +108,7 @@ export const userSlice = createSlice({
 		setLoading(state, action: PayloadAction<boolean>) {
 			state.isLoadingAuth = action.payload
 		},
+
 		setAuth(state, action: PayloadAction<boolean>) {
 			state.isAuth = action.payload
 		},
@@ -115,7 +118,7 @@ export const userSlice = createSlice({
 		setUserAds(state, action: PayloadAction<IAdvrt[]>) {
 			state.userAds = action.payload
 		},
-		setError(state, action: PayloadAction<string>){
+		setError(state, action: PayloadAction<string>) {
 			state.errorMessage = action.payload
 		},
 		removeUser(state) {

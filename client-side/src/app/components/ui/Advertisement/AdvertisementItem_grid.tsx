@@ -1,6 +1,6 @@
 import { CardMedia, Checkbox } from '@mui/material'
 import { Carousel } from 'antd'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { MdFavoriteBorder, MdOutlineNoPhotography } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import FavoriteAdvrtService from '../../../../services/FavouriteAdvrtService'
@@ -20,16 +20,41 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 		window.scrollTo(0, 0)
 	}
 	const [isHover, setIsHover] = useState(false)
-	const [checked, setChecked] = useState(false)
+	const [isFav, setIsFav] = useState(false)
 
 	const handleCheckboxChange = async () => {
-		setChecked(true)
-		try {
-			const response = await FavoriteAdvrtService.AddToFavourite(advrt.id)
-		} catch (e: any) {
-			console.log(e.response)
+		if (!isFav) {
+			setIsFav(true)
+			try {
+				const addToFav = await FavoriteAdvrtService.AddToFavourite(advrt.id)
+			} catch (e: any) {
+				console.log(e.response)
+			}
+		} else {
+			try {
+				setIsFav(false)
+				const removeFromFav = await FavoriteAdvrtService.RemoveFromFavourite(
+					advrt.id
+				)
+
+				// setFav((prevFav) => prevFav.filter((item) => item.id !== advrt.id));
+			} catch (e: any) {
+				console.log(e.response)
+			}
 		}
 	}
+
+	useEffect(() => {
+		try {
+			const fetchData = async () => {
+				const isFav: any = await FavoriteAdvrtService.CheckIsFavourite(advrt.id)
+				setIsFav(isFav.data)
+			}
+			fetchData() // Add this line to invoke the fetch function
+		} catch (e) {
+			console.log(e)
+		}
+	}, [])
 
 	return (
 		<div
@@ -44,7 +69,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 			<div className='absolute z-50 bottom-5 right-5'>
 				{isHover && (
 					<Checkbox
-						checked={checked}
+						checked={isFav}
 						onChange={handleCheckboxChange}
 						color='default'
 						icon={<MdFavoriteBorder className='text w-6 h-6' />}

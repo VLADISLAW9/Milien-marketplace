@@ -12,8 +12,8 @@ export const advrtsApi = createApi({
 			query: ({ limit, page }) => ({
 				url: 'Ad/GetAll',
 				params: {
-					_limit: limit,
-					_page: page,
+					limit: 10,
+					page: 2,
 				}, 
 			}),
 			providesTags: result => ['advrt'],

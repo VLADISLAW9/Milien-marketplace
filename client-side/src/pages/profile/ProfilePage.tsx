@@ -12,9 +12,8 @@ import { useTypedSelector } from '../../hooks/use-typed-selector'
 import EditModal from './EditModal'
 
 const ProfilePage = () => {
-	const { user, isAuth, errorMessage, isLoadingAuth, userAds } = useTypedSelector(
-		state => state.user
-	)
+	const { user, isAuth, errorMessage, isLoadingAuth, userAds } =
+		useTypedSelector(state => state.user)
 	const location = useLocation()
 	const [isLoading, setIsLoading] = useState(false)
 	const dispatch = useDispatch<Dispatch<any>>()

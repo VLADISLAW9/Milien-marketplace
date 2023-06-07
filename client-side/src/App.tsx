@@ -50,6 +50,7 @@ function App() {
 		if (isAuth === true) {
 			try {
 				const getUser = async () => {
+					setLoading(true)
 					const userDate = await userService.getUserData().then(res => {
 						dispatch(setUser(res.data.user))
 						if (res.data.userAds) {
@@ -61,6 +62,7 @@ function App() {
 			} catch (e) {
 				console.log(e)
 			} finally {
+				setLoading(false)
 			}
 		}
 	}, [])
