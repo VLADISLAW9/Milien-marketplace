@@ -1,6 +1,6 @@
 import { Avatar } from '@mui/material'
 import { Dispatch } from '@reduxjs/toolkit'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BsTelephoneFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
@@ -9,13 +9,18 @@ import AdvertisementItem_grid from '../../app/components/ui/Advertisement/Advert
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useActions } from '../../hooks/use-actions'
 import { useTypedSelector } from '../../hooks/use-typed-selector'
+import UserService from '../../services/UserService'
+import { IAdvrt } from '../../types/IAdvrt'
 import EditModal from './EditModal'
 
 const ProfilePage = () => {
-	const { user, isAuth, errorMessage, isLoadingAuth, userAds } =
-		useTypedSelector(state => state.user)
+	const { isAuth, errorMessage, isLoadingAuth } = useTypedSelector(
+		state => state.user
+	)
 	const location = useLocation()
-	const [isLoading, setIsLoading] = useState(false)
+	const [userData, setUserData] = useState<any>(null)
+	const [userAds, setUserDataAds] = useState<any>(null)
+	const [isLoading, setLoading] = useState(false)
 	const dispatch = useDispatch<Dispatch<any>>()
 	const { setUser, setUserAds } = useActions()
 	const [open, setOpen] = useState(false)
@@ -28,43 +33,67 @@ const ProfilePage = () => {
 		setOpen(false)
 	}
 
-	if (isLoading || isLoadingAuth || !user) {
+	useEffect(() => {
+		if (isAuth === true) {
+			try {
+				const getUser = async () => {
+					setLoading(true)
+					const userDate = await UserService.getUserData().then(res => {
+						setUserData(res.data.user)
+						setUserDataAds(res.data.userAds)
+						dispatch(setUser(res.data.user))
+						if (res.data.userAds) {
+							dispatch(setUserAds(res.data.userAds))
+						}
+					})
+				}
+				getUser()
+			} catch (e) {
+				console.log(e)
+				
+			} finally {
+				setLoading(false)
+			}
+		}
+	}, [])
+
+	if (isLoading || isLoadingAuth || !userData) {
 		return (
 			<div className='flex justify-center items-center mt-44'>
 				<Loader />
 			</div>
 		)
-	} else {
+	} else if (userData) {
 		return (
 			<div className=''>
 				<div className='mt-14 flex'>
 					<div className='flex flex-auto w-[25%] flex-col'>
 						<Avatar sx={{ width: 150, height: 150, fontSize: 60 }}>
-							{user.login?.slice(0, 1)}
+							{userData.login?.slice(0, 1)}
 						</Avatar>
 						<div className='flex mt-10 text-3xl text-center items-center'>
-							<h1>{user.login}</h1>
+							<h1>{userData.login}</h1>
 						</div>
 						<div className='mt-2'>
 							<h1 className='text-stone-400'>
-								{user.firstName} {user.lastName}
+								{userData.firstName} {userData.lastName}
 							</h1>
 						</div>
 						<div className='mt-3'>
-							{user.aboutMe && (
+							{userData.aboutMe && (
 								<p>
 									<span className='text-stone-500 font-bold'>Обо мне: </span>
-									{user.aboutMe}
+									{userData.aboutMe}
 								</p>
 							)}
 
 							<div className='mt-5 text-stone-500 flex items-center'>
 								<BsTelephoneFill className='mr-2 ' />
-								<p>{user.phoneNumber}</p>
+								<p>{userData.phoneNumber}</p>
 							</div>
 							<div className='mt-3 text-stone-500 flex items-center'>
 								<MdEmail className='mr-2 w-5 h-5 ' />
-								<p>{user.email}</p>
+								<p>{userData.email}</p>
 							</div>
 						</div>
 
@@ -82,7 +111,7 @@ const ProfilePage = () => {
 						<h1 className='text-3xl font-'>Мои объявления</h1>
 						{userAds ? (
 							<ul className='grid grid-cols-4 gap-5 mt-7'>
-								{userAds.map(advrt => (
+								{userAds.map((advrt: IAdvrt) => (
 									<AdvertisementItem_grid
 										advrt_data={advrt}
 										mini={true}
@@ -97,7 +126,7 @@ const ProfilePage = () => {
 				</div>
 			</div>
 		)
-	}
+	} else return null
 }
 
 export default ProfilePage

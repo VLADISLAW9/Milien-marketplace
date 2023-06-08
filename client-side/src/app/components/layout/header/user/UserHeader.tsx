@@ -4,14 +4,15 @@ import MenuItem from '@mui/material/MenuItem'
 import { alpha, styled } from '@mui/material/styles'
 import { Dispatch } from '@reduxjs/toolkit'
 import * as React from 'react'
+import { FC } from 'react'
 import { AiOutlineUser } from 'react-icons/ai'
 import { BsSuitHeartFill } from 'react-icons/bs'
 import { FiEdit } from 'react-icons/fi'
 import { MdLogout } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { useTypedSelector } from '../../../../../hooks/use-typed-selector'
 import { logout } from '../../../../../store/slices/userSlice'
+import { IUser } from '../../../../../types/IUser'
 
 const StyledMenu = styled((props: MenuProps) => (
 	<Menu
@@ -56,9 +57,12 @@ const StyledMenu = styled((props: MenuProps) => (
 	},
 }))
 
-const CustomizedMenus = () => {
+interface ICustomizedMenus {
+	user: IUser
+}
+
+const CustomizedMenus: FC<ICustomizedMenus> = ({ user }) => {
 	const dispatch = useDispatch<Dispatch<any>>()
-	const { user } = useTypedSelector(state => state.user)
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 	const open = Boolean(anchorEl)
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {

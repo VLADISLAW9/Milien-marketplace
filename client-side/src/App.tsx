@@ -2,12 +2,11 @@ import { Dispatch } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
 import AppRouter from './app/components/AppRouter'
 import Layout from './app/components/layout/Layout'
 import { useActions } from './hooks/use-actions'
 import { useTypedSelector } from './hooks/use-typed-selector'
-import userService from './services/UserService'
+import UserService from './services/UserService'
 import { AUTH_URL } from './store/axios/auth-api'
 import { IAuthResponse } from './types/IAuthResponse'
 
@@ -15,8 +14,6 @@ function App() {
 	const { isAuth, user, isLoadingAuth } = useTypedSelector(state => state.user)
 
 	const { setUser, setUserAds, setAuth, setLoading, removeUser } = useActions()
-
-	const location = useLocation() // Get the current location
 
 	const dispatch = useDispatch<Dispatch<any>>()
 
@@ -51,7 +48,7 @@ function App() {
 			try {
 				const getUser = async () => {
 					setLoading(true)
-					const userDate = await userService.getUserData().then(res => {
+					const userDate = await UserService.getUserData().then(res => {
 						dispatch(setUser(res.data.user))
 						if (res.data.userAds) {
 							dispatch(setUserAds(res.data.userAds))

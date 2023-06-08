@@ -3,10 +3,10 @@ import { Carousel } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { MdFavoriteBorder, MdOutlineNoPhotography } from 'react-icons/md'
 import { Link } from 'react-router-dom'
+import { useTypedSelector } from '../../../../hooks/use-typed-selector'
 import FavoriteAdvrtService from '../../../../services/FavouriteAdvrtService'
 import { IAdvrt } from '../../../../types/IAdvrt'
 import { formatToCurrency } from '../../../../utils/formatToCurrency'
-import { useTypedSelector } from '../../../../hooks/use-typed-selector'
 
 interface IAdvrtProps {
 	advrt_data: IAdvrt
@@ -22,7 +22,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	}
 	const [isHover, setIsHover] = useState(false)
 	const [isFav, setIsFav] = useState(false)
-	const { isAuth } = useTypedSelector(state => state.user)
+	const { isAuth, user } = useTypedSelector(state => state.user)
 
 	const handleCheckboxChange = async () => {
 		if (!isFav) {
@@ -73,7 +73,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 			className='relative'
 		>
 			<div className='absolute z-50 bottom-5 right-5'>
-				{(isHover && isAuth) && (
+				{isHover && isAuth && advrt.customerId !== user.id && (
 					<Checkbox
 						checked={isFav}
 						onChange={handleCheckboxChange}

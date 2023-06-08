@@ -19,7 +19,6 @@ const HomePage: FC = () => {
 	const [view, setView] = useState('grid')
 	const [limit, setLimit] = useState(8)
 	const [page, setPage] = useState(1)
-	const [fetching, setFetching] = useState(true)
 	const lastElement = useRef<any>()
 	let pagesArray = getPagesArray(totalPages)
 

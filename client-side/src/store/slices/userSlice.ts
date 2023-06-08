@@ -81,7 +81,6 @@ export const checkCodeEmail = createAsyncThunk(
 
 interface UserState {
 	user: IUser
-
 	userAds: IAdvrt[] | null
 	isAuth: boolean
 	isLoadingAuth: boolean
