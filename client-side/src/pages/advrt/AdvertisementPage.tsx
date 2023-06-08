@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { MdOutlineNoPhotography } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
-import { useTypedSelector } from '../../hooks/use-typed-selector'
+import { UserContext } from '../../context/UserContext'
 import {
 	useGetAdvrtByCategoryQuery,
 	useGetAdvrtByIdQuery,
@@ -22,7 +22,7 @@ import Similar from './similar/Similar'
 const AdvertisementPage = () => {
 	const params = useParams()
 	const [openEdit, setOpenEdit] = useState(false)
-	const { user } = useTypedSelector(state => state.user)
+	const { userData, isUserLoading, userError } = useContext(UserContext)
 	const [visible, setVisible] = useState(false)
 	const {
 		data: advrt,
@@ -72,11 +72,11 @@ const AdvertisementPage = () => {
 
 	return (
 		<div className='mt-14'>
-			{isLoadingAdvrt ? (
+			{isLoadingAdvrt || isUserLoading ? (
 				<div className='flex justify-center items-center mt-44'>
 					<Loader />
 				</div>
-			) : isErrorAdvrt ? (
+			) : isErrorAdvrt || userError ? (
 				<div className='mt-44'>
 					<ErrorMessage />
 				</div>
@@ -106,7 +106,10 @@ const AdvertisementPage = () => {
 								<h1 className='text-3xl font-semibold mb-4'>Aдрес</h1>
 								<p className=''>{advrt.adress}</p>
 							</div>
-							<div className='mt-14 border-b pb-12' style={{ whiteSpace: 'pre-wrap' }}>
+							<div
+								className='mt-14 border-b pb-12'
+								style={{ whiteSpace: 'pre-wrap' }}
+							>
 								<h1 className='text-3xl font-semibold mb-4'>Описание</h1>
 								<p className=''>{advrt.description}</p>
 							</div>
@@ -127,7 +130,7 @@ const AdvertisementPage = () => {
 								{formatToCurrency(advrt.price)}
 							</h1>
 							<div className='mt-10'>
-								{user.id === customer?.id ? (
+								{userData && userData.id === customer?.id ? (
 									<>
 										<button className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex w-[320px] justify-center  items-center text-xl text-white'>
 											Продвинуть объявление

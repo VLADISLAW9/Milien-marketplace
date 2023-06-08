@@ -1,8 +1,9 @@
 import { CardMedia, Checkbox } from '@mui/material'
 import { Carousel } from 'antd'
-import { FC, useEffect, useState } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import { MdFavoriteBorder, MdOutlineNoPhotography } from 'react-icons/md'
 import { Link } from 'react-router-dom'
+import { UserContext } from '../../../../context/UserContext'
 import { useTypedSelector } from '../../../../hooks/use-typed-selector'
 import FavoriteAdvrtService from '../../../../services/FavouriteAdvrtService'
 import { IAdvrt } from '../../../../types/IAdvrt'
@@ -11,18 +12,20 @@ import { formatToCurrency } from '../../../../utils/formatToCurrency'
 interface IAdvrtProps {
 	advrt_data: IAdvrt
 	mini?: boolean
+	onRemoveAdFromFav?: (id: number) => void
 }
-
 const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	advrt_data: advrt,
 	mini,
+	onRemoveAdFromFav,
 }) => {
 	const handleClick = () => {
 		window.scrollTo(0, 0)
 	}
 	const [isHover, setIsHover] = useState(false)
 	const [isFav, setIsFav] = useState(false)
-	const { isAuth, user } = useTypedSelector(state => state.user)
+	const { isAuth } = useTypedSelector(state => state.user)
+	const { userData, isUserLoading } = useContext(UserContext)
 
 	const handleCheckboxChange = async () => {
 		if (!isFav) {
@@ -38,8 +41,12 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 				const removeFromFav = await FavoriteAdvrtService.RemoveFromFavourite(
 					advrt.id
 				)
-
-				// setFav((prevFav) => prevFav.filter((item) => item.id !== advrt.id));
+				if (onRemoveAdFromFav) {
+					const handleRemoveFromFav = () => {
+						onRemoveAdFromFav(advrt.id)
+					}
+					handleRemoveFromFav()
+				}
 			} catch (e: any) {
 				console.log(e.response)
 			}
@@ -73,7 +80,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 			className='relative'
 		>
 			<div className='absolute z-50 bottom-5 right-5'>
-				{isHover && isAuth && advrt.customerId !== user.id && (
+				{isHover && isAuth && userData && advrt.customerId !== userData.id && (
 					<Checkbox
 						checked={isFav}
 						onChange={handleCheckboxChange}

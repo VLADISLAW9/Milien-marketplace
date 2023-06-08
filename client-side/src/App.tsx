@@ -1,18 +1,22 @@
 import { Dispatch } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import AppRouter from './app/components/AppRouter'
 import Layout from './app/components/layout/Layout'
+import { UserContext } from './context/UserContext'
 import { useActions } from './hooks/use-actions'
 import { useTypedSelector } from './hooks/use-typed-selector'
 import UserService from './services/UserService'
 import { AUTH_URL } from './store/axios/auth-api'
 import { IAuthResponse } from './types/IAuthResponse'
+import { IUser } from './types/IUser'
 
 function App() {
-	const { isAuth, user, isLoadingAuth } = useTypedSelector(state => state.user)
-
+	const { isAuth, user } = useTypedSelector(state => state.user)
+	const [userData, setUserData] = useState<IUser | null>(null)
+	const [isUserLoading, setIsUserLoading] = useState(false)
+	const [userError, setUserError] = useState('')
 	const { setUser, setUserAds, setAuth, setLoading, removeUser } = useActions()
 
 	const dispatch = useDispatch<Dispatch<any>>()
@@ -48,7 +52,10 @@ function App() {
 			try {
 				const getUser = async () => {
 					setLoading(true)
+					setIsUserLoading(true)
 					const userDate = await UserService.getUserData().then(res => {
+						setUserData(res.data.user)
+
 						dispatch(setUser(res.data.user))
 						if (res.data.userAds) {
 							dispatch(setUserAds(res.data.userAds))
@@ -58,16 +65,20 @@ function App() {
 				getUser()
 			} catch (e) {
 				console.log(e)
+				setUserError('Произошла ошибка при загрузке данных пользователя')
 			} finally {
 				setLoading(false)
+				setIsUserLoading(false)
 			}
 		}
 	}, [])
 
 	return (
-		<Layout>
-			<AppRouter />
-		</Layout>
+		<UserContext.Provider value={{ userData, isUserLoading, userError }}>
+			<Layout>
+				<AppRouter />
+			</Layout>
+		</UserContext.Provider>
 	)
 }
 

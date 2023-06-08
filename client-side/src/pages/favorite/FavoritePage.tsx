@@ -4,13 +4,22 @@ import { BsFillGrid3X3GapFill } from 'react-icons/bs'
 import { FaList } from 'react-icons/fa'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
 import AdvertisementItem_list from '../../app/components/ui/Advertisement/AdvertisementItem_list'
+import Loader from '../../app/components/ui/spiner/Loader'
+import { useFetching } from '../../hooks/use-fetching'
 import FavoriteAdvrtService from '../../services/FavouriteAdvrtService'
 import { IAdvrt } from '../../types/IAdvrt'
 
 const FavoritePage: FC = () => {
 	const [view, setView] = useState('grid')
-	const [isLoading, setIsLoading] = useState(false)
 	const [fav, setFav] = useState<IAdvrt[]>([])
+	const [fetchFav, isLoading, favError] = useFetching(async () => {
+		const response = await FavoriteAdvrtService.GetFavorite()
+		setFav([...fav, ...response.data])
+	})
+
+	useEffect(() => {
+		fetchFav()
+	}, [])
 
 	const handleChange = (
 		event: React.MouseEvent<HTMLElement>,
@@ -19,20 +28,9 @@ const FavoritePage: FC = () => {
 		setView(nextView)
 	}
 
-	useEffect(() => {
-		try {
-			const fetchData = async () => {
-				setIsLoading(true)
-				const getAd = await FavoriteAdvrtService.GetFavorite()
-				setFav(getAd.data)
-			}
-			fetchData() // Add this line to invoke the fetch function
-		} catch (e) {
-			console.log(e)
-		} finally {
-			setIsLoading(false)
-		}
-	}, [])
+	const RemoveAdFromFav = (id: number) => {
+		setFav(prevFav => prevFav.filter(item => item.id !== id))
+	}
 
 	return (
 		<div>
@@ -50,6 +48,11 @@ const FavoritePage: FC = () => {
 					<BsFillGrid3X3GapFill className='w-6 h-5' />
 				</ToggleButton>
 			</ToggleButtonGroup>
+			{isLoading && (
+				<div className='flex justify-center items-center mt-36'>
+					<Loader />
+				</div>
+			)}
 			<ul
 				className={
 					view === 'list'
@@ -57,18 +60,24 @@ const FavoritePage: FC = () => {
 						: 'mt-12 grid grid-cols-4 gap-5 '
 				}
 			>
-				{fav.length > 0 ? (
+				{fav.length > 0 &&
 					fav.map(advrt =>
 						view === 'list' ? (
 							<AdvertisementItem_list key={advrt.id} advrt_data={advrt} />
 						) : (
-							<AdvertisementItem_grid key={advrt.id} advrt_data={advrt} />
+							<AdvertisementItem_grid
+								key={advrt.id}
+								advrt_data={advrt}
+								onRemoveAdFromFav={RemoveAdFromFav}
+							/>
 						)
-					)
-				) : (
-					<h1>Нет избранных</h1>
-				)}
+					)}
 			</ul>
+			{!isLoading && fav.length === 0 && (
+				<div className='flex justify-center items-center mt-32'>
+					<h1 className='text-xl text-stone-500'>У вас нет объявлений в избранном</h1>
+				</div>
+			)}
 		</div>
 	)
 }

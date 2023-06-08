@@ -11,7 +11,6 @@ interface ILayoutProps {
 
 const Layout: FC<ILayoutProps> = ({ children }) => {
 	const location = useLocation()
-
 	const { isAuth, user } = useTypedSelector(state => state.user)
 
 	return (
