@@ -1,64 +1,55 @@
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-import { FC, useEffect, useState } from 'react'
+import axios from 'axios'
+import { FC, useEffect, useRef, useState } from 'react'
 import { BsFillGrid3X3GapFill } from 'react-icons/bs'
 import { FaList } from 'react-icons/fa'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
 import AdvertisementItem_list from '../../app/components/ui/Advertisement/AdvertisementItem_list'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
-import { useGetAllAdvrtsQuery } from '../../services/AdvrtsService'
-import axios from 'axios'
+import { useFetching } from '../../hooks/use-fetching'
+import { useObserver } from '../../hooks/use-observer'
 import { IAdvrt } from '../../types/IAdvrt'
+import { getPageCount, getPagesArray } from '../../utils/pages'
 
 const HomePage: FC = () => {
 	const [ads, setAds] = useState<IAdvrt[]>([])
-	const [isLoading, setIsLoading] = useState(false)
-	const [isError, setIsError] = useState(false)
+	const [totalPages, setTotalPages] = useState(0)
 	const [view, setView] = useState('grid')
-	const [limit, setLimit] = useState(4)
+	const [limit, setLimit] = useState(8)
 	const [page, setPage] = useState(1)
 	const [fetching, setFetching] = useState(true)
+	const lastElement = useRef<any>()
+	let pagesArray = getPagesArray(totalPages)
+
+	const [fetchAds, isAdsLoading, adsError] = useFetching(async () => {
+		const response = await axios.get('http://192.168.0.160:5137/Ad/GetAll', {
+			params: { limit: limit, page: page },
+		})
+		const totalCount = response.headers['count']
+		setTotalPages(getPageCount(totalCount, limit))
+		setAds([...ads, ...response.data])
+	})
+
+	useObserver(lastElement, page < totalPages, isAdsLoading, () => {
+		setPage(page + 1)
+	})
+
+	useEffect(() => {
+		fetchAds()
+	}, [page])
+
+	const changePage = (page: number) => {
+		setPage(page)
+		fetchAds()
+	}
 
 	const handleChange = (
 		event: React.MouseEvent<HTMLElement>,
 		nextView: string
 	) => {
 		setView(nextView)
-	}
-
-	useEffect(() => {
-		if (fetching) setIsLoading(true)
-		axios
-			.get('http://192.168.0.160:5137/Ad/GetAll', {
-				params: { limit: limit, page: page },
-			})
-			.then(res => {
-				setAds([...ads, ...res.data])
-				setPage(prevState => prevState + 1)
-			})
-			.finally(() => {
-				setFetching(false)
-				setIsLoading(false)
-			})
-	}, [fetching])
-
-	useEffect(() => {
-		document.addEventListener('scroll', scrollHandler)
-
-		return function () {
-			document.removeEventListener('scroll', scrollHandler)
-		}
-	}, [])
-
-	const scrollHandler = (e: any) => {
-		if (
-			e.target.documentElement.scrollHeight -
-				(e.target.documentElement.scrollTop + window.innerHeight) <
-			100
-		) {
-			setFetching(true)
-		}
 	}
 
 	return (
@@ -92,9 +83,15 @@ const HomePage: FC = () => {
 					)
 				)}
 			</ul>
-			{isLoading && (
+			<div ref={lastElement} className='h-[20px]'></div>
+			{isAdsLoading && (
 				<div className='flex justify-center items-center mt-36'>
 					<Loader />
+				</div>
+			)}
+			{adsError && (
+				<div className='flex justify-center items-center mt-36'>
+					<ErrorMessage />
 				</div>
 			)}
 		</div>
