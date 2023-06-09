@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { BsTelephoneFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useFetchers, useLocation } from 'react-router-dom'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useActions } from '../../hooks/use-actions'
@@ -12,6 +12,7 @@ import { useTypedSelector } from '../../hooks/use-typed-selector'
 import UserService from '../../services/UserService'
 import { IAdvrt } from '../../types/IAdvrt'
 import EditModal from './EditModal'
+import { useFetching } from '../../hooks/use-fetching'
 
 const ProfilePage = () => {
 	const { isAuth, errorMessage, isLoadingAuth } = useTypedSelector(
@@ -19,11 +20,23 @@ const ProfilePage = () => {
 	)
 	const location = useLocation()
 	const [userData, setUserData] = useState<any>(null)
-	const [userAds, setUserDataAds] = useState<any>(null)
-	const [isLoading, setLoading] = useState(false)
+	const [userAds, setUserDataAds] = useState<IAdvrt[]>([])
 	const dispatch = useDispatch<Dispatch<any>>()
 	const { setUser, setUserAds } = useActions()
 	const [open, setOpen] = useState(false)
+	const [fetchUserData, isLoading, userDataError] = useFetching(async () => {
+		const fetcher = await UserService.getUserData()
+		setUserData(fetcher.data.user)
+		dispatch(setUser(fetcher.data.user))
+		if (fetcher.data.userAds) {
+			setUserDataAds([...fetcher.data.userAds, ...userAds])
+			dispatch(setUserAds(fetcher.data.userAds))
+		}
+	})
+
+	useEffect(() => {
+		fetchUserData()
+	}, [])
 
 	const handleOpenEdit = () => {
 		setOpen(true)
@@ -33,29 +46,9 @@ const ProfilePage = () => {
 		setOpen(false)
 	}
 
-	useEffect(() => {
-		if (isAuth === true) {
-			try {
-				const getUser = async () => {
-					setLoading(true)
-					const userDate = await UserService.getUserData().then(res => {
-						setUserData(res.data.user)
-						setUserDataAds(res.data.userAds)
-						dispatch(setUser(res.data.user))
-						if (res.data.userAds) {
-							dispatch(setUserAds(res.data.userAds))
-						}
-					})
-				}
-				getUser()
-			} catch (e) {
-				console.log(e)
-				
-			} finally {
-				setLoading(false)
-			}
-		}
-	}, [])
+	const RemoveAdFromMyAds = (id: number) => {
+		setUserDataAds(prevFav => prevFav.filter(item => item.id !== id))
+	}
 
 	if (isLoading || isLoadingAuth || !userData) {
 		return (
@@ -115,6 +108,7 @@ const ProfilePage = () => {
 									<AdvertisementItem_grid
 										advrt_data={advrt}
 										mini={true}
+										onRemoveAdFromMyAds={RemoveAdFromMyAds}
 										key={advrt.id} // Add a unique key to each item in the map function
 									/>
 								))}

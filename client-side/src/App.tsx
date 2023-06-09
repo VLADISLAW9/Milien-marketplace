@@ -39,6 +39,7 @@ function App() {
 				} catch (e: any) {
 					localStorage.removeItem('token')
 					localStorage.removeItem('refresh')
+					window.location.reload()
 				} finally {
 					setLoading(false)
 				}

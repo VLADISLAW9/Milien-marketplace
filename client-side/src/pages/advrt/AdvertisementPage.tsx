@@ -24,6 +24,7 @@ import ShowContacts from './buttons/showContacts/ShowContacts'
 import CustomerCard from './customerCard/CustomerCard'
 import EditAdvrtModal from './editModal/EditAdvrtModal'
 import Similar from './similar/Similar'
+import FavoriteAdvrtService from '../../services/FavouriteAdvrtService'
 
 const AdvertisementPage = () => {
 	const { addAdvrtToStorage, addPaymentId } = useActions()
@@ -33,6 +34,8 @@ const AdvertisementPage = () => {
 	const { userData, isUserLoading, userError } = useContext(UserContext)
 	const { isAuth } = useTypedSelector(state => state.user)
 	const [visible, setVisible] = useState(false)
+	const [isFav, setIsFav] = useState(false)
+	const [checker, setChecker] = useState(true)
 
 	const {
 		data: advrt,
@@ -68,6 +71,13 @@ const AdvertisementPage = () => {
 		setOpenEdit(false)
 	}
 
+	const [checkIsFav, favLoading, favError] = useFetching(async () => {
+		if (advrt) {
+			const isFav = await FavoriteAdvrtService.CheckIsFavourite(advrt.id)
+			setIsFav(isFav.data)
+		}
+	})
+
 	const [upgradeToPremium, upgrageLoading, upgradeError] = useFetching(
 		async () => {
 			if (advrt) {
@@ -81,6 +91,22 @@ const AdvertisementPage = () => {
 			}
 		}
 	)
+
+	const [addToFav, loadingAddToFav, addToFavError] = useFetching(async () => {
+		const response = await FavoriteAdvrtService.AddToFavourite(advrt.id)
+		setIsFav(true)
+	})
+
+	const [removeFromFav, loadingRemoveFromFav, errorRemoveFromFav] = useFetching(
+		async () => {
+			const response = await FavoriteAdvrtService.RemoveFromFavourite(advrt.id)
+			setIsFav(false)
+		}
+	)
+
+	useEffect(() => {
+		checkIsFav()
+	}, [checker])
 
 	useEffect(() => {
 		function handleScroll() {
@@ -97,6 +123,8 @@ const AdvertisementPage = () => {
 	const handleBuyPremium = () => {
 		upgradeToPremium()
 	}
+
+	const handleAddToFav = () => {}
 
 	return (
 		<div className='mt-14'>

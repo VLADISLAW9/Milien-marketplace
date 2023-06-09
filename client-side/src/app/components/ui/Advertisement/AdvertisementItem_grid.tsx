@@ -6,7 +6,7 @@ import {
 	MdFavoriteBorder,
 	MdOutlineNoPhotography,
 } from 'react-icons/md'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { UserContext } from '../../../../context/UserContext'
 import { useFetching } from '../../../../hooks/use-fetching'
 import { useTypedSelector } from '../../../../hooks/use-typed-selector'
@@ -19,19 +19,22 @@ interface IAdvrtProps {
 	advrt_data: IAdvrt
 	mini?: boolean
 	onRemoveAdFromFav?: (id: number) => void
+	onRemoveAdFromMyAds?: (id: number) => void
 }
 const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	advrt_data: advrt,
 	mini,
 	onRemoveAdFromFav,
+	onRemoveAdFromMyAds,
 }) => {
 	const handleClick = () => {
 		window.scrollTo(0, 0)
 	}
+	const location = useLocation()
 	const [isHover, setIsHover] = useState(false)
 	const [isFav, setIsFav] = useState(false)
 	const { isAuth } = useTypedSelector(state => state.user)
-	const { userData, isUserLoading } = useContext(UserContext)
+	const { userData } = useContext(UserContext)
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
 	const showModal = () => {
@@ -93,7 +96,11 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	})
 
 	const handleDeleteAdvtr = () => {
-		deleteAd()
+		if (onRemoveAdFromMyAds) {
+			deleteAd()
+			onRemoveAdFromMyAds(advrt.id)
+		}
+		setIsModalOpen(false)
 	}
 
 	return (
@@ -122,43 +129,54 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 						}}
 					/>
 				)}
-				{isHover && isAuth && userData && advrt.customerId === userData.id && (
-					<>
-						<button
-							onClick={showModal}
-							className='text-red-500 hover:text-red-700 transition-colors'
-						>
-							<MdDeleteOutline className='w-6 h-6' />
-						</button>
-						<Modal
-							title={
-								<div>
-									<h1 className='text-xl'>Внимание</h1>
-								</div>
-							}
-							open={isModalOpen}
-							onOk={handleOk}
-							onCancel={handleCancel}
-							footer={[
-								<button className='mr-5 px-4 py-2 w-[100px] bg-[#166430] rounded-3xl text-white'>
-									Отмена
-								</button>,
-								<button className='px-4 py-2 w-[100px] text-[#166430] border border-[#166430] rounded-3xl '>
-									Принять
-								</button>,
-							]}
-						>
-							{advrt.premium ? (
-								<p className='my-10 text-lg'>
-									Если вы удалите это объявление, то пропадет пакет "Премиум" .
-									<br /> Вы действительно хотите удалить объявление?
-								</p>
-							) : (
-								<p>Вы действительно хотите удалить объявление</p>
-							)}
-						</Modal>
-					</>
-				)}
+				{isHover &&
+					isAuth &&
+					userData &&
+					advrt.customerId === userData.id &&
+					location.pathname === '/my-profile' && (
+						<>
+							<button
+								onClick={showModal}
+								className='text-red-500 hover:text-red-700 transition-colors'
+							>
+								<MdDeleteOutline className='w-6 h-6' />
+							</button>
+							<Modal
+								title={
+									<div>
+										<h1 className='text-xl'>Внимание</h1>
+									</div>
+								}
+								open={isModalOpen}
+								onOk={handleOk}
+								onCancel={handleCancel}
+								footer={[
+									<button
+										onClick={handleCancel}
+										className='mr-5 px-4 py-2 w-[100px] bg-[#166430] rounded-3xl text-white'
+									>
+										Отмена
+									</button>,
+									<button
+										onClick={handleDeleteAdvtr}
+										className='px-4 py-2 w-[100px] text-[#166430] border border-[#166430] rounded-3xl '
+									>
+										Принять
+									</button>,
+								]}
+							>
+								{advrt.premium ? (
+									<p className='my-10 text-lg'>
+										Если вы удалите это объявление, то пропадет пакет "Премиум"
+										.
+										<br /> Вы действительно хотите удалить объявление?
+									</p>
+								) : (
+									<p>Вы действительно хотите удалить объявление</p>
+								)}
+							</Modal>
+						</>
+					)}
 			</div>
 			<li
 				className={
