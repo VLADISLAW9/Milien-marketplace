@@ -1,14 +1,20 @@
+import { Dispatch } from '@reduxjs/toolkit'
 import { useContext, useEffect, useState } from 'react'
 import { MdOutlineNoPhotography } from 'react-icons/md'
+import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { UserContext } from '../../context/UserContext'
+import { useActions } from '../../hooks/use-actions'
+import { useFetching } from '../../hooks/use-fetching'
+import { useTypedSelector } from '../../hooks/use-typed-selector'
 import {
 	useGetAdvrtByCategoryQuery,
 	useGetAdvrtByIdQuery,
 	useGetAdvrtsByCustomerIdQuery,
 } from '../../services/AdvrtsService'
+import CreateAdvrtService from '../../services/CreatorAdvrtService'
 import { useGetCustomerByIdQuery } from '../../services/CustomerService'
 
 import { formatToCurrency } from '../../utils/formatToCurrency'
@@ -20,10 +26,14 @@ import EditAdvrtModal from './editModal/EditAdvrtModal'
 import Similar from './similar/Similar'
 
 const AdvertisementPage = () => {
+	const { addAdvrtToStorage, addPaymentId } = useActions()
 	const params = useParams()
+	const dispatch = useDispatch<Dispatch<any>>()
 	const [openEdit, setOpenEdit] = useState(false)
 	const { userData, isUserLoading, userError } = useContext(UserContext)
+	const { isAuth } = useTypedSelector(state => state.user)
 	const [visible, setVisible] = useState(false)
+
 	const {
 		data: advrt,
 		isLoading: isLoadingAdvrt,
@@ -58,6 +68,20 @@ const AdvertisementPage = () => {
 		setOpenEdit(false)
 	}
 
+	const [upgradeToPremium, upgrageLoading, upgradeError] = useFetching(
+		async () => {
+			if (advrt) {
+				const navigate = await CreateAdvrtService.navigateToYookassa().then(
+					res => {
+						dispatch(addPaymentId(res.data.paymentId))
+						dispatch(addAdvrtToStorage({ id: advrt.id, upgrade: true }))
+						window.location.href = res.data.paymentUrl
+					}
+				)
+			}
+		}
+	)
+
 	useEffect(() => {
 		function handleScroll() {
 			setScrollPosition(window.pageYOffset)
@@ -69,6 +93,10 @@ const AdvertisementPage = () => {
 			window.removeEventListener('scroll', handleScroll)
 		}
 	}, [])
+
+	const handleBuyPremium = () => {
+		upgradeToPremium()
+	}
 
 	return (
 		<div className='mt-14'>
@@ -130,9 +158,12 @@ const AdvertisementPage = () => {
 								{formatToCurrency(advrt.price)}
 							</h1>
 							<div className='mt-10'>
-								{userData && userData.id === customer?.id ? (
+								{isAuth && userData && userData.id === customer?.id ? (
 									<>
-										<button className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex w-[320px] justify-center  items-center text-xl text-white'>
+										<button
+											onClick={handleBuyPremium}
+											className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex w-[320px] justify-center  items-center text-xl text-white'
+										>
 											Продвинуть объявление
 										</button>
 										<button

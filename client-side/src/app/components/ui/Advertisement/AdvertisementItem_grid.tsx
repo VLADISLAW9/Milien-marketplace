@@ -1,10 +1,16 @@
 import { CardMedia, Checkbox } from '@mui/material'
-import { Carousel } from 'antd'
+import { Carousel, Modal } from 'antd'
 import { FC, useContext, useEffect, useState } from 'react'
-import { MdFavoriteBorder, MdOutlineNoPhotography } from 'react-icons/md'
+import {
+	MdDeleteOutline,
+	MdFavoriteBorder,
+	MdOutlineNoPhotography,
+} from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import { UserContext } from '../../../../context/UserContext'
+import { useFetching } from '../../../../hooks/use-fetching'
 import { useTypedSelector } from '../../../../hooks/use-typed-selector'
+import CreateAdvrtService from '../../../../services/CreatorAdvrtService'
 import FavoriteAdvrtService from '../../../../services/FavouriteAdvrtService'
 import { IAdvrt } from '../../../../types/IAdvrt'
 import { formatToCurrency } from '../../../../utils/formatToCurrency'
@@ -26,6 +32,19 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	const [isFav, setIsFav] = useState(false)
 	const { isAuth } = useTypedSelector(state => state.user)
 	const { userData, isUserLoading } = useContext(UserContext)
+	const [isModalOpen, setIsModalOpen] = useState(false)
+
+	const showModal = () => {
+		setIsModalOpen(true)
+	}
+
+	const handleOk = () => {
+		setIsModalOpen(false)
+	}
+
+	const handleCancel = () => {
+		setIsModalOpen(false)
+	}
 
 	const handleCheckboxChange = async () => {
 		if (!isFav) {
@@ -69,6 +88,14 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 		}
 	}, [])
 
+	const [deleteAd, deleteLoading, deleteError] = useFetching(async () => {
+		const deleteAdFromMyAds = await CreateAdvrtService.deleteAdvrt(advrt.id)
+	})
+
+	const handleDeleteAdvtr = () => {
+		deleteAd()
+	}
+
 	return (
 		<div
 			onMouseEnter={() => {
@@ -94,6 +121,43 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 							},
 						}}
 					/>
+				)}
+				{isHover && isAuth && userData && advrt.customerId === userData.id && (
+					<>
+						<button
+							onClick={showModal}
+							className='text-red-500 hover:text-red-700 transition-colors'
+						>
+							<MdDeleteOutline className='w-6 h-6' />
+						</button>
+						<Modal
+							title={
+								<div>
+									<h1 className='text-xl'>Внимание</h1>
+								</div>
+							}
+							open={isModalOpen}
+							onOk={handleOk}
+							onCancel={handleCancel}
+							footer={[
+								<button className='mr-5 px-4 py-2 w-[100px] bg-[#166430] rounded-3xl text-white'>
+									Отмена
+								</button>,
+								<button className='px-4 py-2 w-[100px] text-[#166430] border border-[#166430] rounded-3xl '>
+									Принять
+								</button>,
+							]}
+						>
+							{advrt.premium ? (
+								<p className='my-10 text-lg'>
+									Если вы удалите это объявление, то пропадет пакет "Премиум" .
+									<br /> Вы действительно хотите удалить объявление?
+								</p>
+							) : (
+								<p>Вы действительно хотите удалить объявление</p>
+							)}
+						</Modal>
+					</>
 				)}
 			</div>
 			<li

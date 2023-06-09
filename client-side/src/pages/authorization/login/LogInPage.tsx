@@ -1,10 +1,11 @@
 import { Dispatch } from '@reduxjs/toolkit'
-import React, { FC, useState } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import { AiFillEye, AiFillEyeInvisible, AiOutlineUser } from 'react-icons/ai'
 import { BsArrowDown } from 'react-icons/bs'
 import { RiLockPasswordFill } from 'react-icons/ri'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { UserContext } from '../../../context/UserContext'
 import { useActions } from '../../../hooks/use-actions'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
 import AuthService from '../../../services/AuthService'
@@ -22,6 +23,8 @@ const LogInPage: FC = () => {
 	const { isAuth, user, isLoadingAuth, isErrorAuth, errorMessage } =
 		useTypedSelector(state => state.user)
 	const { setAuth, setUser } = useActions()
+	const { userData, isUserLoading, userError, setUserData } =
+		useContext(UserContext)
 	const [isHide, setIsHide] = useState(true)
 
 	const dispatch = useDispatch<Dispatch<any>>()
@@ -36,8 +39,10 @@ const LogInPage: FC = () => {
 			const response = await AuthService.login(payload.login, payload.password)
 			localStorage.setItem('token', response.data.accessToken)
 			localStorage.setItem('refresh', response.data.refreshToken)
+			// setUserData(response.data.user)
 			dispatch(setAuth(true))
 			dispatch(setUser(response.data.user))
+			window.location.reload()
 		} catch (e: any) {
 			console.log(e)
 			setError(e.response.data)

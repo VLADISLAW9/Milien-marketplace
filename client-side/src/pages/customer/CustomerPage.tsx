@@ -67,12 +67,6 @@ const CustomerPage = () => {
 								<p>{customer.email}</p>
 							</div>
 						</div>
-
-						<div className='mt-10 text-center'>
-							<button className='bg-[#EF7F1B] rounded-md text-white w-[100%] px-4 py-3'>
-								Подписаться
-							</button>
-						</div>
 					</div>
 					<div className='flex ml-14 flex-auto w-[80%] flex-col'>
 						<h1 className='text-3xl font-'>Объявления пользователя</h1>

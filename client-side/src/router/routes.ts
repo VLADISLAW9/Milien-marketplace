@@ -25,5 +25,4 @@ export const publicRoutes = [
 	{ path: '/customer/:id', component: CustomerPage, exact: true },
 	{ path: '/login', component: LogInPage, exact: true },
 	{ path: '/signin', component: SignInPage, exact: true },
-	{ path: '/payment-success', component: PaymentPage, exact: true },
 ]

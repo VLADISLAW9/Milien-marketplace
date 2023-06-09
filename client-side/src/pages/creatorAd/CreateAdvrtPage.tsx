@@ -24,14 +24,16 @@ import MoreInfo from './stepper/steps/MoreInfo/MoreInfo'
 import Params from './stepper/steps/Params'
 
 export interface IAdvrtData {
-	title: null | string
-	description: null | string
-	price: null | string
-	adress: null | string
-	category: null | string
-	subcategory: null | string
-	images: File[]
-	case: string | null
+	id?: number
+	upgrade?: boolean | null
+	title?: null | string
+	description?: null | string
+	price?: null | string
+	adress?: null | string
+	category?: null | string
+	subcategory?: null | string
+	images?: File[]
+	case?: string | null
 }
 
 const CreateAdvrtPage: FC = () => {

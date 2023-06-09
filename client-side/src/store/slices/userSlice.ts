@@ -41,6 +41,7 @@ export const logout = createAsyncThunk('user/logout', async () => {
 	const response = await AuthService.logout()
 	localStorage.removeItem('token')
 	localStorage.removeItem('refresh')
+	window.location.reload()
 	return response
 })
 

@@ -58,6 +58,16 @@ export default class CreateAdvrtService {
 		return $createAdvrt_api.post('/Ad/CreateAd', formData)
 	}
 
+	static async upgradeToPremium(id: number): Promise<AxiosResponse> {
+		return $createAdvrt_api.post('/Ad/UpgradeToPremium', id, {
+			headers: { 'Content-Type': 'application/json' },
+		})
+	}
+
+	static async deleteAdvrt(id: number): Promise<AxiosResponse> {
+		return $createAdvrt_api.delete('/Ad/DeleteAd', { params: { id } })
+	}
+
 	// for paid ads
 
 	static async navigateToYookassa(): Promise<AxiosResponse> {
@@ -76,8 +86,7 @@ export default class CreateAdvrtService {
 		price: number,
 		adress: string,
 		category: string,
-		subcategory: string,
-		images: File[]
+		subcategory: string
 	): Promise<AxiosResponse> {
 		const formData = new FormData()
 		formData.append('title', title)
@@ -86,10 +95,6 @@ export default class CreateAdvrtService {
 		formData.append('adress', adress)
 		formData.append('category', category)
 		formData.append('subcategory', subcategory)
-
-		images.forEach(image => {
-			formData.append(`images`, image)
-		})
 
 		return $createAdvrt_api.post('/Ad/CreatePaidAd', formData)
 	}

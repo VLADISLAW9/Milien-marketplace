@@ -18,32 +18,38 @@ const PaymentPage: FC = () => {
 	const { advt: advrtData } = useTypedSelector(state => state.payment)
 	const [isPaymentChecked, setIsPaymentChecked] = useState(false)
 
+	console.log(advrtData)
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				setIsLoading(true)
 				const response = await CreateAdvrtService.cheakPayment(paymentId)
-				// ЕСЛИ ВСЕ ОК ТО ПЛАТНАЯ ОБЪЯВА, ЕСЛИ НЕТ ТО СОЗДАЕМ ДЕФОЛТНОЕ
+				// IF PAYMENT IS SUCCESSFUL
 				if (response.data) {
 					setCheck(response.data)
-					if (
+					if (advrtData && advrtData.id) {
+						// Upgrade the advertisement to premium level
+						const upgrade = await CreateAdvrtService.upgradeToPremium(
+							advrtData.id
+						)
+					} else if (
 						advrtData &&
+						advrtData.title &&
+						advrtData.description &&
+						advrtData.price &&
 						advrtData.adress &&
 						advrtData.category &&
-						advrtData.description &&
-						advrtData.images &&
-						advrtData.price &&
-						advrtData.subcategory &&
-						advrtData.title
+						advrtData.subcategory
 					) {
+						// Create a new advertisement with premium level
 						const addPaid = await CreateAdvrtService.createPaidAdvrt(
 							advrtData.title,
 							advrtData.description,
 							removeSpacesFromString(advrtData.price),
 							advrtData.adress,
 							advrtData.category,
-							advrtData.subcategory,
-							advrtData.images
+							advrtData.subcategory
 						)
 					}
 				}
@@ -78,9 +84,17 @@ const PaymentPage: FC = () => {
 					<h1 className='text-center font-sans text-2xl font-bold text-stone-700'>
 						Спасибо за покупку
 					</h1>
-					<p className='mt-3 text-center'>
-						Ваше объявление с тарифом "Премиум" <br /> успешно опубликовано
-					</p>
+					{advrtData && advrtData.upgrade && advrtData.id ? (
+						<p className='mt-3 text-center'>
+							Вы успешно обновили ваше объявление
+							<br /> до уровня "Премиум"
+						</p>
+					) : (
+						<p className='mt-3 text-center'>
+							Ваше объявление с тарифом "Премиум" <br /> успешно опубликовано
+						</p>
+					)}
+
 					<Link to='/' className='flex justify-center items-center mt-16 '>
 						<button className='w-[200px] rounded-2xl  px-4 py-3 bg-[#33BA87] text-white'>
 							Вернуться
