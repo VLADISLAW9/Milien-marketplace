@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ServiceAPI.Models.DTO;
+using ServiceAPI.Models;
 
 namespace ServiceAPI.Data
 {
@@ -12,6 +12,5 @@ namespace ServiceAPI.Data
         }
 
         public DbSet<PaidAdDTO> PaidAds { get; set; }
-        public DbSet<AdDTO> Ads { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using System.Net;
 
 namespace MilienAPI.Controllers
 {
@@ -43,30 +42,39 @@ namespace MilienAPI.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var authorizedUser = await _context.Customers.FindAsync(Convert.ToInt32(userId));
 
-            var userAds = await _context.Ads.Where(a => a.CustomerId == authorizedUser.Id).ToListAsync();
-
+            var userAds = await _context.Ads.Where(a => a.CustomerId == authorizedUser.Id)
+                .OrderByDescending(a => a.Id)
+                .ToListAsync();
+            
             return Ok(new { User = authorizedUser, UserAds = userAds });
         }
 
         [HttpPut]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> EditProfile([FromBody] Account accountDetail)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var userDto = _context.Customers.Find(25);
+            var userDto = _context.Customers.Find(Convert.ToInt32(userId));
 
-            if (userDto != null)
+            try
             {
-                userDto.Login = accountDetail.Login;
-                userDto.FirstName = accountDetail.FirstName;
-                userDto.LastName = accountDetail.LastName;
+                if (userDto != null)
+                {
+                    userDto.FirstName = accountDetail.FirstName;
+                    userDto.LastName = accountDetail.LastName;
+                    userDto.AboutMe = accountDetail.AboutMe;
 
-                _context.SaveChanges();
-                return Ok();
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+            }
+            catch
+            {
+                return BadRequest("Логин уже занят другим пользователем!");
             }
 
-            return BadRequest();
+            return BadRequest("Произошла ошибка при редактировании пользователя!");
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using ServiceAPI.Data;
-using ServiceAPI.Models.AdResponse;
-using ServiceAPI.Models.DTO;
-using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc;
 using Yandex.Checkout.V3;
 
 namespace ServiceAPI.Controllers
@@ -14,19 +8,20 @@ namespace ServiceAPI.Controllers
     //[Authorize]
     public class PaymentController : ControllerBase
     {
-        static private readonly Client _client = new Client("985078", "test_RU37ABpXDmq91JZq5iJ1ts5jRORUoh3L0_I1DgHFxTI");
-        private readonly Context _context;
-        private IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public PaymentController(Context context, IMapper mapper)
+        public PaymentController(IConfiguration configuration)
         {
-            _context = context;
-            _mapper = mapper;
+            _configuration = configuration;
         }
 
         [HttpGet]
         public IActionResult CreatePayment()
         {
+            //Client client = new Client(_configuration.GetSection("YooKassa:ShopId").Value,
+            //_configuration.GetSection("YooKassa:SecretKey").Value);
+
+            Client client = new Client("985078", "test_RU37ABpXDmq91JZq5iJ1ts5jRORUoh3L0_I1DgHFxTI");
             var newPayment = new NewPayment
             {
                 Amount = new Amount { Value = 50.00m, Currency = "RUB" },
@@ -38,7 +33,7 @@ namespace ServiceAPI.Controllers
                 Capture = true
             };
 
-            Payment payment = _client.CreatePayment(newPayment);
+            Payment payment = client.CreatePayment(newPayment);
             string paymentUrl = payment.Confirmation.ConfirmationUrl;
             return Ok(new { PaymentUrl = paymentUrl, PaymentId = payment.Id });
         }
@@ -46,16 +41,19 @@ namespace ServiceAPI.Controllers
         [HttpGet]
         public bool CheckPayment(string paymentId)
         {
+            //Client client = new Client(_configuration.GetSection("YooKassa:ShopId").Value,
+            //_configuration.GetSection("YooKassa:SecretKey").Value);
+            Client client = new Client("985078", "test_RU37ABpXDmq91JZq5iJ1ts5jRORUoh3L0_I1DgHFxTI");
             try
             {
-                var paymentInfo = _client.GetPayment(paymentId);
+                var paymentInfo = client.GetPayment(paymentId);
 
                 if (paymentInfo.Status == PaymentStatus.Succeeded)
                     return true;
                 else
                     return false;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }

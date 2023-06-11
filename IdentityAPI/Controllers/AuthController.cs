@@ -105,7 +105,7 @@ namespace IdentityAPI.Controllers
         {
             var userForCheckingEmail = _context.Users.FirstOrDefault(c => c.Email == email);
 
-            if(userForCheckingEmail.ConfirmedCode == code)
+            if (userForCheckingEmail.ConfirmedCode == code)
             {
                 userForCheckingEmail.ComfimedEmail = true;
                 userForCheckingEmail.ConfirmedCode = null;
@@ -113,9 +113,24 @@ namespace IdentityAPI.Controllers
                 return Ok("Почта подтверждена!");
             }
 
-            return BadRequest(new {Message = "Неверный код подтверждения!"});
+            return BadRequest(new { Message = "Неверный код подтверждения!" });
         }
 
+
+        [HttpGet]
+        [Route("check_code")]
+        public bool CheckCode(string code, string email)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+
+            if(user.ConfirmedCode == code)
+            {
+                user.ConfirmedCode = null;
+                return true;
+            }
+
+            return false;
+        }
         [HttpGet]
         [Route("check_login")]
         public bool CheckLogin(string login)
@@ -138,9 +153,44 @@ namespace IdentityAPI.Controllers
         [Route("check_email")]
         public bool CheckPhoneEmail(string email)
         {
-            var emailForChekc = _context.Users.FirstOrDefault(p => p.Email == email);
+            var emailForCheck = _context.Users.FirstOrDefault(p => p.Email == email);
 
-            return emailForChekc == null ? true : false;
+            return emailForCheck == null ? true : false;
+        }
+
+        [HttpPut]
+        [Route("reset_password")]
+        public async Task<IActionResult> ResetPassword(string email)
+        {
+            var user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                EmailService emailService = new EmailService();
+                user.ConfirmedCode = emailService.SendEmailAsync(email, "Сброс пароля", user);
+
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+
+            return BadRequest("Пользователя с данным почтовым адресом не существует!");
+        }
+
+        [HttpPut]
+        [Route("create_new_password")]
+        public async Task<IActionResult> CreateNewPassword(string password, string email)
+        {
+            var user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            var login = await _context.LoginModels.Where(l => l.Login == user.Login).FirstOrDefaultAsync();
+
+            string passForCustomer = PasswordHasher.HashPassword(password);
+            user.Pass = passForCustomer;
+
+            login.Password = passForCustomer;
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace MilienAPI.Helpers
             CreateMap<Customer, Account>();
             CreateMap<AdResponse, Ad>();
             CreateMap<Ad, AdResponse>();
-            CreateMap<FavoriteAdResponse, FavoriteAd>();
+            CreateMap<FavoriteAdResponse, Favorite>();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace IdentityAPI.Services
                 issuer: _configuration["JwtSettings:Issuer"],
                 audience: _configuration["JwtSettings:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(15),
+                expires: DateTime.Now.AddSeconds(15),
                 signingCredentials: signingKey
                 );
 

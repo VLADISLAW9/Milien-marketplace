@@ -49,6 +49,13 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddCors(policy => policy.AddPolicy("default", opt =>
+{
+    opt.AllowAnyHeader();
+    opt.AllowCredentials();
+    opt.AllowAnyMethod();
+    opt.SetIsOriginAllowed(_ => true);
+}));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -66,18 +73,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 
-app.UseCors(builder =>
-{
-    builder.WithOrigins("http://localhost:3000")
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials();  
-    
-    builder.WithOrigins("http://192.168.0.159:3000")
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials();
-});
+app.UseCors("default");
 
 app.UseAuthentication();
 app.UseAuthorization();

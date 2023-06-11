@@ -23,7 +23,7 @@ namespace MilienAPI.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Ad> Ads { get; set; }
         public DbSet<LoginModel> LoginModels { get; set; }
-        public DbSet<FavoriteAd> FavoriteAds { get; set; }
+        public DbSet<Favorite> FavoriteAds { get; set; }
         public DbSet<PaidAdDTO> PaidAds { get; set; }
     }
 }

@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 var dataBaseConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<Context>(option => option.UseNpgsql(dataBaseConnection));
 builder.Services.AddControllers();
+builder.Services.AddMemoryCache();
 var secretKey = builder.Configuration.GetSection("JwtSettings:SecretKey").Value;
 var issuer = builder.Configuration.GetSection("JwtSettings:Issuer").Value;
 var audience = builder.Configuration.GetSection("JwtSettings:Audience").Value;
@@ -37,6 +38,13 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true
         };
     });
+builder.Services.AddCors(policy => policy.AddPolicy("default", opt =>
+{
+    opt.AllowAnyHeader();
+    opt.AllowCredentials();
+    opt.AllowAnyMethod();
+    opt.SetIsOriginAllowed(_ => true);
+}));
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -58,13 +66,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors(builder =>
-{
-    builder.WithOrigins("http://localhost:3000")
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials();
-});
+app.UseCors("default");
 
 app.UseStaticFiles();
 app.MapControllers();

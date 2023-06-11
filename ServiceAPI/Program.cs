@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Tokens;
 using ServiceAPI.Data;
 using System.Text.Json.Serialization;
 using System.Text;
-using ServiceAPI.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +40,13 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true
         };
     });
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddCors(policy => policy.AddPolicy("default", opt =>
+{
+    opt.AllowAnyHeader();
+    opt.AllowCredentials();
+    opt.AllowAnyMethod();
+    opt.SetIsOriginAllowed(_ => true);
+}));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -60,12 +65,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors(builder =>
-{
-    builder.WithOrigins("http://localhost:3000")
-    .AllowAnyMethod()
-    .AllowAnyHeader();
-});
+app.UseCors("default");
 
 app.MapControllers();
 

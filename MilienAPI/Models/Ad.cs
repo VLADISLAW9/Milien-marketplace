@@ -17,5 +17,6 @@ namespace MilienAPI.Models
         public string[]? PhotoPath { get; set; }
         public string? Subcategory { get; set; }
         public bool Premium { get; set; }
+        public DateTime DateOfCreation { get; set; } = DateTime.Now.Date;
     }
 }
