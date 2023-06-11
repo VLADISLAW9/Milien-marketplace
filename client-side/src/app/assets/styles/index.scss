@@ -16,6 +16,10 @@ body {
 	font-family: 'Open Sans', sans-serif;
 }
 
+.header {
+	@apply inset-x-[200px];
+}
+
 @media (max-width: 1910px) {
 	body {
 		@apply bg-stone-100;
@@ -23,6 +27,9 @@ body {
 		padding-left: $laptop_padding-x;
 		position: relative;
 		font-family: 'Open Sans', sans-serif;
+	}
+	.header {
+		@apply inset-x-[50px];
 	}
 }
 
@@ -177,4 +184,44 @@ html {
 	75% {
 		background-position: 0% 0%, 100% 100%;
 	}
+}
+
+/*======================
+    404 page
+=======================*/
+
+.page_404 {
+	@apply -mt-[200px];
+	padding: 40px 0;
+	background: #fff;
+}
+
+.page_404 img {
+	width: 100%;
+}
+
+.four_zero_four_bg {
+	background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+	height: 500px;
+	width: 600px;
+	background-position: center;
+}
+
+.four_zero_four_bg h1 {
+	font-size: 80px;
+}
+
+.four_zero_four_bg h3 {
+	font-size: 80px;
+}
+
+.link_404 {
+	color: #fff !important;
+	padding: 10px 20px;
+	background: #39ac31;
+	margin: 20px 0;
+	display: inline-block;
+}
+.contant_box_404 {
+	margin-top: -50px;
 }

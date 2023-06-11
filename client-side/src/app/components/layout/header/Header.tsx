@@ -23,7 +23,7 @@ const Header: FC = () => {
 
 	if (isLoading) {
 		return (
-			<div className='px-[50px] py-[20px] flex items-center'>
+			<div className='fixed header z-[50] bg-white px-[50px] py-[20px] flex items-center'>
 				<HeaderLogo />
 				<HeaderSearch />
 				<div className='flex w-[15%] items-center flex-auto justify-end'>
@@ -34,7 +34,7 @@ const Header: FC = () => {
 	}
 
 	return (
-		<div className='px-[50px] py-[20px] flex items-center'>
+		<div className='fixed header z-[50] bg-white px-[50px] py-[20px] flex items-center'>
 			<HeaderLogo />
 			<HeaderSearch />
 

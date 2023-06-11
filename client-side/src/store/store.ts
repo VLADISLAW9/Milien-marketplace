@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
 import { advrtsApi } from '../services/AdvrtsService'
 import { customersApi } from '../services/CustomerService'
+import { BlurSliceReducer } from './slices/blurSlice'
 import { paymentReducer } from './slices/paymentSlice'
 import { userReducers } from './slices/userSlice'
 
@@ -11,6 +12,7 @@ export const store = configureStore({
 		[customersApi.reducerPath]: customersApi.reducer,
 		user: userReducers,
 		payment: paymentReducer,
+		isBlur: BlurSliceReducer
 	},
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware().concat(

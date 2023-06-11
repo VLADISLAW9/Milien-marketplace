@@ -1,8 +1,9 @@
 import { Dispatch } from '@reduxjs/toolkit'
 import { useContext, useEffect, useState } from 'react'
+import { BsHeart } from 'react-icons/bs'
 import { MdOutlineNoPhotography } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { UserContext } from '../../context/UserContext'
@@ -17,14 +18,13 @@ import {
 import CreateAdvrtService from '../../services/CreatorAdvrtService'
 import { useGetCustomerByIdQuery } from '../../services/CustomerService'
 
+import FavoriteAdvrtService from '../../services/FavouriteAdvrtService'
 import { formatToCurrency } from '../../utils/formatToCurrency'
 import Album from './album/Album'
-import AddToFav from './buttons/AddToFav'
 import ShowContacts from './buttons/showContacts/ShowContacts'
 import CustomerCard from './customerCard/CustomerCard'
 import EditAdvrtModal from './editModal/EditAdvrtModal'
 import Similar from './similar/Similar'
-import FavoriteAdvrtService from '../../services/FavouriteAdvrtService'
 
 const AdvertisementPage = () => {
 	const { addAdvrtToStorage, addPaymentId } = useActions()
@@ -34,8 +34,9 @@ const AdvertisementPage = () => {
 	const { userData, isUserLoading, userError } = useContext(UserContext)
 	const { isAuth } = useTypedSelector(state => state.user)
 	const [visible, setVisible] = useState(false)
-	const [isFav, setIsFav] = useState(false)
+	const [isFavAd, setIsFavAd] = useState(false)
 	const [checker, setChecker] = useState(true)
+	const navigate = useNavigate()
 
 	const {
 		data: advrt,
@@ -72,9 +73,12 @@ const AdvertisementPage = () => {
 	}
 
 	const [checkIsFav, favLoading, favError] = useFetching(async () => {
-		if (advrt) {
-			const isFav = await FavoriteAdvrtService.CheckIsFavourite(advrt.id)
-			setIsFav(isFav.data)
+		if (isAuth) {
+			const isFav = await FavoriteAdvrtService.CheckIsFavourite(
+				Number(params.id)
+			)
+			setIsFavAd(isFav.data)
+			console.log(isFav, 'in fetch')
 		}
 	})
 
@@ -93,20 +97,26 @@ const AdvertisementPage = () => {
 	)
 
 	const [addToFav, loadingAddToFav, addToFavError] = useFetching(async () => {
-		const response = await FavoriteAdvrtService.AddToFavourite(advrt.id)
-		setIsFav(true)
+		if (advrt && isAuth) {
+			const response = await FavoriteAdvrtService.AddToFavourite(advrt.id)
+		} else {
+			navigate('/login')
+		}
 	})
 
 	const [removeFromFav, loadingRemoveFromFav, errorRemoveFromFav] = useFetching(
 		async () => {
-			const response = await FavoriteAdvrtService.RemoveFromFavourite(advrt.id)
-			setIsFav(false)
+			if (advrt) {
+				const response = await FavoriteAdvrtService.RemoveFromFavourite(
+					advrt.id
+				)
+			}
 		}
 	)
 
 	useEffect(() => {
 		checkIsFav()
-	}, [checker])
+	}, [])
 
 	useEffect(() => {
 		function handleScroll() {
@@ -124,7 +134,15 @@ const AdvertisementPage = () => {
 		upgradeToPremium()
 	}
 
-	const handleAddToFav = () => {}
+	const handleAddToFav = () => {
+		setIsFavAd(true)
+		addToFav()
+	}
+
+	const handleDeleteFromFav = () => {
+		setIsFavAd(false)
+		removeFromFav()
+	}
 
 	return (
 		<div className='mt-14'>
@@ -133,7 +151,7 @@ const AdvertisementPage = () => {
 					<Loader />
 				</div>
 			) : isErrorAdvrt || userError ? (
-				<div className='mt-44'>
+				<div className='flex justify-center items-center mt-[200px]'>
 					<ErrorMessage />
 				</div>
 			) : advrt ? (
@@ -141,7 +159,7 @@ const AdvertisementPage = () => {
 					<div className='flex justify-between'>
 						<div
 							className={
-								scrollPosition >= 135 ? 'relative w-[50%]' : 'relative w-[55%]'
+								scrollPosition >= 19 ? 'relative w-[50%]' : 'relative w-[55%]'
 							}
 						>
 							<div className='max-w-[700px]'>
@@ -177,8 +195,8 @@ const AdvertisementPage = () => {
 						</div>
 						<div
 							className={
-								scrollPosition >= 135
-									? 'fixed -right-16 top-[50px] w-[50%]'
+								scrollPosition >= 19
+									? 'fixed -right-16 top-[135px] w-[50%]'
 									: 'ml-16 w-[50%]'
 							}
 						>
@@ -208,7 +226,29 @@ const AdvertisementPage = () => {
 									</>
 								) : (
 									<>
-										<AddToFav />
+										{!isFavAd && advrt ? (
+											<button
+												disabled={favLoading}
+												onClick={handleAddToFav}
+												className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex h-[68px] w-[320px] justify-center  items-center text-xl text-white'
+											>
+												{!favLoading && (
+													<>
+														<h1>Добавить в избранное</h1>
+														<BsHeart className='ml-3' />
+													</>
+												)}
+											</button>
+										) : (
+											<button
+												onClick={handleDeleteFromFav}
+												className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex w-[320px] justify-center  items-center text-xl text-white'
+											>
+												Удалить из избранного
+												<BsHeart className='ml-3' />
+											</button>
+										)}
+
 										<ShowContacts
 											isLoading={isLoadingCustomer}
 											isError={isErrorCustomer}

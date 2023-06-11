@@ -89,7 +89,14 @@ const EditAdvrtModal: FC<IEditAdvrtModal> = ({
 	) => {
 		const files = event.target.files
 		if (files) {
-			const updatedPhotos: File[] = Array.from(files)
+			const updatedPhotos: File[] = Array.from(files).slice(
+				0,
+				advrt.premium
+					? 30 -
+							(newAdvrtData.photoPath.length + newAdvrtData.newPhotoPath.length)
+					: 15 -
+							(newAdvrtData.photoPath.length + newAdvrtData.newPhotoPath.length)
+			) // Ограничение до 15 фотографий
 			setUploadedPhotos([...uploadedPhotos, ...updatedPhotos])
 
 			const uploadedURLs = updatedPhotos.map(file => URL.createObjectURL(file))
@@ -143,6 +150,7 @@ const EditAdvrtModal: FC<IEditAdvrtModal> = ({
 			<Dialog open={open} onClose={handleCloseEdit}>
 				<DialogTitle>
 					<h1 className='text-3xl'>Редактирование объявления</h1>
+					{advrt.premium && <h1 className='text-yellow-500'>"Премиум"</h1>}
 				</DialogTitle>
 				<DialogContent>
 					<ul className='grid grid-cols-6 my-5'>
@@ -179,13 +187,27 @@ const EditAdvrtModal: FC<IEditAdvrtModal> = ({
 								</button>
 							</li>
 						))}
+						{advrt.premium &&
+							newAdvrtData.newPhotoPath.length + newAdvrtData.photoPath.length <
+								30 && (
+								<button
+									onClick={handleButtonClick}
+									className='h-[80px] flex text-stone-400 justify-center items-center w-[80px] border-2 border-stone-300 border-dashed'
+								>
+									<MdAddToPhotos className='w-10 h-10' />
+								</button>
+							)}
+						{!advrt.premium &&
+							newAdvrtData.newPhotoPath.length + newAdvrtData.photoPath.length <
+								15 && (
+								<button
+									onClick={handleButtonClick}
+									className='h-[80px] flex text-stone-400 justify-center items-center w-[80px] border-2 border-stone-300 border-dashed'
+								>
+									<MdAddToPhotos className='w-10 h-10' />
+								</button>
+							)}
 
-						<button
-							onClick={handleButtonClick}
-							className='h-[80px] flex text-stone-400 justify-center items-center w-[80px] border-2 border-stone-300 border-dashed'
-						>
-							<MdAddToPhotos className='w-10 h-10' />
-						</button>
 						<input
 							ref={fileInputRef}
 							accept='image/*'

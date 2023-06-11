@@ -12,6 +12,7 @@ interface ILayoutProps {
 const Layout: FC<ILayoutProps> = ({ children }) => {
 	const location = useLocation()
 	const { isAuth, user } = useTypedSelector(state => state.user)
+	const { isBlur } = useTypedSelector(state => state.isBlur)
 
 	return (
 		<>
@@ -30,7 +31,15 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 						</div>
 					)}
 
-					<main className='flex-[1] px-[50px]'>{children}</main>
+					<main
+						className={
+							isBlur
+								? 'flex-[1] mt-24 px-[50px] transition-all blur-sm'
+								: 'flex-[1] mt-24 px-[50px]'
+						}
+					>
+						{children}
+					</main>
 					<Footer />
 				</div>
 			)}

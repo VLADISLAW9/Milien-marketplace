@@ -23,12 +23,21 @@ const HomePage: FC = () => {
 	let pagesArray = getPagesArray(totalPages)
 
 	const [fetchAds, isAdsLoading, adsError] = useFetching(async () => {
-		const response = await axios.get('http://192.168.0.160:5137/Ad/GetAll', {
-			params: { limit: limit, page: page },
-		})
-		const totalCount = response.headers['count']
-		setTotalPages(getPageCount(totalCount, limit))
-		setAds([...ads, ...response.data])
+		if (page === 1) {
+			const response = await axios.get('http://192.168.0.160:5137/Ad/GetAll', {
+				params: { limit: limit, page: page, refreshAds: true },
+			})
+			const totalCount = response.headers['count']
+			setTotalPages(getPageCount(totalCount, limit))
+			setAds([...ads, ...response.data])
+		} else {
+			const response = await axios.get('http://192.168.0.160:5137/Ad/GetAll', {
+				params: { limit: limit, page: page },
+			})
+			const totalCount = response.headers['count']
+			setTotalPages(getPageCount(totalCount, limit))
+			setAds([...ads, ...response.data])
+		}
 	})
 
 	useObserver(lastElement, page < totalPages, isAdsLoading, () => {
@@ -53,7 +62,7 @@ const HomePage: FC = () => {
 
 	return (
 		<div>
-			<h1 className='mt-14 mb-5 text-3xl'>Все объявления</h1>
+			<h1 className='mt-14 mb-5 text-3xl'>Рекомендации</h1>
 			<ToggleButtonGroup
 				orientation='horizontal'
 				value={view}

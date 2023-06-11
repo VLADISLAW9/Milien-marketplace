@@ -8,6 +8,8 @@ import FavoritePage from '../pages/favorite/FavoritePage'
 import HomePage from '../pages/home/HomePage'
 import PaymentPage from '../pages/payment/PaymentPage'
 import ProfilePage from '../pages/profile/ProfilePage'
+import SearchPage from '../pages/search/SearchPage'
+import UserAcception from '../pages/userAcception/UserAcception'
 
 export const privateRoutes = [
 	{ path: '/', component: HomePage, exact: true },
@@ -17,6 +19,8 @@ export const privateRoutes = [
 	{ path: '/payment-success', component: PaymentPage, exact: true },
 	{ path: '/my-profile', component: ProfilePage, exact: true },
 	{ path: '/favorite', component: FavoritePage, exact: true },
+	{ path: '/search/:param', component: SearchPage, exact: true },
+	{ path: '/user-acception', component: UserAcception, exact: true },
 ]
 
 export const publicRoutes = [
@@ -25,4 +29,6 @@ export const publicRoutes = [
 	{ path: '/customer/:id', component: CustomerPage, exact: true },
 	{ path: '/login', component: LogInPage, exact: true },
 	{ path: '/signin', component: SignInPage, exact: true },
+	{ path: '/search/:param', component: SearchPage, exact: true },
+	{ path: '/user-acception', component: UserAcception, exact: true },
 ]
