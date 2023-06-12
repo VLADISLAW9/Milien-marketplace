@@ -37,7 +37,7 @@ const AdvertisementPage = () => {
 	const [isFavAd, setIsFavAd] = useState(false)
 	const [checker, setChecker] = useState(true)
 	const navigate = useNavigate()
-
+	
 	const {
 		data: advrt,
 		isLoading: isLoadingAdvrt,
@@ -71,6 +71,8 @@ const AdvertisementPage = () => {
 	const handleCloseEdit = () => {
 		setOpenEdit(false)
 	}
+
+	console.log(advrt?.photoPath)
 
 	const [checkIsFav, favLoading, favError] = useFetching(async () => {
 		if (isAuth) {
@@ -187,10 +189,15 @@ const AdvertisementPage = () => {
 											{isAuth && userData && userData.id === customer?.id ? (
 												<>
 													<button
+														disabled={upgrageLoading}
 														onClick={handleBuyPremium}
 														className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex w-[320px] justify-center  items-center text-xl text-white'
 													>
-														Продвинуть объявление
+														{upgrageLoading ? (
+															<>Загрузка...</>
+														) : (
+															<>Продвинуть объявление</>
+														)}
 													</button>
 													<button
 														onClick={handleOpenEdit}
@@ -279,10 +286,15 @@ const AdvertisementPage = () => {
 								{isAuth && userData && userData.id === customer?.id ? (
 									<>
 										<button
+											disabled={upgrageLoading}
 											onClick={handleBuyPremium}
 											className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex w-[320px] justify-center  items-center text-xl text-white'
 										>
-											Продвинуть объявление
+											{upgrageLoading ? (
+												<>Загрузка...</>
+											) : (
+												<>Продвинуть объявление</>
+											)}
 										</button>
 										<button
 											onClick={handleOpenEdit}

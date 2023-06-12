@@ -310,7 +310,9 @@ const EditAdvrtModal: FC<IEditAdvrtModal> = ({
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleCloseEdit}>Отмена</Button>
-					<Button onClick={handleSubmitData}>Сохранить</Button>
+					<Button disabled={isLoading} onClick={handleSubmitData}>
+						{isLoading ? <>Загрузка...</> : <>Сохранить изменения</>}
+					</Button>
 				</DialogActions>
 			</Dialog>
 		</div>

@@ -7,7 +7,7 @@ const AddAdvrt: FC = () => {
 		<Link to='/createAdvrt'>
 			<div className='bg-gradient '>
 				<div className='bg-gradient-animation'></div>
-				<MdAdd className='text-white w-16 h-16' />
+				<MdAdd className='text-white w-16 h-16 max-lg:w-24 max-lg:h-24' />
 			</div>
 		</Link>
 	)

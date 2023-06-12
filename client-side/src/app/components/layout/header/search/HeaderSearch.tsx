@@ -68,11 +68,11 @@ const HeaderSearch = () => {
 
 	return (
 		<div
-			className='flex-auto w-[80%] max-2xl:w-[60%] max-xl:w-[30%]  relative flex justify-center items-center max'
+			className='flex-auto w-[80%] max-lg:w-[100px] max-2xl:w-[60%] max-xl:w-[30%]  relative flex justify-center items-center '
 			ref={ref}
 		>
 			{isShow && isShowMore && (
-				<div className='absolute w-[67.5%] top-[50px]'>
+				<div className='absolute w-[67.5%] max-lg:w-[80%] top-[50px]'>
 					<div className='flex bg-white border-gray-400 border-l 	border-r border-t border-b p-5 rounded-b-3xl '>
 						<ul className='w-[22%]'>
 							{categories.map(category => (
@@ -90,7 +90,7 @@ const HeaderSearch = () => {
 							))}
 						</ul>
 						{selectCategory && (
-							<ul className='ml-10 grid grid-rows-6 grid-flow-col gap-x-10'>
+							<ul className='ml-10 max-lg:ml-16 grid grid-rows-6  gap-x-10'>
 								{categories
 									.find(category => category.name === selectCategory)
 									?.subcategories.map(subcategory => (
@@ -115,13 +115,13 @@ const HeaderSearch = () => {
 				}}
 				className={
 					isShowMore && isShow
-						? 'relative text-white transition-all rounded-tl-3xl py-3 px-4 bg-[#166430] justify-center border-t border-l border-b border-[#166430] flex items-center'
-						: 'relative text-gray-400 hover:text-white transition-all rounded-l-3xl py-3 px-4 hover:bg-[#166430] border-gray-400 justify-center border-t border-l border-b hover:border-[#166430] flex items-center'
+						? 'relative text-white transition-all rounded-tl-3xl py-3 max-lg:py-0 max-lg:h-[100px]  px-4 bg-[#166430] max-lg:border-[#166430] max-lg:border-2  justify-center border-t border-l border-b border-[#166430] flex items-center '
+						: 'relative text-gray-400 max-lg:h-[100px] max-lg:rounded-l-full hover:text-white transition-all rounded-l-3xl max-lg:border-[#166430] max-lg:border-l-2 max-lg:border-t-2 max-lg:border-b-2  max-lg:py-0 py-3 px-4 hover:bg-[#166430] border-gray-400 justify-center border-t max-lg:text-[#166430] border-l border-b hover:border-[#166430] flex items-center'
 				}
 			>
-				<RxHamburgerMenu className='translate-x-2 mr-2 w-6 h-6' />
+				<RxHamburgerMenu className='translate-x-2 mr-2 w-6 h-6 max-lg:w-10 max-lg:w-10' />
 			</button>
-			<div className='relative w-[50%]'>
+			<div className='relative w-[50%] max-lg:w-[100%]'>
 				<input
 					onClick={() => {
 						setIsShow(true)
@@ -134,7 +134,9 @@ const HeaderSearch = () => {
 					value={searchValue}
 					onChange={handleSearch}
 					placeholder='Поиск'
-					className='border-t border-r border-l border-b border-gray-400  py-3 w-[100%] px-6 outline-none '
+					className='border-t max-lg:text-[#166430] border-r border-l border-b border-gray-400 max-lg:h-[100px]  max-lg:border-[#166430]
+					max-lg:border-2 max-lg:placeholder:text-[#166430] max-lg:placeholder:text-center  max-lg:py-0 py-3 w-[100%] px-6 outline-none max-lg:placeholder:text-4xl 
+					max-lg:placeholder:translate-y-1'
 					type='text'
 				/>
 
@@ -213,12 +215,12 @@ const HeaderSearch = () => {
 				}}
 				className={
 					isShowMore && isShow
-						? 'text-white hover:border-[#166430]/10 hover:bg-[#166430]/80 transition-all rounded-tr-3xl py-3 px-4 bg-[#166430]  border border-[#166430] flex items-center'
-						: 'text-white hover:border-[#166430]/10 hover:bg-[#166430]/80 transition-all rounded-r-3xl py-3 px-4 bg-[#166430]  border border-[#166430] flex items-center'
+						? 'text-white max-lg:h-[100px] max-lg:py-0  hover:border-[#166430]/10 max-lg:rounded-r-full hover:bg-[#166430]/80 transition-all rounded-tr-3xl py-3 px-4 bg-[#166430]  border border-[#166430] flex items-center'
+						: 'text-white max-lg:h-[100px] max-lg:rounded-r-full max-lg:py-0 hover:border-[#166430]/10 hover:bg-[#166430]/80 transition-all rounded-r-3xl py-3 px-4 bg-[#166430]  border border-[#166430] flex items-center'
 				}
 			>
-				<AiOutlineSearch className=' mr-1 w-6 h-6' />
-				<h1>Найти</h1>
+				<AiOutlineSearch className=' mr-1 w-6 h-6 max-lg:w-16 max-lg:h-10' />
+				<h1 className='max-lg:hidden'>Найти</h1>
 			</button>
 		</div>
 	)

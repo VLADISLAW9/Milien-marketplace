@@ -68,17 +68,23 @@ const Header: FC = () => {
 			</div>
 
 			{showBurger && (
-				<div className='absolute top-0 left-0 right-0 z-20 h-[200vh] px-[25px] w-[100%] py-[35px]  bg-white'>
-					<button
-						onClick={() => {
-							setShowBurger(false)
-						}}
-						className='z-30 float-right'
-					>
-						<MdClose className='w-[60px] text-stone-600 h-[60px]' />
-					</button>
+				<div className='absolute flex flex-col top-0 left-0 right-0 z-20 h-[200vh] px-[25px] w-[100%] py-[25px]  bg-white'>
+					<div>
+						<button
+							onClick={() => {
+								setShowBurger(false)
+							}}
+							className='z-30 flex justify-center items-center float-right translate-y-1.5 translate-x-1'
+						>
+							<MdClose className='w-16 text-stone-600 h-16' />
+						</button>
+					</div>
+
 					<div className='flex mt-1 flex-col  justify-center'>
-						<div className='w-[100%] mb-14  relative flex justify-center items-center '>
+						<div className='flex justify-center mt-5 mb-10 items-center'>
+							<img src='/logo.png' className='w-[250px]' alt='логотип' />
+						</div>
+						<div className='w-[100%] mb-28 mt-14 relative flex justify-center items-center '>
 							<HeaderSearch />
 						</div>
 						{isAuth && user ? (
@@ -88,15 +94,25 @@ const Header: FC = () => {
 										setShowBurger(false)
 										navigate('/my-profile')
 									}}
-									className='text-4xl text-center rounded-full border-2 border-[#166430] w-[79%] text-[#166430] px-8 py-6 mb-14 border'
+									className='text-4xl text-center rounded-full border-2 bg-[#166430]  border-[#166430] w-[100%] text-white px-8 py-0 flex justify-center items-center h-[100px] mb-14 border'
 								>
 									Профиль
+								</button>
+
+								<button
+									onClick={() => {
+										setShowBurger(false)
+										navigate('/favorite')
+									}}
+									className='text-4xl text-center rounded-full  w-[100%] text-white bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00] px-8 py-0 flex justify-center items-center h-[100px] mb-14 '
+								>
+									Избранное
 								</button>
 								<button
 									onClick={() => {
 										handleExit()
 									}}
-									className='text-4xl text-center rounded-full border-2 border-[#166430] w-[79%] text-[#166430] px-8 py-6 mb-14 border'
+									className='text-4xl text-center rounded-full border-2 border-[#166430] w-[100%] text-[#166430] px-8 py-0 flex justify-center items-center h-[100px] mb-14 border'
 								>
 									Выйти
 								</button>
@@ -105,13 +121,13 @@ const Header: FC = () => {
 							<div className='flex justify-center items-center flex-col'>
 								<Link
 									to={'/login'}
-									className='text-4xl text-center rounded-full border-2 border-[#166430] w-[79%] text-[#166430] px-8 py-6 mb-14 border'
+									className='text-4xl text-center rounded-full border-2 border-[#166430] w-[100%] text-[#166430] px-8 py-0 flex justify-center items-center h-[100px] mb-14 border'
 								>
 									Войти
 								</Link>
 								<Link
 									to={'/signin'}
-									className='text-4xl text-center rounded-full border-2 border-[#166430] w-[79%] text-[#166430] px-8 py-6 mb-14 border'
+									className='text-4xl text-center rounded-full border-2 bg-[#166430] border-[#166430] w-[100%] text-white px-8 py-0 flex justify-center items-center h-[100px] mb-14 border'
 								>
 									Регистрация
 								</Link>

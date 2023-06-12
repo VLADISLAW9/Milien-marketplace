@@ -24,7 +24,7 @@ const LogInPage: FC = () => {
 		async () => {
 			if (isTrueCode) {
 				const reset = await axios.put(
-					'http://192.168.0.160:5243/api/Auth/create_new_password',
+					'http://37.140.199.105:5001/api/Auth/create_new_password',
 					null,
 					{
 						params: {
@@ -51,7 +51,7 @@ const LogInPage: FC = () => {
 	})
 	const [sendler, sendlerLoading, sendlerError] = useFetching(async () => {
 		const sendCode = await axios.put(
-			'http://192.168.0.160:5243/api/Auth/reset_password',
+			'http://37.140.199.105:5001/api/Auth/reset_password',
 			null,
 			{
 				params: {

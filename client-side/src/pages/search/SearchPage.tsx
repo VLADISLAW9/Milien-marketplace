@@ -111,7 +111,7 @@ const SearchPage: FC = () => {
 				»{' '}
 			</h1>
 			<div className='flex mt-7'>
-				<div ref={ref} className='flex-initial w-[30%] '>
+				<div ref={ref} className='flex-initial max-lg:hidden w-[30%] '>
 					<h1 className='text-2xl mb-3'>Категории</h1>
 					<ul className='ml-5' ref={ref}>
 						{categories.map(cat => (
@@ -192,7 +192,7 @@ const SearchPage: FC = () => {
 						</button>
 					</div>
 				</div>
-				<div className='flex-initial justify-center w-[70%]'>
+				<div className='flex-initial justify-center max-lg:w-[100%] w-[70%]'>
 					{searchingLoading ? (
 						<div className='flex justify-center items-center mt-24'>
 							<Loader />
@@ -212,7 +212,7 @@ const SearchPage: FC = () => {
 								className={
 									view === 'list'
 										? ' flex flex-col justify-center items-center gap-5'
-									: ' grid grid-cols-3 gap-5 '
+									: ' grid grid-cols-3 max-lg:grid-cols-2 max-lg:gap-3 gap-5 '
 								}
 							>
 								{foundAds.map(advrt =>
