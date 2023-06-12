@@ -46,7 +46,7 @@ const AdvertisementPage = () => {
 
 	const {
 		data: similar_advrts,
-		isLoading: isLoadingSimilar,
+
 		isError: isErrorSimilar,
 	} = useGetAdvrtByCategoryQuery(advrt?.category)
 
@@ -56,11 +56,9 @@ const AdvertisementPage = () => {
 		isError: isErrorCustomer,
 	} = useGetCustomerByIdQuery(advrt?.customerId)
 
-	const {
-		data: customer_advrts,
-		isLoading: isLoadingCustomerAdvrts,
-		isError: isErrorCustomerAdvrts,
-	} = useGetAdvrtsByCustomerIdQuery(advrt?.customerId)
+	const { data: customer_advrts } = useGetAdvrtsByCustomerIdQuery(
+		advrt?.customerId
+	)
 
 	const [scrollPosition, setScrollPosition] = useState(window.pageYOffset)
 
