@@ -1,4 +1,5 @@
 import AdvertisementPage from '../pages/advrt/AdvertisementPage'
+import ForgotPass from '../pages/authorization/forgotPass/ForgotPass'
 import LogInPage from '../pages/authorization/login/LogInPage'
 import SignInPage from '../pages/authorization/signin/SignInPage'
 import CreateAdvrtPage from '../pages/creatorAd/CreateAdvrtPage'
@@ -30,5 +31,6 @@ export const publicRoutes = [
 	{ path: '/login', component: LogInPage, exact: true },
 	{ path: '/signin', component: SignInPage, exact: true },
 	{ path: '/search/:param', component: SearchPage, exact: true },
+	{ path: '/forgot-password', component: ForgotPass, exact: true },
 	{ path: '/user-acception', component: UserAcception, exact: true },
 ]

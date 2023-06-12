@@ -7,9 +7,11 @@
 
 $fullhd_padding-x: 200px;
 $laptop_padding-x: 50px;
+$tablet_padding-x: 5px;
 
 body {
-	@apply bg-stone-100;
+	@apply bg-stone-100 ;
+	min-width: 700px;
 	padding-right: $fullhd_padding-x;
 	padding-left: $fullhd_padding-x;
 	position: relative;
@@ -30,6 +32,19 @@ body {
 	}
 	.header {
 		@apply inset-x-[50px];
+	}
+}
+
+@media (max-width: 1280px) {
+	body {
+		@apply bg-stone-100;
+		padding-right: $tablet_padding-x;
+		padding-left: $tablet_padding-x;
+		position: relative;
+		font-family: 'Open Sans', sans-serif;
+	}
+	.header {
+		@apply inset-x-[5px];
 	}
 }
 

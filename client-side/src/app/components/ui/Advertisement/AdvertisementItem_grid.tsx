@@ -13,6 +13,7 @@ import { useTypedSelector } from '../../../../hooks/use-typed-selector'
 import CreateAdvrtService from '../../../../services/CreatorAdvrtService'
 import FavoriteAdvrtService from '../../../../services/FavouriteAdvrtService'
 import { IAdvrt } from '../../../../types/IAdvrt'
+import { calculateDaysAgo } from '../../../../utils/calculateDaysAgo'
 import { formatToCurrency } from '../../../../utils/formatToCurrency'
 
 interface IAdvrtProps {
@@ -294,7 +295,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 											? 'text-stone-200   text-sm line-clamp-2	 font-normal'
 											: 'text-stone-200   text-sm line-clamp-1 font-normal'
 										: mini
-										? 'text-gray-400 line-clamp-2 text-sm font-normal'
+										? 'text-gray-400 h-[40px] line-clamp-2 text-sm font-normal'
 										: 'text-gray-400 line-clamp-1 text-sm font-normal'
 								}
 							>
@@ -307,7 +308,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 										: 'text-gray-400 mt-3 text-sm font-normal'
 								}
 							>
-								3 дня назад
+								{calculateDaysAgo(advrt.dateOfCreation)}
 							</p>
 						</div>
 					</div>

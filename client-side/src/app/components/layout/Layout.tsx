@@ -18,15 +18,16 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 		<>
 			{location.pathname === '/signin' ||
 			location.pathname === '/login' ||
-			location.pathname === '/payment-success' ? (
+			location.pathname === '/payment-success' ||
+			location.pathname === '/forgot-password' ? (
 				<main className='flex items-center justify-center h-screen'>
 					{children}
 				</main>
 			) : (
-				<div className='bg-white flex relative flex-col min-h-[100vh] h-[100%]'>
+				<div className='bg-white justify-between flex relative flex-col min-h-[100vh]  max-lg:min-h-[174vh] h-[100%]'>
 					<Header />
 					{isAuth && user && (
-						<div className='fixed z-50 right-14 bottom-16	'>
+						<div className='fixed z-[30] right-14 bottom-16	'>
 							<AddAdvrt />
 						</div>
 					)}
@@ -34,8 +35,8 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 					<main
 						className={
 							isBlur
-								? 'flex-[1] mt-24 px-[50px] transition-all blur-sm'
-								: 'flex-[1] mt-24 px-[50px]'
+								? 'flex-[1] mt-24 max-xl:px-[25px] px-[50px] transition-all  blur-sm'
+								: 'flex-[1] max-xl:px-[25px] mt-24 px-[50px]'
 						}
 					>
 						{children}

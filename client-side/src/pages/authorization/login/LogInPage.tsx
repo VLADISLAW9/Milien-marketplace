@@ -125,6 +125,16 @@ const LogInPage: FC = () => {
 					<BsArrowDown className='-rotate-90' />
 				</Link>
 			</div>
+			<div className='flex mt-3 text-[13px] justify-center'>
+				<h1 className='mr-2 text-stone-400 font-light'>Забыли пароль? </h1>
+				<Link
+					to='/forgot-password'
+					className='hover:text-stone-400 transition-all font-medium flex items-center'
+				>
+					<h1 className='mr-[2px]'>Сброс пароля</h1>
+					<BsArrowDown className='-rotate-90' />
+				</Link>
+			</div>
 		</div>
 	)
 }

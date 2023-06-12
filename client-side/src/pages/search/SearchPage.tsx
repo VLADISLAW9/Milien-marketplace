@@ -1,9 +1,6 @@
-import { ToggleButton, ToggleButtonGroup } from '@mui/material'
 import axios from 'axios'
 import { FC, useEffect, useState } from 'react'
-import { BsFillGrid3X3GapFill } from 'react-icons/bs'
-import { FaList } from 'react-icons/fa'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
 import AdvertisementItem_list from '../../app/components/ui/Advertisement/AdvertisementItem_list'
 import Loader from '../../app/components/ui/spiner/Loader'
@@ -15,6 +12,7 @@ import { getPageCount, getPagesArray } from '../../utils/pages'
 
 const SearchPage: FC = () => {
 	const params = useParams()
+	const navigate = useNavigate()
 	const [totalPages, setTotalPages] = useState(0)
 	const [limit, setLimit] = useState(16)
 	const [page, setPage] = useState(1)
@@ -29,7 +27,7 @@ const SearchPage: FC = () => {
 	const [filtration, filtrationLoading, filtrationError] = useFetching(
 		async () => {
 			const filter = await axios.get(
-				'http://192.168.0.160:5137/Ad/Filtration',
+				'http://37.140.199.105:5000/Ad/Filtration',
 				{
 					params: {
 						limit: limit,
@@ -49,7 +47,7 @@ const SearchPage: FC = () => {
 	const [searchingAds, searchingLoading, searchingError] = useFetching(
 		async () => {
 			const response = await axios.get(
-				'http://192.168.0.160:5137/Ad/SearchByQuery',
+				'http://37.140.199.105:5000/Ad/SearchByQuery',
 				{
 					params: { query: params.param, page: page, limit: limit },
 				}
@@ -79,20 +77,41 @@ const SearchPage: FC = () => {
 	const handleFilter = () => {
 		if (minPrice || maxPrice || currentCat || currentSub) {
 			filtration()
-			setMinPrice(null)
-			setMaxPrice(null)
-			setCurrentCat(null)
-			setCurrentSub(null)
+			// setMinPrice(null)
+			// setMaxPrice(null)
+			// setCurrentCat(null)
+			// setCurrentSub(null)
 		} else {
 			searchingAds()
 		}
+		const newParams = {
+			param:
+				currentCat && currentSub
+					? currentSub
+					: currentCat
+					? currentCat
+					: params.param,
+		}
+		navigate(`/search/${newParams.param}`)
 	}
 
 	return (
 		<div className='mt-14 text-3xl'>
-			<h1>Объявления по запросу «{params.param}» </h1>
+			<h1>
+				Объявления по запросу «
+				{currentCat && currentSub ? (
+					<>
+						{currentCat}, {currentSub}
+					</>
+				) : currentCat ? (
+					<>{currentCat}</>
+				) : (
+					params.param
+				)}
+				»{' '}
+			</h1>
 			<div className='flex mt-7'>
-				<div className='flex-initial w-[30%]'>
+				<div ref={ref} className='flex-initial w-[30%] '>
 					<h1 className='text-2xl mb-3'>Категории</h1>
 					<ul className='ml-5' ref={ref}>
 						{categories.map(cat => (
@@ -101,12 +120,10 @@ const SearchPage: FC = () => {
 									onClick={() => {
 										setIsShow(true)
 										setCurrentSub(null)
-										setCurrentCat(
-											isShow && currentCat === cat.name ? null : cat.name
-										)
+										setCurrentCat(currentCat === cat.name ? null : cat.name)
 									}}
 									className={
-										isShow && cat.name === currentCat
+										cat.name === currentCat
 											? 'text-base  mt-2  w-[200px] font-semibold cursor-pointer'
 											: 'text-base hover:text-stone-400 transition-colors w-[200px]  mt-2 cursor-pointer'
 									}
@@ -147,9 +164,10 @@ const SearchPage: FC = () => {
 						<h1 className='text-2xl'>Цена</h1>
 						<div className='flex mt-3 gap-5 ml-5'>
 							<input
+								type='number'
 								value={minPrice ? minPrice : ''}
 								onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-									setMinPrice(parseFloat(e.target.value))
+									setMinPrice(Number(e.target.value))
 								}}
 								className='placeholder:text-lg border-stone-400 outline-none border-b px-3 py-2 text-lg w-[150px]'
 								placeholder='от'
@@ -158,7 +176,7 @@ const SearchPage: FC = () => {
 								value={maxPrice ? maxPrice : ''}
 								type='number'
 								onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-									setMaxPrice(parseFloat(e.target.value))
+									setMaxPrice(Number(e.target.value))
 								}}
 								className='w-[150px] border-stone-400 border-b px-3 py-2 outline-none text-lg placeholder:text-lg'
 								placeholder='до, в рублях'
@@ -175,19 +193,6 @@ const SearchPage: FC = () => {
 					</div>
 				</div>
 				<div className='flex-initial justify-center w-[70%]'>
-					<ToggleButtonGroup
-						orientation='horizontal'
-						value={view}
-						exclusive
-						onChange={handleChangeView}
-					>
-						<ToggleButton value='list' aria-label='list'>
-							<FaList className='w-4 h-4 ' />
-						</ToggleButton>
-						<ToggleButton value='grid' aria-label='grid'>
-							<BsFillGrid3X3GapFill className='w-4 h-4' />
-						</ToggleButton>
-					</ToggleButtonGroup>
 					{searchingLoading ? (
 						<div className='flex justify-center items-center mt-24'>
 							<Loader />
@@ -206,8 +211,8 @@ const SearchPage: FC = () => {
 							<ul
 								className={
 									view === 'list'
-										? 'mt-12 flex flex-col justify-center items-center gap-5'
-										: 'mt-12 grid grid-cols-3 gap-5 '
+										? ' flex flex-col justify-center items-center gap-5'
+									: ' grid grid-cols-3 gap-5 '
 								}
 							>
 								{foundAds.map(advrt =>

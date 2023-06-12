@@ -79,7 +79,7 @@ const CustomizedMenus: FC<ICustomizedMenus> = ({ user }) => {
 	}
 
 	return (
-		<div className='flex w-[15%]  items-center flex-auto justify-end'>
+		<div className='flex items-center'>
 			<Link to='/favorite'>
 				<BsSuitHeartFill className='text-stone-400 w-[22px] h-[22px]  hover:text-red-500 transition-colors' />
 			</Link>

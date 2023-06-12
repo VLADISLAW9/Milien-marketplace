@@ -14,7 +14,7 @@ const CaseSelector: FC<ICaseSelectorProps> = ({ advrtData, setAdvrtData }) => {
 			<div className='py-4 border-b text-[22px]'>
 				<h1 className='font-semibold'>Выберите пакет услуг</h1>
 			</div>
-			<div className='mt-5 flex justify-center gap-10'>
+			<div className='mt-5 flex justify-center max-lg:gap-3 gap-10'>
 				<FreeCase advrtData={advrtData} setAdvrtData={setAdvrtData} />
 				<PremiumCase advrtData={advrtData} setAdvrtData={setAdvrtData}/>
 			</div>

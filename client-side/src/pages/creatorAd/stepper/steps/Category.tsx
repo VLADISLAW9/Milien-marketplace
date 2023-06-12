@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { categories } from '../../../../app/data/category'
 import { IAdvrtData } from '../../CreateAdvrtPage'
 
@@ -50,7 +50,7 @@ const Category: FC<ICategoryProps> = ({ advrtData, setAdvrtData }) => {
 					))}
 				</ul>
 				{advrtData.category && (
-					<ul className='ml-60 grid grid-rows-6 grid-flow-col gap-x-10'>
+					<ul className='ml-60 max-lg:ml-10 max-lg:gap-x-3 grid  grid-rows-6 grid-flow-col gap-x-10'>
 						{categories
 							.find(category => category.name === advrtData.category)
 							?.subcategories.map(subcategory => (

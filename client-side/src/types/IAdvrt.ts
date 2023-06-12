@@ -9,4 +9,5 @@ export interface IAdvrt {
 	price: number
 	photoPath: string[]
 	premium: boolean
+	dateOfCreation: Date
 }

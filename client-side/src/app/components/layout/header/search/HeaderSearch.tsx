@@ -21,7 +21,7 @@ const HeaderSearch = () => {
 	const { setIsBlur } = useActions()
 	const [fetchSearchResult, searchLoading, searchError] = useFetching(
 		async () => {
-			const response = await axios.get('http://192.168.0.160:5137/Ad/Search', {
+			const response = await axios.get('http://37.140.199.105:5000/Ad/Search', {
 				params: { query: searchValue },
 			})
 			setSearchArray([...response.data.categories, ...response.data.ads])
@@ -68,8 +68,8 @@ const HeaderSearch = () => {
 
 	return (
 		<div
+			className='flex-auto w-[80%] max-2xl:w-[60%] max-xl:w-[30%]  relative flex justify-center items-center max'
 			ref={ref}
-			className='flex-auto w-[80%] relative flex justify-center items-center'
 		>
 			{isShow && isShowMore && (
 				<div className='absolute w-[67.5%] top-[50px]'>

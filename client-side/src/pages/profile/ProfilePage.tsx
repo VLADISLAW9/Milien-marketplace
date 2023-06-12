@@ -4,15 +4,15 @@ import { useEffect, useState } from 'react'
 import { BsTelephoneFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
-import { useFetchers, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useActions } from '../../hooks/use-actions'
+import { useFetching } from '../../hooks/use-fetching'
 import { useTypedSelector } from '../../hooks/use-typed-selector'
 import UserService from '../../services/UserService'
 import { IAdvrt } from '../../types/IAdvrt'
 import EditModal from './EditModal'
-import { useFetching } from '../../hooks/use-fetching'
 
 const ProfilePage = () => {
 	const { isAuth, errorMessage, isLoadingAuth } = useTypedSelector(
@@ -59,8 +59,8 @@ const ProfilePage = () => {
 	} else if (userData) {
 		return (
 			<div className=''>
-				<div className='mt-14 flex'>
-					<div className='flex flex-auto w-[25%] flex-col'>
+				<div className='mt-14 flex max-lg:flex-col'>
+					<div className='flex flex-auto w-[25%] max-lg:w-[100%] flex-col'>
 						<Avatar sx={{ width: 150, height: 150, fontSize: 60 }}>
 							{userData.login?.slice(0, 1)}
 						</Avatar>
@@ -100,10 +100,10 @@ const ProfilePage = () => {
 						</div>
 						<EditModal open={open} handleCloseEdit={handleCloseEdit} />
 					</div>
-					<div className='flex ml-14 flex-auto w-[80%] flex-col'>
+					<div className='flex ml-14 flex-auto max-lg:w-[100%] max-lg:ml-0 max-xl:mt-10  w-[80%] flex-col'>
 						<h1 className='text-3xl font-'>Мои объявления</h1>
 						{userAds ? (
-							<ul className='grid grid-cols-4 gap-5 mt-7'>
+							<ul className='grid grid-cols-4 max-lg:grid-cols-3 max-lg:gap-2 gap-5 mt-7'>
 								{userAds.map((advrt: IAdvrt) => (
 									<AdvertisementItem_grid
 										advrt_data={advrt}

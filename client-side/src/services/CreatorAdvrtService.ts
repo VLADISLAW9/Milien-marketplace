@@ -55,7 +55,11 @@ export default class CreateAdvrtService {
 			formData.append(`images`, image)
 		})
 
-		return $createAdvrt_api.post('/Ad/CreateAd', formData)
+		return $createAdvrt_api.post('/Ad/CreateAd', formData, {
+			headers: {
+				'Access-Control-Allow-Origin': 'http://localhost:3000',
+			},
+		})
 	}
 
 	static async upgradeToPremium(id: number): Promise<AxiosResponse> {

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const USER_URL = 'http://192.168.0.160:5137'
+export const USER_URL = 'http://37.140.199.105:5000'
 
 const $user_api = axios.create({
 	baseURL: USER_URL,

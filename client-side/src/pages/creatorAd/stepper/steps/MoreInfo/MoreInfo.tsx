@@ -25,7 +25,7 @@ const MoreInfo: FC<IMoreInfoProps> = ({ advrtData, setAdvrtData }) => {
 							setAdvrtData({ ...advrtData, description: e.target.value })
 						}}
 						placeholder='Введите описание объявления'
-						className='border-2 w-[848px] h-[250px] rounded-lg p-3'
+						className='border-2 max-lg:w-[600px] w-[848px] h-[250px] rounded-lg p-3'
 					/>
 				</div>
 			</div>

@@ -60,7 +60,7 @@ const PhotoUploader: FC<IPhotoUploaderProps> = ({
 	return (
 		<div>
 			<div></div>
-			<div className='w-[848px]'>
+			<div className='w-[848px] max-lg:w-[600px]'>
 				<div className='flex justify-center mb-5'>
 					{uploadedPhotos.length > 0 ? (
 						<div

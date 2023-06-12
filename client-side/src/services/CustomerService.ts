@@ -4,7 +4,7 @@ import { ICustomer } from '../types/ICustomer'
 export const customersApi = createApi({
 	reducerPath: 'customersApi',
 	baseQuery: fetchBaseQuery({
-		baseUrl: 'http://192.168.0.160:5137/',
+		baseUrl: 'http://37.140.199.105:5000/',
 	}),
 	tagTypes: ['customer'],
 	endpoints: build => ({

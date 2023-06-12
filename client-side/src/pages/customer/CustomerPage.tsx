@@ -35,8 +35,8 @@ const CustomerPage = () => {
 					<ErrorMessage />
 				</div>
 			) : customer ? (
-				<div className='mt-14 flex'>
-					<div className='flex flex-auto w-[25%] flex-col'>
+				<div className='mt-14 flex max-lg:flex-col'>
+					<div className='flex flex-auto w-[25%] max-lg:w-[100%] flex-col'>
 						<Avatar sx={{ width: 150, height: 150 }} />
 						<div className='flex mt-10 text-3xl text-center items-center'>
 							<h1>{customer.login}</h1>
@@ -68,7 +68,7 @@ const CustomerPage = () => {
 							</div>
 						</div>
 					</div>
-					<div className='flex ml-14 flex-auto w-[80%] flex-col'>
+					<div className='flex ml-14 flex-auto max-lg:w-[100%] max-lg:ml-0 max-xl:mt-10  w-[80%] flex-col'>
 						<h1 className='text-3xl font-'>Объявления пользователя</h1>
 						{isLoadingCustomerAdvrts ? (
 							<div className='flex justify-center items-center mt-36'>
@@ -79,7 +79,7 @@ const CustomerPage = () => {
 								<ErrorMessage />
 							</div>
 						) : customerAdvrts ? (
-							<ul className='grid grid-cols-4 gap-5 mt-7'>
+							<ul className='grid grid-cols-4 max-lg:grid-cols-3 max-lg:gap-2 gap-5 mt-7'>
 								{customerAdvrts.map(advrt => (
 									<AdvertisementItem_grid advrt_data={advrt} mini={true} />
 								))}
