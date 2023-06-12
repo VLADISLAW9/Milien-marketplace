@@ -31,7 +31,7 @@ const ShowContacts: FC<IShowContactsProps> = ({
 		<>
 			<button
 				onClick={handleClickOpen}
-				className='mt-4 rounded-md px-4 bg-[#EF7E1B]/40 py-5 w-[320px] justify-center flex items-center text-xl text-[#EF7E1B]'
+				className='mt-4 rounded-md px-4 bg-[#EF7E1B]/40 py-5 w-[320px] max-lg:w-[500px] max-lg:h-[100px] max-lg:text-3xl justify-center flex items-center text-xl text-[#EF7E1B]'
 			>
 				Показать контакты
 			</button>

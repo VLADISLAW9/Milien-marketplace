@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { AiOutlineUser } from 'react-icons/ai'
 import { RiLockPasswordFill, RiLockPasswordLine } from 'react-icons/ri'
 import { IUserData } from '../SingInStepper'
@@ -9,6 +9,9 @@ interface ILoginPassProps {
 }
 
 const LoginPass: FC<ILoginPassProps> = ({ userData, setUserData }) => {
+
+	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
 	return (
 		<form className='px-[50px] flex text-center flex-col mt-10'>
 			<div className='flex mb-4 justify-center '>
@@ -56,6 +59,9 @@ const LoginPass: FC<ILoginPassProps> = ({ userData, setUserData }) => {
 					type='text'
 				/>
 			</div>
+			<div className='flex justify-center'>
+					<h1 className='text-sm text-red-500 w-[300px]'>{errorMessage}</h1>
+				</div>
 		</form>
 	)
 }

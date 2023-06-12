@@ -40,7 +40,7 @@ const HeaderSearch = () => {
 
 	useEffect(() => {
 		setIsBlur(isShow)
-		if(!isShow){
+		if (!isShow) {
 			setSelectCategory(null)
 		}
 	}, [isShow])
@@ -160,9 +160,9 @@ const HeaderSearch = () => {
 										className='py-3 cursor-pointer px-6 hover:bg-stone-300'
 									>
 										{i.title ? (
-											i.title
+											<h1 className='max-lg:text-2xl'>{i.title}</h1>
 										) : (
-											<h1 className='font-[600] flex items-center gap-2'>
+											<h1 className='font-[600] flex items-center gap-2 max-lg:text-2xl'>
 												<BiCategory />
 												{i}
 											</h1>
@@ -185,7 +185,7 @@ const HeaderSearch = () => {
 										.map(cat => (
 											<li
 												onClick={() => handleNavigate(cat.name)}
-												className='py-3 cursor-pointer px-6 hover:bg-stone-300 flex gap-2 items-center font-[600]'
+												className='py-3 cursor-pointer px-6 hover:bg-stone-300 flex gap-2 items-center font-[600] max-lg:text-2xl'
 											>
 												<BiCategory />
 												{cat.name}
@@ -198,7 +198,7 @@ const HeaderSearch = () => {
 											.map(sub => (
 												<li
 													onClick={() => handleNavigate(sub)}
-													className='py-3 cursor-pointer font-[600] px-6 hover:bg-stone-300 flex gap-2 items-center'
+													className='py-3 cursor-pointer font-[600] px-6 hover:bg-stone-300 flex gap-2 items-center max-lg:text-2xl'
 												>
 													<BiCategory />
 													{sub}

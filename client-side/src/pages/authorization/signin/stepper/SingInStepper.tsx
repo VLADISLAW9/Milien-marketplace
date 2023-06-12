@@ -35,6 +35,7 @@ export interface IUserData {
 	email: string
 	phoneNumber: string
 	role: ['user']
+	
 	emailCode: string
 }
 
@@ -236,39 +237,49 @@ const SingInStepper: FC = () => {
 	}
 
 	const handleNextLogin = async () => {
-		setErrorMessage(null)
+		setErrorMessage(null);
 		if (
 			userData.login !== '' &&
 			userData.pass !== '' &&
 			userData.repeatPass !== ''
 		) {
+			// Проверка на соответствие требованиям к паролю
+			const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+			if (!passwordRegex.test(userData.pass)) {
+				setErrorMessage(
+					'Пароль должен состоять минимум из 8 символов, содержать минимум одну заглавную букву и минимум одну цифру'
+				);
+				return;
+			}
+	
 			if (userData.pass === userData.repeatPass) {
 				try {
-					setIsLoading(true)
-					const result = await dispatch(checkLogin(userData.login))
-					const unwrappedResult = unwrapResult<any>(result)
-
+					setIsLoading(true);
+					const result = await dispatch(checkLogin(userData.login));
+					const unwrappedResult = unwrapResult<any>(result);
+	
 					if (unwrappedResult) {
-						setActiveStep(prevActiveStep => prevActiveStep + 1)
-						setErrorMessage(null)
+						setActiveStep(prevActiveStep => prevActiveStep + 1);
+						setErrorMessage(null);
 					} else {
 						setErrorMessage(
 							'Данный логин уже занят, пожалуйста придумайте другой'
-						)
+						);
 					}
 				} catch (error: any) {
-					console.error('Error checking login:', error)
-					setErrorMessage('Произошла ошибка при проверке логина')
+					console.error('Error checking login:', error);
+					setErrorMessage('Произошла ошибка при проверке логина');
 				} finally {
-					setIsLoading(false)
+					setIsLoading(false);
 				}
 			} else {
-				setErrorMessage('Пароли не совпадают')
+				setErrorMessage('Пароли не совпадают');
 			}
 		} else {
-			setErrorMessage('Пожалуйста заполните все поля')
+			setErrorMessage('Пожалуйста заполните все поля');
 		}
-	}
+	};
+	
 
 	const handleBack = () => {
 		setActiveStep(prevActiveStep => prevActiveStep - 1)
