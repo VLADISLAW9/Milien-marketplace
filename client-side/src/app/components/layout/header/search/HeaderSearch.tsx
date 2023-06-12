@@ -40,6 +40,9 @@ const HeaderSearch = () => {
 
 	useEffect(() => {
 		setIsBlur(isShow)
+		if(!isShow){
+			setSelectCategory(null)
+		}
 	}, [isShow])
 
 	useEffect(() => {
@@ -55,6 +58,7 @@ const HeaderSearch = () => {
 
 	const handleCategoryClick = (category: string) => {
 		setSelectCategory(category)
+		setSearchValue(category)
 	}
 
 	const handleNavigate = (value: string) => {
@@ -72,15 +76,15 @@ const HeaderSearch = () => {
 			ref={ref}
 		>
 			{isShow && isShowMore && (
-				<div className='absolute w-[67.5%] max-lg:w-[80%] top-[50px]'>
+				<div className='absolute w-[67.5%] max-lg:w-[100%] top-[50px] max-lg:top-[100px]'>
 					<div className='flex bg-white border-gray-400 border-l 	border-r border-t border-b p-5 rounded-b-3xl '>
 						<ul className='w-[22%]'>
 							{categories.map(category => (
 								<li
 									className={
 										category.name === selectCategory
-											? 'mb-3	text-lg border-b-2 border-[#166430]   cursor-pointer font-medium'
-											: 'mb-3	text-lg hover:text-stone-500 transition-colors border-b-2 border-[#fff] cursor-pointer font-medium'
+											? 'mb-3	text-lg  max-lg:text-3xl border-b-2 border-[#166430]  max-lg:mb-7   cursor-pointer font-medium'
+											: 'mb-3	text-lg max-lg:text-3xl hover:text-stone-500 max-lg:mb-7 transition-colors border-b-2 border-[#fff] cursor-pointer font-medium'
 									}
 									key={category.name}
 									onClick={() => handleCategoryClick(category.name)}
@@ -90,7 +94,7 @@ const HeaderSearch = () => {
 							))}
 						</ul>
 						{selectCategory && (
-							<ul className='ml-10 max-lg:ml-16 grid grid-rows-6  gap-x-10'>
+							<ul className='ml-10 max-lg:ml-36 grid grid-rows-6  gap-x-10'>
 								{categories
 									.find(category => category.name === selectCategory)
 									?.subcategories.map(subcategory => (
@@ -141,7 +145,7 @@ const HeaderSearch = () => {
 				/>
 
 				{isShow && isShowSearchRes && (
-					<div className='absolute top-[49px]  border-gray-400 border-b w-[100%] border-l border-r bg-white pb-5 rounded-b-3xl'>
+					<div className='absolute max-lg:top-[100px] top-[49px]  border-gray-400 border-b w-[100%] border-l border-r bg-white pb-5 rounded-b-3xl'>
 						{searchArray && searchArray.length > 0 ? (
 							<ul>
 								{searchArray.map(i => (
@@ -215,7 +219,7 @@ const HeaderSearch = () => {
 				}}
 				className={
 					isShowMore && isShow
-						? 'text-white max-lg:h-[100px] max-lg:py-0  hover:border-[#166430]/10 max-lg:rounded-r-full hover:bg-[#166430]/80 transition-all rounded-tr-3xl py-3 px-4 bg-[#166430]  border border-[#166430] flex items-center'
+						? 'text-white max-lg:h-[100px] max-lg:py-0  hover:border-[#166430]/10 max-lg:rounded-tr-3xl hover:bg-[#166430]/80 transition-all rounded-tr-3xl py-3 px-4 bg-[#166430]  border border-[#166430] flex items-center'
 						: 'text-white max-lg:h-[100px] max-lg:rounded-r-full max-lg:py-0 hover:border-[#166430]/10 hover:bg-[#166430]/80 transition-all rounded-r-3xl py-3 px-4 bg-[#166430]  border border-[#166430] flex items-center'
 				}
 			>

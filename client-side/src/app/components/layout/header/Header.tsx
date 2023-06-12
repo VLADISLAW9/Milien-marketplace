@@ -19,6 +19,7 @@ const Header: FC = () => {
 	const { isAuth } = useTypedSelector(state => state.user)
 	const [user, setUser] = useState<IUser | null>(null)
 	const navigate = useNavigate()
+
 	const dispatch = useDispatch<Dispatch<any>>()
 	const [fetchUser, isLoading, error] = useFetching(async () => {
 		const response = await UserService.getUserData()
@@ -87,6 +88,7 @@ const Header: FC = () => {
 						<div className='w-[100%] mb-28 mt-14 relative flex justify-center items-center '>
 							<HeaderSearch />
 						</div>
+
 						{isAuth && user ? (
 							<div className='flex justify-center items-center flex-col'>
 								<button
