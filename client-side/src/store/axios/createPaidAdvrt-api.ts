@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const CREATEPAYED_URL = 'http://192.168.0.160:5255'
+export const CREATEPAYED_URL = 'http://37.140.199.105:5002'
 
 const $createPremiumAdvrt_api = axios.create({
 	baseURL: CREATEPAYED_URL,
