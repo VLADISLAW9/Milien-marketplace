@@ -7,7 +7,6 @@ import * as React from 'react'
 import { FC } from 'react'
 import { AiOutlineUser } from 'react-icons/ai'
 import { BsSuitHeartFill } from 'react-icons/bs'
-import { FiEdit } from 'react-icons/fi'
 import { MdLogout } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -110,12 +109,6 @@ const CustomizedMenus: FC<ICustomizedMenus> = ({ user }) => {
 						<h1 className='text-base'>Профиль</h1>
 					</MenuItem>
 				</Link>
-				<div>
-					<MenuItem className='' onClick={handleClose} disableRipple>
-						<FiEdit className='mr-2 w-5 h-5' />
-						<h1 className='text-base'>Редактировать</h1>
-					</MenuItem>
-				</div>
 				<div>
 					<MenuItem className='' onClick={handleExit} disableRipple>
 						<MdLogout className='mr-1 w-6 h-6' />

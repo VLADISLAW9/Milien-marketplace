@@ -1,6 +1,6 @@
 import { Step, StepLabel, Stepper } from '@mui/material'
 import StepConnector, {
-	stepConnectorClasses
+	stepConnectorClasses,
 } from '@mui/material/StepConnector'
 import { StepIconProps } from '@mui/material/StepIcon'
 import { styled } from '@mui/material/styles'
@@ -16,10 +16,9 @@ import { useNavigate } from 'react-router-dom'
 
 import {
 	checkCodeEmail,
-	checkEmail,
 	checkLogin,
 	checkPhone,
-	sendCodeToEmail
+	sendCodeToEmail,
 } from '../../../../store/slices/userSlice'
 import { reformatPhoneNumber } from '../../../../utils/reformatPhoneNumber'
 import EmailAccept from './steps/EmailAccept'
@@ -35,7 +34,7 @@ export interface IUserData {
 	email: string
 	phoneNumber: string
 	role: ['user']
-	
+
 	emailCode: string
 }
 
@@ -198,36 +197,20 @@ const SingInStepper: FC = () => {
 		setErrorMessage(null)
 		if (userData.email !== '') {
 			try {
-				setIsLoading(true)
-				const result = await dispatch(checkEmail(userData.email))
-				const unwrappedResult = unwrapResult<any>(result)
-				if (unwrappedResult) {
-					try {
-						setErrorMessage(null)
-						const resultEmail = await dispatch(
-							sendCodeToEmail({
-								login: userData.login,
-								pass: userData.pass,
-								email: userData.email,
-								firstName: userData.firstName,
-								lastName: userData.lastName,
-								phoneNumber: reformatPhoneNumber(userData.phoneNumber),
-							})
-						)
-						const unwrappedResultEmail = unwrapResult<any>(resultEmail)
-						if (unwrappedResultEmail) {
-							setIsSendCodeToEmail(true)
-						}
-					} catch (error: any) {
-						console.error('Error checking send code:', error)
-						setErrorMessage('Произошла ошибка при отправке письма почты')
-					}
-				} else {
-					setErrorMessage('Данная почта уже зарегистрирована, введите другую')
-				}
+				const resultEmail = await dispatch(
+					sendCodeToEmail({
+						login: userData.login,
+						pass: userData.pass,
+						email: userData.email,
+						firstName: userData.firstName,
+						lastName: userData.lastName,
+						phoneNumber: reformatPhoneNumber(userData.phoneNumber),
+					})
+				)
+				window.location.href = '/login'
 			} catch (error: any) {
 				console.error('Error checking email:', error)
-				setErrorMessage('Произошла ошибка при проверке почты')
+				setErrorMessage('Произошла ошибка при создании аккаунта')
 			} finally {
 				setIsLoading(false)
 			}
@@ -237,49 +220,48 @@ const SingInStepper: FC = () => {
 	}
 
 	const handleNextLogin = async () => {
-		setErrorMessage(null);
+		setErrorMessage(null)
 		if (
 			userData.login !== '' &&
 			userData.pass !== '' &&
 			userData.repeatPass !== ''
 		) {
 			// Проверка на соответствие требованиям к паролю
-			const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+			const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/
 			if (!passwordRegex.test(userData.pass)) {
 				setErrorMessage(
 					'Пароль должен состоять минимум из 8 символов, содержать минимум одну заглавную букву и минимум одну цифру'
-				);
-				return;
+				)
+				return
 			}
-	
+
 			if (userData.pass === userData.repeatPass) {
 				try {
-					setIsLoading(true);
-					const result = await dispatch(checkLogin(userData.login));
-					const unwrappedResult = unwrapResult<any>(result);
-	
+					setIsLoading(true)
+					const result = await dispatch(checkLogin(userData.login))
+					const unwrappedResult = unwrapResult<any>(result)
+
 					if (unwrappedResult) {
-						setActiveStep(prevActiveStep => prevActiveStep + 1);
-						setErrorMessage(null);
+						setActiveStep(prevActiveStep => prevActiveStep + 1)
+						setErrorMessage(null)
 					} else {
 						setErrorMessage(
 							'Данный логин уже занят, пожалуйста придумайте другой'
-						);
+						)
 					}
 				} catch (error: any) {
-					console.error('Error checking login:', error);
-					setErrorMessage('Произошла ошибка при проверке логина');
+					console.error('Error checking login:', error)
+					setErrorMessage('Произошла ошибка при проверке логина')
 				} finally {
-					setIsLoading(false);
+					setIsLoading(false)
 				}
 			} else {
-				setErrorMessage('Пароли не совпадают');
+				setErrorMessage('Пароли не совпадают')
 			}
 		} else {
-			setErrorMessage('Пожалуйста заполните все поля');
+			setErrorMessage('Пожалуйста заполните все поля')
 		}
-	};
-	
+	}
 
 	const handleBack = () => {
 		setActiveStep(prevActiveStep => prevActiveStep - 1)
@@ -355,7 +337,7 @@ const SingInStepper: FC = () => {
 									? 'Загрузка...'
 									: isSendCodeToEmail
 									? 'Подтвердить код'
-									: 'Отправить код'}
+									: 'Продолжить'}
 							</h1>
 							{!isLoading && !isSendCodeToEmail && (
 								<TbSend className='w-6 h-6' />
