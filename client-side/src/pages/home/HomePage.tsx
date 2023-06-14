@@ -21,20 +21,20 @@ const HomePage: FC = () => {
 	const [fetchNewServices, isNewServicesLoading, newServicesError] =
 		useFetching(async () => {
 			const response = await axios.get(
-				'https://xn--h1agbg8e4a.xn--p1ai/Ad/GetNewServices'
+				'https://api.xn--h1agbg8e4a.xn--p1ai/Ad/GetNewServices'
 			)
 			setNewServices([...response.data])
 		})
 
 	const [fetchNewAds, isNewAdsLoading, newAdsError] = useFetching(async () => {
-		const response = await axios.get('https://xn--h1agbg8e4a.xn--p1ai/Ad/GetNewAds')
+		const response = await axios.get('https://api.xn--h1agbg8e4a.xn--p1ai/Ad/GetNewAds')
 		setNewAds([...response.data])
 	})
 
 	const [fetchAds, isAdsLoading, adsError] = useFetching(async () => {
 		if (page === 1) {
 			const response = await axios.get(
-				'https://xn--h1agbg8e4a.xn--p1ai/Ad/GetAll',
+				'https://api.xn--h1agbg8e4a.xn--p1ai/Ad/GetAll',
 				{
 					params: { limit: limit, page: page, refreshAds: true },
 				}
@@ -43,7 +43,7 @@ const HomePage: FC = () => {
 			setTotalPages(getPageCount(totalCount, limit))
 			setAds([...ads, ...response.data])
 		} else {
-			const response = await axios.get('https://xn--h1agbg8e4a.xn--p1ai/Ad/GetAll', {
+			const response = await axios.get('https://api.xn--h1agbg8e4a.xn--p1ai/Ad/GetAll', {
 				params: { limit: limit, page: page },
 			})
 			const totalCount = response.headers['count']
