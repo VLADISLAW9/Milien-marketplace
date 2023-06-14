@@ -42,7 +42,7 @@ const LogInPage: FC = () => {
 			// setUserData(response.data.user)
 			dispatch(setAuth(true))
 			dispatch(setUser(response.data.user))
-			// window.location.reload()
+			window.location.reload()
 		} catch (e: any) {
 			console.log(e)
 			setError(e.response.data)

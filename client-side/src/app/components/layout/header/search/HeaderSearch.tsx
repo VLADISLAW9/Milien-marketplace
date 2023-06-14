@@ -21,7 +21,7 @@ const HeaderSearch = () => {
 	const { setIsBlur } = useActions()
 	const [fetchSearchResult, searchLoading, searchError] = useFetching(
 		async () => {
-			const response = await axios.get('http://37.140.199.105:5000/Ad/Search', {
+			const response = await axios.get('https://api.xn--h1agbg8e4a.xn--p1ai/Ad/Search', {
 				params: { query: searchValue },
 			})
 			setSearchArray([...response.data.categories, ...response.data.ads])

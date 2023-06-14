@@ -42,6 +42,7 @@ export const logout = createAsyncThunk('user/logout', async () => {
 	localStorage.removeItem('token')
 	localStorage.removeItem('refresh')
 	localStorage.clear()
+	window.location.reload()
 	return response
 })
 
