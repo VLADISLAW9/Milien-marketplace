@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const CREATEADVT_URL = 'http://37.140.199.105:5000'
+export const CREATEADVT_URL = 'https://xn--h1agbg8e4a.xn--p1ai'
 
 const $createAdvrt_api = axios.create({
 	baseURL: CREATEADVT_URL
