@@ -4,7 +4,7 @@ import { IAdvrt } from '../types/IAdvrt'
 export const advrtsApi = createApi({
 	reducerPath: 'advrtsApi',
 	baseQuery: fetchBaseQuery({
-		baseUrl: 'http://37.140.199.105:5000',
+		baseUrl: 'https://api.xn--h1agbg8e4a.xn--p1ai',
 	}),
 	tagTypes: ['advrt'],
 	endpoints: build => ({

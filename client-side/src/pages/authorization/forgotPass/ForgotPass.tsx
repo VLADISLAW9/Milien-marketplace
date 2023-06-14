@@ -14,6 +14,7 @@ interface LoginPayload {
 const LogInPage: FC = () => {
 	const [emailValue, setEmailValue] = useState('')
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+	const [isPasswordValid, setPasswordValid] = useState(true)
 	const [isSendCode, setIsSend] = useState(false)
 	const [isTrueCode, setIsTrueCode] = useState(false)
 	const [alertMessage, setAlertMessage] = useState<string | null>(null)
@@ -24,7 +25,7 @@ const LogInPage: FC = () => {
 		async () => {
 			if (isTrueCode) {
 				const reset = await axios.put(
-					'http://37.140.199.105:5001/api/Auth/create_new_password',
+					'https://api.xn--h1agbg8e4a.xn--p1ai/api/Auth/create_new_password',
 					null,
 					{
 						params: {
@@ -51,7 +52,7 @@ const LogInPage: FC = () => {
 	})
 	const [sendler, sendlerLoading, sendlerError] = useFetching(async () => {
 		const sendCode = await axios.put(
-			'http://37.140.199.105:5001/api/Auth/reset_password',
+			'https://api.xn--h1agbg8e4a.xn--p1ai/api/Auth/reset_password',
 			null,
 			{
 				params: {
@@ -119,8 +120,9 @@ const LogInPage: FC = () => {
 								required
 								onChange={e => {
 									setNewPass(e.target.value)
+									setPasswordValid(true) // Сбросить состояние проверки при изменении пароля
 								}}
-								type='text'
+								pattern='(?=.*\d)(?=.*[A-Z]).{8,}' // Проверка на требования
 							/>
 						</div>
 						<div className='flex mb-4'>
@@ -142,7 +144,7 @@ const LogInPage: FC = () => {
 				)}
 
 				{errorMessage && (
-					<h1 className='text-red text-base text-center'>{errorMessage}</h1>
+					<h1 className='text-red-500 max-w-[256px] text-base  flex justify-start'>{errorMessage}</h1>
 				)}
 				{!isSendCode && (
 					<button
@@ -175,11 +177,24 @@ const LogInPage: FC = () => {
 				{isTrueCode && (
 					<button
 						onClick={() => {
-							if (newPass === repeatNewPass) {
-								resetPass()
-							} else {
-								setErrorMessage('Пароли не совпадают')
+							// Проверка на требования к паролю
+							const passwordRegex = /(?=.*\d)(?=.*[A-Z]).{8,}/
+							if (!passwordRegex.test(newPass)) {
+								setErrorMessage(
+									'Пароль должен состоять минимум из 8 символов, содержать минимум одну заглавную букву и минимум одну цифру.'
+								)
+								return
 							}
+
+							// Удаление всех пробелов
+							const formattedNewPass = newPass.replace(/\s/g, '')
+
+							if (formattedNewPass !== repeatNewPass) {
+								setErrorMessage('Пароли не совпадают')
+								return
+							}
+
+							resetPass()
 						}}
 						disabled={
 							newPass.length === 0 ||
@@ -196,6 +211,7 @@ const LogInPage: FC = () => {
 					</button>
 				)}
 			</div>
+
 			<div className='flex mt-7 text-[13px] justify-center'>
 				<h1 className='mr-2 text-stone-400 font-light'>Нет аккаунта? </h1>
 				<Link
@@ -221,5 +237,4 @@ const LogInPage: FC = () => {
 		</div>
 	)
 }
-
 export default LogInPage

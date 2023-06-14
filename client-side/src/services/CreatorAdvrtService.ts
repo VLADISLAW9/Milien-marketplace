@@ -57,7 +57,7 @@ export default class CreateAdvrtService {
 
 		return $createAdvrt_api.post('/Ad/CreateAd', formData, {
 			headers: {
-				'Access-Control-Allow-Origin': 'http://localhost:3000',
+				'Access-Control-Allow-Origin': 'https://xn--h1agbg8e4a.xn--p1ai',
 			},
 		})
 	}
