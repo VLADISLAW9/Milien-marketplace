@@ -4,7 +4,6 @@ import { IAuthResponse } from '../../types/IAuthResponse'
 export const AUTH_URL = 'http://37.140.199.105:5001'
 
 const $api = axios.create({
-	withCredentials: true,
 	baseURL: AUTH_URL,
 })
 

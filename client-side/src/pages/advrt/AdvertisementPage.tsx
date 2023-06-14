@@ -269,7 +269,7 @@ const AdvertisementPage = () => {
 							<Similar
 								isError={isErrorSimilar}
 								isLoading={isErrorSimilar}
-								similar={similar_advrts}
+								similar={similar_advrts?.filter(ad => ad.id !== advrt.id)}
 							/>
 						</div>
 						<div

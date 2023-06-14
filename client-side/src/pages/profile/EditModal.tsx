@@ -35,7 +35,6 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 				newUsersData.firstName !== user.firstName ||
 				newUsersData.lastName !== user.lastName) &&
 			newUsersData.firstName &&
-			newUsersData.aboutMe &&
 			newUsersData.lastName &&
 			user.email &&
 			user.phoneNumber &&

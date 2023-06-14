@@ -14,7 +14,7 @@ const PhotoUploader: FC<IPhotoUploaderProps> = ({
 	advrtData,
 	setAdvrtData,
 }) => {
-	const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
+	const [uploadedPhotos, setUploadedPhotos] = useState<File[]>(advrtData.images || [])
 	const [isHover, setIsHover] = useState(false)
 	const fileInputRef = useRef<HTMLInputElement>(null)
 

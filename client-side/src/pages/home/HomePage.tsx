@@ -33,9 +33,12 @@ const HomePage: FC = () => {
 
 	const [fetchAds, isAdsLoading, adsError] = useFetching(async () => {
 		if (page === 1) {
-			const response = await axios.get('http://37.140.199.105:5000/Ad/GetAll', {
-				params: { limit: limit, page: page, refreshAds: true },
-			})
+			const response = await axios.get(
+				'http://37.140.199.105:5000/Ad/GetAll',
+				{
+					params: { limit: limit, page: page, refreshAds: true },
+				}
+			)
 			const totalCount = response.headers['count']
 			setTotalPages(getPageCount(totalCount, limit))
 			setAds([...ads, ...response.data])
