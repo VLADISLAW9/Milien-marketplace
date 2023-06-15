@@ -27,7 +27,7 @@ const SearchPage: FC = () => {
 	const [filtration, filtrationLoading, filtrationError] = useFetching(
 		async () => {
 			const filter = await axios.get(
-				'http://37.140.199.105:5000/Ad/Filtration',
+				'https://api.xn--h1agbg8e4a.xn--p1ai/Ad/Filtration',
 				{
 					params: {
 						limit: limit,
@@ -47,7 +47,7 @@ const SearchPage: FC = () => {
 	const [searchingAds, searchingLoading, searchingError] = useFetching(
 		async () => {
 			const response = await axios.get(
-				'http://37.140.199.105:5000/Ad/SearchByQuery',
+				'https://api.xn--h1agbg8e4a.xn--p1ai/Ad/SearchByQuery',
 				{
 					params: { query: params.param, page: page, limit: limit },
 				}
