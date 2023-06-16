@@ -80,6 +80,11 @@ const LogInPage: FC = () => {
 							className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[300px]'
 							placeholder='Введите почту от вашего аккаунта'
 							value={emailValue}
+							onKeyPress={e => {
+								if (e.key === ' ') {
+									e.preventDefault()
+								}
+							}}
 							required
 							onChange={e => {
 								setEmailValue(e.target.value)
@@ -98,6 +103,11 @@ const LogInPage: FC = () => {
 							className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[300px]'
 							placeholder='Введите код с почты'
 							value={codeValue}
+							onKeyPress={e => {
+								if (e.key === ' ') {
+									e.preventDefault()
+								}
+							}}
 							required
 							onChange={e => {
 								setCodeValue(e.target.value)
@@ -117,6 +127,11 @@ const LogInPage: FC = () => {
 								className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[300px]'
 								placeholder='Введите новый пароль'
 								value={newPass}
+								onKeyPress={e => {
+									if (e.key === ' ') {
+										e.preventDefault()
+									}
+								}}
 								required
 								onChange={e => {
 									setNewPass(e.target.value)
@@ -132,6 +147,11 @@ const LogInPage: FC = () => {
 							<input
 								className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[300px]'
 								placeholder='Подтвердите новый пароль'
+								onKeyPress={e => {
+									if (e.key === ' ') {
+										e.preventDefault()
+									}
+								}}
 								value={repeatNewPass}
 								required
 								onChange={e => {
@@ -144,7 +164,9 @@ const LogInPage: FC = () => {
 				)}
 
 				{errorMessage && (
-					<h1 className='text-red-500 max-w-[256px] text-base  flex justify-start'>{errorMessage}</h1>
+					<h1 className='text-red-500 max-w-[256px] text-base  flex justify-start'>
+						{errorMessage}
+					</h1>
 				)}
 				{!isSendCode && (
 					<button

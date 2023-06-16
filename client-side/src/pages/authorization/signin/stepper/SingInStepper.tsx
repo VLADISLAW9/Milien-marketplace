@@ -206,9 +206,9 @@ const SingInStepper: FC = () => {
 						setErrorMessage(null)
 						const resultEmail = await dispatch(
 							sendCodeToEmail({
-								login: userData.login,
-								pass: userData.pass,
-								email: userData.email,
+								login: userData.login.replace(/\s/g, ''),
+								pass: userData.pass.replace(/\s/g, ''),
+								email: userData.email.replace(/\s/g, ''),
 								firstName: userData.firstName,
 								lastName: userData.lastName,
 								phoneNumber: reformatPhoneNumber(userData.phoneNumber),

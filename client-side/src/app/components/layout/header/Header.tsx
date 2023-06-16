@@ -89,7 +89,7 @@ const Header: FC = () => {
 							<HeaderSearch />
 						</div>
 
-						{isAuth && user ? (
+						{isAuth ? (
 							<div className='flex justify-center items-center flex-col'>
 								<button
 									onClick={() => {

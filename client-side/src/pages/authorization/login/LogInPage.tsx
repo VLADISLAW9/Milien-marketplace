@@ -36,7 +36,10 @@ const LogInPage: FC = () => {
 		}
 		try {
 			setLoading(true)
-			const response = await AuthService.login(payload.login, payload.password)
+			const response = await AuthService.login(
+				payload.login.replace(/\s/g, ''),
+				payload.password.replace(/\s/g, '')
+			)
 			localStorage.setItem('token', response.data.accessToken)
 			localStorage.setItem('refresh', response.data.refreshToken)
 			// setUserData(response.data.user)
@@ -67,7 +70,8 @@ const LogInPage: FC = () => {
 						value={loginValue}
 						required
 						onChange={e => {
-							setLogin(e.target.value)
+							const valueWithoutSpaces = e.target.value.replace(/\s/g, '')
+							setLogin(valueWithoutSpaces)
 						}}
 						type='text'
 					/>
@@ -84,7 +88,8 @@ const LogInPage: FC = () => {
 						type={isHide ? 'password' : 'text'}
 						value={password}
 						onChange={e => {
-							setPassword(e.target.value)
+							const valueWithoutSpaces = e.target.value.replace(/\s/g, '')
+							setPassword(valueWithoutSpaces)
 						}}
 					/>
 					<button

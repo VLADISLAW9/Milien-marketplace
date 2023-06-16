@@ -9,7 +9,6 @@ interface ILoginPassProps {
 }
 
 const LoginPass: FC<ILoginPassProps> = ({ userData, setUserData }) => {
-
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
 	return (
@@ -24,7 +23,8 @@ const LoginPass: FC<ILoginPassProps> = ({ userData, setUserData }) => {
 					value={userData.login}
 					required
 					onChange={e => {
-						setUserData({ ...userData, login: e.target.value })
+						const valueWithoutSpaces = e.target.value.replace(/\s/g, '')
+						setUserData({ ...userData, login: valueWithoutSpaces })
 					}}
 					type='text'
 				/>
@@ -39,7 +39,8 @@ const LoginPass: FC<ILoginPassProps> = ({ userData, setUserData }) => {
 					value={userData.pass}
 					required
 					onChange={e => {
-						setUserData({ ...userData, pass: e.target.value })
+						const valueWithoutSpaces = e.target.value.replace(/\s/g, '')
+						setUserData({ ...userData, pass: valueWithoutSpaces })
 					}}
 					type='text'
 				/>
@@ -54,14 +55,15 @@ const LoginPass: FC<ILoginPassProps> = ({ userData, setUserData }) => {
 					value={userData.repeatPass}
 					required
 					onChange={e => {
-						setUserData({ ...userData, repeatPass: e.target.value })
+						const valueWithoutSpaces = e.target.value.replace(/\s/g, '')
+						setUserData({ ...userData, repeatPass: valueWithoutSpaces })
 					}}
 					type='text'
 				/>
 			</div>
 			<div className='flex justify-center'>
-					<h1 className='text-sm text-red-500 w-[300px]'>{errorMessage}</h1>
-				</div>
+				<h1 className='text-sm text-red-500 w-[300px]'>{errorMessage}</h1>
+			</div>
 		</form>
 	)
 }

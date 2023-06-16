@@ -22,7 +22,8 @@ const EmailAccept: FC<IEmailAccepttProps> = ({
 				<div className='flex mb-10'>
 					<h1 className='text-stone-500'>
 						На вашу почту{' '}
-						<span className='font-semibold'>{userData.email}</span> отправелeно письмо с кодом
+						<span className='font-semibold'>{userData.email}</span> отправелeно
+						письмо с кодом
 					</h1>
 				</div>
 			)}
@@ -38,6 +39,11 @@ const EmailAccept: FC<IEmailAccepttProps> = ({
 					required
 					onChange={e => {
 						setUserData({ ...userData, email: e.target.value })
+					}}
+					onKeyPress={e => {
+						if (e.key === ' ') {
+							e.preventDefault()
+						}
 					}}
 					type='email'
 					onFocus={e => {
@@ -59,7 +65,8 @@ const EmailAccept: FC<IEmailAccepttProps> = ({
 						value={userData.emailCode}
 						required
 						onChange={e => {
-							setUserData({ ...userData, emailCode: e.target.value })
+							const valueWithoutSpaces = e.target.value.replace(/\s/g, '')
+							setUserData({ ...userData, emailCode: valueWithoutSpaces })
 						}}
 						type='text'
 					/>
