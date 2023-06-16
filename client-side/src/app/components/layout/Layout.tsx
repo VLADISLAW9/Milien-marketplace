@@ -26,7 +26,7 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 			) : (
 				<div className='bg-white justify-between flex relative flex-col min-h-[100vh]  max-lg:min-h-[174vh] h-[100%]'>
 					<Header />
-					{isAuth && user && (
+					{isAuth && user && location.pathname !== '/createAdvrt' && (
 						<div className='fixed z-[30] right-14 bottom-16	'>
 							<AddAdvrt />
 						</div>

@@ -20,6 +20,8 @@ const Header: FC = () => {
 	const [user, setUser] = useState<IUser | null>(null)
 	const navigate = useNavigate()
 
+	console.log(isAuth, user, 'fdfdsf')
+
 	const dispatch = useDispatch<Dispatch<any>>()
 	const [fetchUser, isLoading, error] = useFetching(async () => {
 		const response = await UserService.getUserData()
@@ -89,7 +91,7 @@ const Header: FC = () => {
 							<HeaderSearch />
 						</div>
 
-						{isAuth ? (
+						{user ? (
 							<div className='flex justify-center items-center flex-col'>
 								<button
 									onClick={() => {
@@ -139,7 +141,7 @@ const Header: FC = () => {
 				</div>
 			)}
 
-			{isAuth && user ? (
+			{user ? (
 				<div className='flex max-xl:hidden w-[15%] max-xl:w-[5%] items-center flex-auto justify-end'>
 					<UserHeader user={user} />
 				</div>

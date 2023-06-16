@@ -12,6 +12,7 @@ import { categories } from '../../../../data/category'
 const HeaderSearch = () => {
 	const { isShow, setIsShow, ref } = useOutside(false)
 	const [isShowSearchRes, setIsShowSearchRes] = useState(false)
+	const [onFocus, setOnFocus] = useState(false)
 	const [isShowMore, setIsShowMore] = useState(false)
 	const [searchValue, setSearchValue] = useState('')
 	const [searchArray, setSearchArray] = useState<any[] | null>(null)
@@ -21,9 +22,12 @@ const HeaderSearch = () => {
 	const { setIsBlur } = useActions()
 	const [fetchSearchResult, searchLoading, searchError] = useFetching(
 		async () => {
-			const response = await axios.get('https://api.xn--h1agbg8e4a.xn--p1ai/Ad/Search', {
-				params: { query: searchValue },
-			})
+			const response = await axios.get(
+				'https://api.xn--h1agbg8e4a.xn--p1ai/Ad/Search',
+				{
+					params: { query: searchValue },
+				}
+			)
 			setSearchArray([...response.data.categories, ...response.data.ads])
 		}
 	)
@@ -137,7 +141,13 @@ const HeaderSearch = () => {
 					// }}
 					value={searchValue}
 					onChange={handleSearch}
-					placeholder='Поиск'
+					placeholder={
+						onFocus
+							? 'Название, категория или город'
+							: 'Поиск'
+					}
+					onFocus={() => setOnFocus(true)}
+					onBlur={() => setOnFocus(false)}
 					className='border-t max-lg:text-[#166430] border-r border-l border-b border-gray-400 max-lg:h-[100px]  max-lg:border-[#166430]
 					max-lg:border-2 max-lg:placeholder:text-[#166430] max-lg:placeholder:text-center  max-lg:py-0 py-3 w-[100%] px-6 outline-none max-lg:placeholder:text-4xl 
 					max-lg:placeholder:translate-y-1'

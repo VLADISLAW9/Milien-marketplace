@@ -112,13 +112,32 @@ const SearchPage: FC = () => {
 				)}
 				»{' '}
 			</h1>
-			<div className='flex mt-7'>
+			<div className='flex max-lg:flex-col mt-7'>
+				<div className='hidden max-lg:block'>
+					<h1 className='text-2xl mb-5'>Город</h1>
+					<input
+						value={townValue ? townValue : ''}
+						type='text'
+						onChange={e => {
+							setTownValue(e.target.value)
+						}}
+						placeholder='Введите город '
+						className='border-2 outline-none rounded-3xl text-base px-4 py-2'
+					/>
+					<div className=' mt-8 mb-10	'>
+						<button
+							onClick={handleFilter}
+							className='text-white text-xl bg-[#166430] px-6 rounded-3xl py-2 h-[50px] w-[150px]'
+						>
+							Найти
+						</button>
+					</div>
+				</div>
 				<div className='flex-initial max-lg:hidden w-[30%] '>
 					<h1 className='text-2xl mb-5'>Город</h1>
 					<input
 						value={townValue ? townValue : ''}
 						type='text'
-
 						onChange={e => {
 							setTownValue(e.target.value)
 						}}

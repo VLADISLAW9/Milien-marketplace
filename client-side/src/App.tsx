@@ -6,6 +6,7 @@ import AppRouter from './app/components/AppRouter'
 import Layout from './app/components/layout/Layout'
 import { UserContext } from './context/UserContext'
 import { useActions } from './hooks/use-actions'
+import { useFetching } from './hooks/use-fetching'
 import { useTypedSelector } from './hooks/use-typed-selector'
 import UserService from './services/UserService'
 import { AUTH_URL } from './store/axios/auth-api'
@@ -18,6 +19,35 @@ function App() {
 	const [isUserLoading, setIsUserLoading] = useState(false)
 	const [userError, setUserError] = useState('')
 	const { setUser, setUserAds, setAuth, setLoading, removeUser } = useActions()
+
+	const [checkPremium, checkPremiumLoading, checkPremiumError] = useFetching(
+		async () => {
+			const checkerPremium = await axios.delete(
+				'https://api.xn--h1agbg8e4a.xn--p1ai/PaidAds/DeleteExpiredRows'
+			)
+		}
+	)
+
+	useEffect(() => {
+		// Функция, которая будет вызывать checkPremium
+		const runCheckPremium = async () => {
+			try {
+				await checkPremium()
+			} catch (error) {
+				// Обработка ошибки, если необходимо
+				console.error('Ошибка при вызове checkPremium:', error)
+			}
+		}
+
+		// Запускаем checkPremium при монтировании компонента
+		runCheckPremium()
+
+		// Вызываем checkPremium раз в сутки
+		const interval = setInterval(runCheckPremium, 24 * 60 * 60 * 1000)
+
+		// Очищаем интервал при размонтировании компонента
+		return () => clearInterval(interval)
+	}, []) // Пустой массив зависимостей гарантирует, что useEffect будет вызван только один раз при монтировании компонента
 
 	const dispatch = useDispatch<Dispatch<any>>()
 
