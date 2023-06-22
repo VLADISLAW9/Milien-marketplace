@@ -29,9 +29,9 @@ $api.interceptors.request.use(
 			try {
 				const response = await axios.post<IAuthResponse>(
 					`${AUTH_URL}/api/Token/refresh`,
-					{ accessToken, refreshToken },
-					{ withCredentials: true }
+					{ accessToken, refreshToken }
 				)
+				console.log('interceptors is working')
 				localStorage.setItem('token', response.data.accessToken)
 				localStorage.setItem('refresh', response.data.refreshToken)
 				return $api.request(originalRequest)
