@@ -15,32 +15,33 @@ const PhotoUploader: FC<IPhotoUploaderProps> = ({ advrtData, setAdvrtData }) => 
   const [isHover, setIsHover] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const updatedPhotos: File[] = Array.from(files).slice(0, 15 - uploadedPhotos.length); // Ограничение до 15 фотографий
-      const updatedFiles: File[] = [];
-
-      // Создаем новые файлы без метаданных
-      for (let i = 0; i < updatedPhotos.length; i++) {
-        const fileReader = new FileReader();
-        fileReader.onload = () => {
-          const arrayBuffer = fileReader.result as ArrayBuffer;
-          const newFile = new File([arrayBuffer], updatedPhotos[i].name, { type: updatedPhotos[i].type });
-          updatedFiles.push(newFile);
-
-          if (updatedFiles.length === updatedPhotos.length) {
-            setUploadedPhotos([...uploadedPhotos, ...updatedFiles]);
-            setAdvrtData({
-              ...advrtData,
-              images: [...uploadedPhotos, ...updatedFiles],
-            });
-          }
-        };
-        fileReader.readAsArrayBuffer(updatedPhotos[i]);
-      }
-    }
-  };
+	const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const files = event.target.files;
+		if (files) {
+			const updatedPhotos: File[] = Array.from(files).slice(0, 15 - uploadedPhotos.length); // Ограничение до 15 фотографий
+			const updatedFiles: File[] = [];
+	
+			// Создаем новые файлы без метаданных
+			for (let i = 0; i < updatedPhotos.length; i++) {
+				const fileReader = new FileReader();
+				fileReader.onload = () => {
+					const arrayBuffer = fileReader.result as ArrayBuffer;
+					const newFile = new File([arrayBuffer], updatedPhotos[i].name, { type: updatedPhotos[i].type });
+					updatedFiles.push(newFile);
+	
+					if (updatedFiles.length === updatedPhotos.length) {
+						setUploadedPhotos(updatedFiles);
+						setAdvrtData({
+							...advrtData,
+							images: updatedFiles,
+						});
+					}
+				};
+				fileReader.readAsArrayBuffer(updatedPhotos[i]);
+			}
+		}
+	};
+	
 
   const handlePhotoDelete = (index: number) => {
     const updatedPhotos = [...uploadedPhotos];
