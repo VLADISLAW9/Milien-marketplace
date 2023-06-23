@@ -146,7 +146,7 @@ const HeaderSearch = () => {
 					onBlur={() => setOnFocus(false)}
 					className={
 						onFocus
-							? 'border-t text-2xl max-lg:text-[#166430] border-r border-l border-b border-gray-400 max-lg:h-[100px]  max-lg:border-[#166430] ' +
+							? 'border-t max-lg:text-2xl max-lg:text-[#166430] border-r border-l border-b border-gray-400 max-lg:h-[100px]  max-lg:border-[#166430] ' +
 							  'max-lg:border-2 max-lg:placeholder:text-[#166430]  max-lg:py-0 py-3 w-[100%] px-6 outline-none max-lg:placeholder:text-2xl ' +
 							  'max-lg:placeholder:translate-y-0.5 max-lg:placeholder:translate-x-2'
 							: 'border-t max-lg:text-[#166430] border-r border-l border-b border-gray-400 max-lg:h-[100px]  max-lg:border-[#166430] ' +
