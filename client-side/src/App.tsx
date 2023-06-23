@@ -64,6 +64,7 @@ function App() {
 					)
 					localStorage.setItem('token', response.data.accessToken)
 					localStorage.setItem('refresh', response.data.refreshToken)
+
 					dispatch(setAuth(true))
 				} catch (e: any) {
 					localStorage.removeItem('token')
@@ -79,10 +80,10 @@ function App() {
 
 	useEffect(() => {
 		if (isAuth === true) {
-			try {
-				const getUser = async () => {
-					setLoading(true)
-					setIsUserLoading(true)
+			const getUser = async () => {
+				setLoading(true)
+				setIsUserLoading(true)
+				try {
 					const userDate = await UserService.getUserData().then(res => {
 						setUserData(res.data.user)
 
@@ -91,15 +92,39 @@ function App() {
 							dispatch(setUserAds(res.data.userAds))
 						}
 					})
+				} catch (e: any) {
+					console.log(e)
+					if (e.status === 401) {
+						// Обработка ошибки 401 - вызов refresh token
+						const refreshToken = localStorage.getItem('refresh')
+						try {
+							const response = await axios.post<IAuthResponse>(
+								`${AUTH_URL}/api/Token/refresh`,
+								{ refreshToken }
+							)
+							localStorage.setItem('token', response.data.accessToken)
+							localStorage.setItem('refresh', response.data.refreshToken)
+							dispatch(setAuth(true))
+							window.location.reload()
+							// Повторный вызов getUser после успешного обновления токена
+							getUser()
+						} catch (error) {
+							console.error('Ошибка при обновлении токена:', error)
+							// Обработка ошибки обновления токена, например, выход пользователя из системы
+							localStorage.removeItem('token')
+							localStorage.removeItem('refresh')
+							dispatch(removeUser())
+							window.location.reload()
+						}
+					} else {
+						setUserError('Произошла ошибка при загрузке данных пользователя')
+					}
+				} finally {
+					setLoading(false)
+					setIsUserLoading(false)
 				}
-				getUser()
-			} catch (e) {
-				console.log(e)
-				setUserError('Произошла ошибка при загрузке данных пользователя')
-			} finally {
-				setLoading(false)
-				setIsUserLoading(false)
 			}
+			getUser()
 		}
 	}, [])
 

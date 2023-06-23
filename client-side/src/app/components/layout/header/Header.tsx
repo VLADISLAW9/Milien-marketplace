@@ -26,6 +26,9 @@ const Header: FC = () => {
 	const [fetchUser, isLoading, error] = useFetching(async () => {
 		const response = await UserService.getUserData()
 		setUser(response.data.user)
+		if(response.status === 401){
+			
+		}
 	})
 	const [showBurger, setShowBurger] = useState(false)
 
