@@ -16,7 +16,7 @@ import HeaderSearch from './search/HeaderSearch'
 import UserHeader from './user/UserHeader'
 
 const Header: FC = () => {
-	const { isAuth } = useTypedSelector(state => state.user)
+	const { isAuth, user: userData } = useTypedSelector(state => state.user)
 	const [user, setUser] = useState<IUser | null>(null)
 	const navigate = useNavigate()
 
@@ -143,7 +143,7 @@ const Header: FC = () => {
 
 			{user ? (
 				<div className='flex max-xl:hidden w-[15%] max-xl:w-[5%] items-center flex-auto justify-end'>
-					<UserHeader user={user} />
+					<UserHeader user={userData} />
 				</div>
 			) : (
 				<div className='flex max-xl:hidden w-[15%] flex-auto justify-end'>

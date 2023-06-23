@@ -67,20 +67,20 @@ const HeaderSearch = () => {
 
 	const handleNavigate = (value: string) => {
 		if (value.length > 0) {
-			navigate(`/search/${value}`)
+			// navigate(`/search/${value}`)
+			window.location.href = `/search/${value}`
 			setSearchValue('')
 			setIsShow(false)
-			window.location.reload()
 		}
 	}
 
 	return (
 		<div
-			className='flex-auto w-[80%] max-lg:w-[100px] max-2xl:w-[60%] max-xl:w-[30%]  relative flex justify-center items-center '
+			className='flex-auto max-lg:w-[100px] max-2xl:w-[60%] max-xl:w-[30%]  relative flex justify-center items-center '
 			ref={ref}
 		>
 			{isShow && isShowMore && (
-				<div className='absolute w-[67.5%] max-lg:w-[100%] top-[50px] max-lg:top-[100px]'>
+				<div className='absolute w-[67.25%] max-lg:w-[100%] top-[50px] max-lg:top-[100px]'>
 					<div className='flex bg-white border-gray-400 border-l 	border-r border-t border-b p-5 rounded-b-3xl '>
 						<ul className='w-[22%]'>
 							{categories.map(category => (
@@ -137,20 +137,22 @@ const HeaderSearch = () => {
 						setIsShowMore(false)
 					}}
 					// onBlur={() => {
-					// 	setIsShowSearchRes(false)
+					//   setIsShowSearchRes(false);
 					// }}
 					value={searchValue}
 					onChange={handleSearch}
-					placeholder={
-						onFocus
-							? 'Название, категория или город'
-							: 'Поиск'
-					}
+					placeholder={onFocus ? 'Название, категория или город' : 'Поиск'}
 					onFocus={() => setOnFocus(true)}
 					onBlur={() => setOnFocus(false)}
-					className='border-t max-lg:text-[#166430] border-r border-l border-b border-gray-400 max-lg:h-[100px]  max-lg:border-[#166430]
-					max-lg:border-2 max-lg:placeholder:text-[#166430] max-lg:placeholder:text-center  max-lg:py-0 py-3 w-[100%] px-6 outline-none max-lg:placeholder:text-4xl 
-					max-lg:placeholder:translate-y-1'
+					className={
+						onFocus
+							? 'border-t text-2xl max-lg:text-[#166430] border-r border-l border-b border-gray-400 max-lg:h-[100px]  max-lg:border-[#166430] ' +
+							  'max-lg:border-2 max-lg:placeholder:text-[#166430]  max-lg:py-0 py-3 w-[100%] px-6 outline-none max-lg:placeholder:text-2xl ' +
+							  'max-lg:placeholder:translate-y-0.5 max-lg:placeholder:translate-x-2'
+							: 'border-t max-lg:text-[#166430] border-r border-l border-b border-gray-400 max-lg:h-[100px]  max-lg:border-[#166430] ' +
+							  'max-lg:border-2 max-lg:placeholder:text-[#166430] max-lg:placeholder:text-center  max-lg:py-0 py-3 w-[100%] px-6 outline-none max-lg:placeholder:text-4xl ' +
+							  'max-lg:placeholder:translate-y-1'
+					}
 					type='text'
 				/>
 

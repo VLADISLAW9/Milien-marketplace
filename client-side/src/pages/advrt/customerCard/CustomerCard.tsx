@@ -41,7 +41,7 @@ const CustomerCard: FC<ICustomerCardProps> = ({
 					<Link
 						onClick={handleClick}
 						to={
-							user.id === customer.id
+							user && user.id === customer.id
 								? `/my-profile`
 								: `/customer/${customer.id}`
 						}

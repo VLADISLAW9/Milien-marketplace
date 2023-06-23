@@ -19,49 +19,53 @@ interface IEditModal {
 
 const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 	const { user } = useTypedSelector(state => state.user)
-	const [newUsersData, setNewUsersData] = useState({
-		firstName: user.firstName,
-		lastName: user.lastName,
-		aboutMe: user.aboutMe,
-	})
+	const [newUsersData, setNewUsersData] = useState(
+		user && {
+			firstName: user.firstName,
+			lastName: user.lastName,
+			aboutMe: user.aboutMe,
+		}
+	)
 	const [isLoading, setIsLoading] = useState(false)
 	const [isError, setIsError] = useState(null)
 	const location = useLocation()
 	const { isAuth } = useTypedSelector(state => state.user)
 
 	const handleSubmitData = async () => {
-		if (
-			(newUsersData.aboutMe !== user.aboutMe ||
-				newUsersData.firstName !== user.firstName ||
-				newUsersData.lastName !== user.lastName) &&
-			newUsersData.firstName &&
-			newUsersData.lastName &&
-			user.email &&
-			user.phoneNumber &&
-			user.login
-		) {
-			try {
-				setIsLoading(true)
-				const response = await userService
-					.editUserData(
-						user.login,
-						newUsersData.aboutMe,
-						newUsersData.firstName,
-						newUsersData.lastName,
-						user.email,
-						user.phoneNumber
-					)
-					.then(res => {
-						handleCloseEdit()
-						window.location.reload()
-					})
-			} catch (e: any) {
-				setIsError(e.response.data)
-			} finally {
-				setIsLoading(false)
+		if (user && newUsersData) {
+			if (
+				(newUsersData.aboutMe !== user.aboutMe ||
+					newUsersData.firstName !== user.firstName ||
+					newUsersData.lastName !== user.lastName) &&
+				newUsersData.firstName &&
+				newUsersData.lastName &&
+				user.email &&
+				user.phoneNumber &&
+				user.login
+			) {
+				try {
+					setIsLoading(true)
+					const response = await userService
+						.editUserData(
+							user.login,
+							newUsersData.aboutMe,
+							newUsersData.firstName,
+							newUsersData.lastName,
+							user.email,
+							user.phoneNumber
+						)
+						.then(res => {
+							handleCloseEdit()
+							window.location.reload()
+						})
+				} catch (e: any) {
+					setIsError(e.response.data)
+				} finally {
+					setIsLoading(false)
+				}
+			} else {
+				handleCloseEdit()
 			}
-		} else {
-			handleCloseEdit()
 		}
 	}
 
@@ -99,9 +103,11 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 						/>
 					</div>
 					<TextField
-						value={newUsersData.firstName}
+						value={newUsersData && newUsersData.firstName}
 						onChange={(e: any) => {
-							setNewUsersData({ ...newUsersData, firstName: e.target.value })
+							setNewUsersData(
+								newUsersData && { ...newUsersData, firstName: e.target.value }
+							)
 						}}
 						margin='dense'
 						id='name'
@@ -111,9 +117,11 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 						variant='standard'
 					/>
 					<TextField
-						value={newUsersData.lastName}
+						value={newUsersData && newUsersData.lastName}
 						onChange={(e: any) => {
-							setNewUsersData({ ...newUsersData, lastName: e.target.value })
+							setNewUsersData(
+								newUsersData && { ...newUsersData, lastName: e.target.value }
+							)
 						}}
 						margin='dense'
 						id='name'
@@ -124,9 +132,13 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 					/>
 					<div className='mt-7'>
 						<textarea
-							value={newUsersData.aboutMe ? newUsersData.aboutMe : ''}
+							value={
+								newUsersData && newUsersData.aboutMe ? newUsersData.aboutMe : ''
+							}
 							onChange={(e: any) => {
-								setNewUsersData({ ...newUsersData, aboutMe: e.target.value })
+								setNewUsersData(
+									newUsersData && { ...newUsersData, aboutMe: e.target.value }
+								)
 							}}
 							placeholder='Обо мне'
 							rows={10}
