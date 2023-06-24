@@ -1,6 +1,7 @@
 import axios from 'axios'
-import { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
+import YandexAd_grid from '../../app/components/ui/Advertisement/YandexAd_grid'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useFetching } from '../../hooks/use-fetching'
@@ -27,7 +28,9 @@ const HomePage: FC = () => {
 		})
 
 	const [fetchNewAds, isNewAdsLoading, newAdsError] = useFetching(async () => {
-		const response = await axios.get('https://api.xn--h1agbg8e4a.xn--p1ai/Ad/GetNewAds')
+		const response = await axios.get(
+			'https://api.xn--h1agbg8e4a.xn--p1ai/Ad/GetNewAds'
+		)
 		setNewAds([...response.data])
 	})
 
@@ -43,9 +46,12 @@ const HomePage: FC = () => {
 			setTotalPages(getPageCount(totalCount, limit))
 			setAds([...ads, ...response.data])
 		} else {
-			const response = await axios.get('https://api.xn--h1agbg8e4a.xn--p1ai/Ad/GetAll', {
-				params: { limit: limit, page: page },
-			})
+			const response = await axios.get(
+				'https://api.xn--h1agbg8e4a.xn--p1ai/Ad/GetAll',
+				{
+					params: { limit: limit, page: page },
+				}
+			)
 			const totalCount = response.headers['count']
 			console.log(totalCount)
 			setTotalPages(getPageCount(totalCount, limit))
@@ -79,7 +85,7 @@ const HomePage: FC = () => {
 					<h1 className='mt-14 text-3xl'>Новые объвления</h1>
 					<ul
 						className={
-							'mt-7 grid grid-cols-6  gap-5 max-2xl:grid-cols-5 max-xl:grid-cols-4 max-md:grid-cols-3 max-xl:gap-3 '
+							'mt-7 grid grid-cols-6  gap-5 max-2xl:grid-cols-5 max-xl:grid-cols-4 max-lg:grid-cols-3 max-xl:gap-3 '
 						}
 					>
 						{newAds.map(advrt => (
@@ -109,7 +115,7 @@ const HomePage: FC = () => {
 					<h1 className='mt-14 text-3xl'>Новые услуги</h1>
 					<ul
 						className={
-							'mt-7 grid grid-cols-6  gap-5 max-2xl:grid-cols-5 max-xl:grid-cols-4 max-md:grid-cols-3  max-xl:gap-3'
+							'mt-7 grid grid-cols-6  gap-5 max-2xl:grid-cols-5 max-xl:grid-cols-4 max-lg:grid-cols-3  max-xl:gap-3'
 						}
 					>
 						{newServices.map(advrt => (
@@ -135,11 +141,14 @@ const HomePage: FC = () => {
 			{!adsError && <h1 className='mt-14 text-3xl'>Рекомендации</h1>}
 			<ul
 				className={
-					'mt-7 grid grid-cols-4 max-xl:grid-cols-3 max-md:grid-cols-2 gap-5 max-xl:gap-3 '
+					'mt-7 grid grid-cols-4 max-xl:grid-cols-3 max-lg:grid-cols-2 gap-5 max-xl:gap-3 '
 				}
 			>
-				{ads.map(advrt => (
-					<AdvertisementItem_grid key={advrt.id} advrt_data={advrt} />
+				{ads.map((advrt, index) => (
+					<React.Fragment key={advrt.id}>
+						<AdvertisementItem_grid key={advrt.id} advrt_data={advrt} />
+						{index !== 0 && (index + 1) % 5 === 0 && <YandexAd_grid />}
+					</React.Fragment>
 				))}
 			</ul>
 			<div ref={lastElement} className='h-[20px]'></div>

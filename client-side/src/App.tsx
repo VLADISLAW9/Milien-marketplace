@@ -29,25 +29,15 @@ function App() {
 	)
 
 	useEffect(() => {
-		// Функция, которая будет вызывать checkPremium
 		const runCheckPremium = async () => {
 			try {
 				await checkPremium()
 			} catch (error) {
-				// Обработка ошибки, если необходимо
 				console.error('Ошибка при вызове checkPremium:', error)
 			}
 		}
-
-		// Запускаем checkPremium при монтировании компонента
 		runCheckPremium()
-
-		// Вызываем checkPremium раз в сутки
-		const interval = setInterval(runCheckPremium, 24 * 60 * 60 * 1000)
-
-		// Очищаем интервал при размонтировании компонента
-		return () => clearInterval(interval)
-	}, []) // Пустой массив зависимостей гарантирует, что useEffect будет вызван только один раз при монтировании компонента
+	}, [])
 
 	const dispatch = useDispatch<Dispatch<any>>()
 
@@ -93,31 +83,27 @@ function App() {
 						}
 					})
 				} catch (e: any) {
-					console.log(e)
-					if (e.status === 401) {
-						// Обработка ошибки 401 - вызов refresh token
-						const refreshToken = localStorage.getItem('refresh')
-						try {
-							const response = await axios.post<IAuthResponse>(
-								`${AUTH_URL}/api/Token/refresh`,
-								{ refreshToken }
-							)
-							localStorage.setItem('token', response.data.accessToken)
-							localStorage.setItem('refresh', response.data.refreshToken)
-							dispatch(setAuth(true))
-							window.location.reload()
-							// Повторный вызов getUser после успешного обновления токена
-							getUser()
-						} catch (error) {
-							console.error('Ошибка при обновлении токена:', error)
-							// Обработка ошибки обновления токена, например, выход пользователя из системы
-							localStorage.removeItem('token')
-							localStorage.removeItem('refresh')
-							dispatch(removeUser())
-							window.location.reload()
-						}
-					} else {
-						setUserError('Произошла ошибка при загрузке данных пользователя')
+					// Обработка ошибки 401 - вызов refresh token
+					const accessToken = localStorage.getItem('token')
+					const refreshToken = localStorage.getItem('refresh')
+					try {
+						const response = await axios.post<IAuthResponse>(
+							`${AUTH_URL}/api/Token/refresh`,
+							{ accessToken, refreshToken }
+						)
+						localStorage.setItem('token', response.data.accessToken)
+						localStorage.setItem('refresh', response.data.refreshToken)
+						dispatch(setAuth(true))
+						window.location.reload()
+						// Повторный вызов getUser после успешного обновления токена
+						getUser()
+					} catch (error) {
+						console.error('Ошибка при обновлении токена:', error)
+						// Обработка ошибки обновления токена, например, выход пользователя из системы
+						localStorage.removeItem('token')
+						localStorage.removeItem('refresh')
+						dispatch(removeUser())
+						window.location.reload()
 					}
 				} finally {
 					setLoading(false)

@@ -33,6 +33,13 @@ const Similar: FC<ISimilatProps> = ({ isLoading, isError, similar }) => {
 							/>
 						))}
 					</ul>
+					{similar.length === 0 && (
+						<div className='flex  mt-10 justify-center items-center'>
+							<h1 className='text-2xl text-stone-400 '>
+								Нет похожих объявлений
+							</h1>
+						</div>
+					)}
 				</>
 			) : null}
 		</div>

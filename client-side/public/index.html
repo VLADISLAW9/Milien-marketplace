@@ -10,14 +10,22 @@
   <link rel="icon" href="myfavicon.ico" />
   <meta name="yandex-verification" content="5ab8e81a04fd40e9" />
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-
+  <!-- Yandex.RTB -->
+  <script>window.yaContextCb = window.yaContextCb || []</script>
+  <script src="https://yandex.ru/ads/system/context.js" async></script>
   <title>Мильён: поиск, продажа товаров и услуг</title>
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
-
+  <script>window.yaContextCb.push(() => {
+      Ya.Context.AdvManager.renderFeed({
+        "blockId": "R-A-2461588-2",
+        "renderTo": "yandex_rtb_R-A-2461588-2"
+      })
+    })
+  </script>
 </body>
 
 </html>

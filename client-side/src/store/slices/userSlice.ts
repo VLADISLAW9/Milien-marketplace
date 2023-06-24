@@ -93,7 +93,6 @@ interface UserState {
 
 const initialState: UserState = {
 	user: {} as IUser,
-
 	userAds: null,
 	isAuth: !!localStorage.getItem('token'),
 	isLoadingAuth: false,
