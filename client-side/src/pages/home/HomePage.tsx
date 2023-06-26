@@ -147,10 +147,13 @@ const HomePage: FC = () => {
 				{ads.map((advrt, index) => (
 					<React.Fragment key={advrt.id}>
 						<AdvertisementItem_grid key={advrt.id} advrt_data={advrt} />
-						{index !== 0 && (index + 1) % 5 === 0 && <YandexAd_grid />}
+						{index !== 0 && (index + 1) % 5 === 0 && (
+							<YandexAd_grid adNumber={index / 5} />
+						)}
 					</React.Fragment>
 				))}
 			</ul>
+
 			<div ref={lastElement} className='h-[20px]'></div>
 			{isAdsLoading && (
 				<div className='flex justify-center items-center mt-36'>

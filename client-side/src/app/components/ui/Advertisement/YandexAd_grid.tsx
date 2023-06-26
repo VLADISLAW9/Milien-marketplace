@@ -1,6 +1,10 @@
-import { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 
-const YandexAd_grid = () => {
+interface IYandexAd_grid {
+	adNumber: number
+}
+
+const YandexAd_grid: FC<IYandexAd_grid> = ({ adNumber }) => {
 	useEffect(() => {
 		const script1 = document.createElement('script')
 		script1.innerHTML = `
@@ -8,7 +12,7 @@ const YandexAd_grid = () => {
       window.yaContextCb.push(() => {
         Ya.Context.AdvManager.render({
           blockId: 'R-A-2461588-4',
-          renderTo: 'yandex_rtb_R-A-2461588-4'
+          renderTo: 'yandex_rtb_R-A-2461588-4-${adNumber}'
         });
       });
     `
@@ -17,12 +21,12 @@ const YandexAd_grid = () => {
 		return () => {
 			document.head.removeChild(script1)
 		}
-	}, [])
+	}, [adNumber])
 
 	return (
 		<li className='flex justify-center items-center'>
 			<div
-				id='yandex_rtb_R-A-2461588-4'
+				id={`yandex_rtb_R-A-2461588-4-${adNumber}`}
 				style={{ maxHeight: '500px', maxWidth: '337px' }}
 			>
 				<div style={{ height: '500px', width: '337px' }}></div>
