@@ -55,7 +55,7 @@ function App() {
 					localStorage.setItem('token', response.data.accessToken)
 					localStorage.setItem('refresh', response.data.refreshToken)
 
-					dispatch(setAuth(true))
+					setAuth(true)
 				} catch (e: any) {
 					localStorage.removeItem('token')
 					localStorage.removeItem('refresh')
@@ -69,7 +69,7 @@ function App() {
 	}, [])
 
 	useEffect(() => {
-		if (isAuth === true) {
+		if (localStorage.getItem('token')) {
 			const getUser = async () => {
 				setLoading(true)
 				setIsUserLoading(true)
@@ -93,7 +93,7 @@ function App() {
 						)
 						localStorage.setItem('token', response.data.accessToken)
 						localStorage.setItem('refresh', response.data.refreshToken)
-						dispatch(setAuth(true))
+						setAuth(true)
 						window.location.reload()
 						// Повторный вызов getUser после успешного обновления токена
 						getUser()
@@ -102,7 +102,7 @@ function App() {
 						// Обработка ошибки обновления токена, например, выход пользователя из системы
 						localStorage.removeItem('token')
 						localStorage.removeItem('refresh')
-						dispatch(removeUser())
+						removeUser()
 						window.location.reload()
 					}
 				} finally {
