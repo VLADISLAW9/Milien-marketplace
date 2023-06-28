@@ -24,7 +24,7 @@ const YandexAd_grid: FC<IYandexAd_grid> = ({ adNumber }) => {
 	}, [adNumber])
 
 	return (
-		<li className='flex justify-center items-center'>
+		<li className='flex justify-center shadow-stone-200 shadow-xl items-center rounded-2xl'>
 			<div
 				id={`yandex_rtb_R-A-2461588-4-${adNumber}`}
 				style={{ maxHeight: '500px', maxWidth: '337px' }}

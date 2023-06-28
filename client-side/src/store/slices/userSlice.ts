@@ -132,11 +132,11 @@ export const userSlice = createSlice({
 	},
 	extraReducers: builder => {
 		builder.addCase(logout.fulfilled, state => {
+			state.isAuth = false
 			state.user = {} as IUser
 			state.isErrorAuth = false
 			state.isLoadingAuth = false
 			state.errorMessage = null
-			state.isAuth = false
 		})
 	},
 })
