@@ -18,7 +18,7 @@ body {
 	@apply inset-x-[200px];
 }
 
-@media (max-width: 1910px) {
+@media (max-width: 1824px) {
 	body {
 		@apply bg-stone-100;
 		padding-right: 50px;
@@ -29,12 +29,13 @@ body {
 	.header {
 		@apply inset-x-[50px];
 	}
-	.yandexAd_list {
-		display: none;
+
+	.yandexAd_list{
+		display:none
 	}
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1424px) {
 	body {
 		@apply bg-stone-100;
 		padding-right: 0px;
@@ -43,15 +44,7 @@ body {
 		font-family: 'Open Sans', sans-serif;
 	}
 	.header {
-		@apply inset-x-[5px];
-	}
-}
-
-@media screen and (max-width: 700px) {
-	body {
-		padding: 0;
-		margin: 0;
-		overflow-x: hidden;
+		@apply inset-x-[0px];
 	}
 }
 
