@@ -19,18 +19,16 @@ const Header: FC = () => {
 	const { isAuth, user: userData } = useTypedSelector(state => state.user)
 	const [user, setUser] = useState<IUser | null>(null)
 	const navigate = useNavigate()
-
-	console.log(isAuth, user, 'fdfdsf')
-
 	const dispatch = useDispatch<Dispatch<any>>()
 	const [fetchUser, isLoading, error] = useFetching(async () => {
 		const response = await UserService.getUserData()
 		setUser(response.data.user)
-		if(response.status === 401){
-			
+		if (response.status === 401) {
 		}
 	})
 	const [showBurger, setShowBurger] = useState(false)
+
+	console.log(userData)
 
 	const handleExit = () => {
 		dispatch(logout())
@@ -144,7 +142,7 @@ const Header: FC = () => {
 				</div>
 			)}
 
-			{user ? (
+			{isAuth ? (
 				<div className='flex max-xl:hidden w-[15%] max-xl:w-[5%] items-center flex-auto justify-end'>
 					<UserHeader user={userData} />
 				</div>

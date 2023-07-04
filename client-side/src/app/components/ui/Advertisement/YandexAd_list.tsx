@@ -1,6 +1,10 @@
 import { FC, useEffect } from 'react'
 
-const YandexAd_list: FC = () => {
+interface YandexAdListProps {
+	position: string
+}
+
+const YandexAd_list: FC<YandexAdListProps> = ({ position }) => {
 	useEffect(() => {
 		const script1 = document.createElement('script')
 		script1.innerHTML = `
@@ -20,12 +24,24 @@ const YandexAd_list: FC = () => {
 	}, [])
 
 	return (
-		<div className='flex justify-center items-center rounded-2xl'>
+		<div className='flex  justify-center items-center rounded-2xl'>
 			<div
 				id='yandex_rtb_R-A-2461588-5'
-				style={{ maxHeight: 'calc(100vh - 40px)', maxWidth: '160px' }}
+				style={{
+					maxHeight:
+						position === 'right' ? 'calc(100vh - 180px)' : 'calc(100vh - 40px)',
+					maxWidth: '160px',
+				}}
 			>
-				<div style={{ height: 'calc(100vh - 40px)', width: '160px' }}></div>
+				<div
+					style={{
+						height:
+							position === 'right'
+								? 'calc(100vh - 180px)'
+								: 'calc(100vh - 40px)',
+						width: '160px',
+					}}
+				></div>
 			</div>
 		</div>
 	)

@@ -39,8 +39,6 @@ function App() {
 		runCheckPremium()
 	}, [])
 
-	const dispatch = useDispatch<Dispatch<any>>()
-
 	useEffect(() => {
 		if (localStorage.getItem('token')) {
 			const checker = async () => {
@@ -57,8 +55,8 @@ function App() {
 
 					setAuth(true)
 				} catch (e: any) {
-					localStorage.removeItem('token')
-					localStorage.removeItem('refresh')
+					// localStorage.removeItem('token')
+					// localStorage.removeItem('refresh')
 					// window.location.reload()
 				} finally {
 					setLoading(false)
@@ -74,37 +72,14 @@ function App() {
 				setLoading(true)
 				setIsUserLoading(true)
 				try {
-					const userDate = await UserService.getUserData().then(res => {
-						setUserData(res.data.user)
-
-						dispatch(setUser(res.data.user))
-						if (res.data.userAds) {
-							dispatch(setUserAds(res.data.userAds))
-						}
-					})
-				} catch (e: any) {
-					// Обработка ошибки 401 - вызов refresh token
-					const accessToken = localStorage.getItem('token')
-					const refreshToken = localStorage.getItem('refresh')
-					try {
-						const response = await axios.post<IAuthResponse>(
-							`${AUTH_URL}/api/Token/refresh`,
-							{ accessToken, refreshToken }
-						)
-						localStorage.setItem('token', response.data.accessToken)
-						localStorage.setItem('refresh', response.data.refreshToken)
-						setAuth(true)
-						window.location.reload()
-						// Повторный вызов getUser после успешного обновления токена
-						getUser()
-					} catch (error) {
-						console.error('Ошибка при обновлении токена:', error)
-						// Обработка ошибки обновления токена, например, выход пользователя из системы
-						localStorage.removeItem('token')
-						localStorage.removeItem('refresh')
-						removeUser()
-						window.location.reload()
+					const userDate = await UserService.getUserData()
+					setUserData(userDate.data.user)
+					setUser(userDate.data.user)
+					if (userDate.data.userAds) {
+						setUserAds(userDate.data.userAds)
 					}
+				} catch (e: any) {
+					console.log('Ошибка при вызове - getUserData')
 				} finally {
 					setLoading(false)
 					setIsUserLoading(false)
