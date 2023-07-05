@@ -12,14 +12,12 @@ import UserService from './services/UserService'
 import { AUTH_URL } from './store/axios/auth-api'
 import { IAuthResponse } from './types/IAuthResponse'
 import { IUser } from './types/IUser'
-
 function App() {
 	const { isAuth, user } = useTypedSelector(state => state.user)
 	const [userData, setUserData] = useState<IUser | null>(null)
 	const [isUserLoading, setIsUserLoading] = useState(false)
 	const [userError, setUserError] = useState('')
 	const { setUser, setUserAds, setAuth, setLoading, removeUser } = useActions()
-
 	const [checkPremium, checkPremiumLoading, checkPremiumError] = useFetching(
 		async () => {
 			const checkerPremium = await axios.delete(
@@ -27,7 +25,6 @@ function App() {
 			)
 		}
 	)
-
 	useEffect(() => {
 		const runCheckPremium = async () => {
 			try {
@@ -38,6 +35,8 @@ function App() {
 		}
 		runCheckPremium()
 	}, [])
+
+	const dispatch = useDispatch<Dispatch<any>>()
 
 	useEffect(() => {
 		if (localStorage.getItem('token')) {
@@ -52,12 +51,17 @@ function App() {
 					)
 					localStorage.setItem('token', response.data.accessToken)
 					localStorage.setItem('refresh', response.data.refreshToken)
-
+					const userDate = await UserService.getUserData()
+					setUserData(userDate.data.user)
+					setUser(userDate.data.user)
+					if (userDate.data.userAds) {
+						setUserAds(userDate.data.userAds)
+					}
 					setAuth(true)
 				} catch (e: any) {
 					// localStorage.removeItem('token')
 					// localStorage.removeItem('refresh')
-					// window.location.reload()
+					window.location.reload()
 				} finally {
 					setLoading(false)
 				}
@@ -65,30 +69,6 @@ function App() {
 			checker()
 		}
 	}, [])
-
-	useEffect(() => {
-		if (localStorage.getItem('token')) {
-			const getUser = async () => {
-				setLoading(true)
-				setIsUserLoading(true)
-				try {
-					const userDate = await UserService.getUserData()
-					setUserData(userDate.data.user)
-					setUser(userDate.data.user)
-					if (userDate.data.userAds) {
-						setUserAds(userDate.data.userAds)
-					}
-				} catch (e: any) {
-					console.log('Ошибка при вызове - getUserData')
-				} finally {
-					setLoading(false)
-					setIsUserLoading(false)
-				}
-			}
-			getUser()
-		}
-	}, [])
-
 	return (
 		<UserContext.Provider value={{ userData, isUserLoading, userError }}>
 			<Layout>
@@ -97,5 +77,4 @@ function App() {
 		</UserContext.Provider>
 	)
 }
-
 export default App

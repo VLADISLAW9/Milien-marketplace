@@ -61,7 +61,6 @@ const HomePage: FC = () => {
 
 	useObserver(lastElement, page < totalPages, isAdsLoading, () => {
 		setPage(page + 1)
-		console.log('fdsfadsfds')
 	})
 
 	useEffect(() => {

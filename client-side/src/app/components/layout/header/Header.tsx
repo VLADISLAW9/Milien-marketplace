@@ -1,5 +1,7 @@
 import { Dispatch } from '@reduxjs/toolkit'
 import { FC, useEffect, useState } from 'react'
+import { AiOutlineUser } from 'react-icons/ai'
+import { BiExit, BiHeart } from 'react-icons/bi'
 import { HiMenu } from 'react-icons/hi'
 import { MdClose } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
@@ -23,12 +25,8 @@ const Header: FC = () => {
 	const [fetchUser, isLoading, error] = useFetching(async () => {
 		const response = await UserService.getUserData()
 		setUser(response.data.user)
-		if (response.status === 401) {
-		}
 	})
 	const [showBurger, setShowBurger] = useState(false)
-
-	console.log(userData)
 
 	const handleExit = () => {
 		dispatch(logout())
@@ -92,16 +90,17 @@ const Header: FC = () => {
 							<HeaderSearch />
 						</div>
 
-						{user ? (
+						{isAuth && userData ? (
 							<div className='flex justify-center items-center flex-col'>
 								<button
 									onClick={() => {
 										setShowBurger(false)
 										navigate('/my-profile')
 									}}
-									className='text-4xl text-center rounded-full border-2 bg-[#166430]  border-[#166430] w-[100%] text-white px-8 py-0 flex justify-center items-center h-[100px] mb-14 border'
+									className='text-4xl text-center rounded-full border-2 bg-[#166430]  border-[#166430] w-[500px] text-white  py-0 flex justify-center items-center h-[100px] mb-14 border'
 								>
-									Профиль
+									<AiOutlineUser className='mr-5 w-12 h-12' />
+									<h1 className='w-[220px]'>Профиль</h1>
 								</button>
 
 								<button
@@ -109,17 +108,19 @@ const Header: FC = () => {
 										setShowBurger(false)
 										navigate('/favorite')
 									}}
-									className='text-4xl text-center rounded-full  w-[100%] text-white bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00] px-8 py-0 flex justify-center items-center h-[100px] mb-14 '
+									className='text-4xl text-center rounded-full  w-[500px] text-white bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]  py-0 flex justify-center items-center h-[100px] mb-14 '
 								>
-									Избранное
+									<BiHeart className='mr-5 w-12 h-12' />
+									<h1 className='w-[220px]'>Избранное</h1>
 								</button>
 								<button
 									onClick={() => {
 										handleExit()
 									}}
-									className='text-4xl text-center rounded-full border-2 border-[#166430] w-[100%] text-[#166430] px-8 py-0 flex justify-center items-center h-[100px] mb-14 border'
+									className='text-4xl text-center rounded-full border-2 border-[#166430] w-[500px] text-[#166430]  py-0 flex justify-center items-center h-[100px] mb-14 border'
 								>
-									Выйти
+									<BiExit className='mr-5 w-12 h-12' />
+									<h1 className='w-[220px]'>Выйти</h1>
 								</button>
 							</div>
 						) : (
@@ -142,7 +143,7 @@ const Header: FC = () => {
 				</div>
 			)}
 
-			{isAuth ? (
+			{isAuth && userData ? (
 				<div className='flex max-xl:hidden w-[15%] max-xl:w-[5%] items-center flex-auto justify-end'>
 					<UserHeader user={userData} />
 				</div>
