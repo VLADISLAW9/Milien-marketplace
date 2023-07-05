@@ -1,19 +1,14 @@
 import { FC, useEffect } from 'react'
 
-interface YandexAdListProps {
-	position: string
-	adNumber: number
-}
-
-const YandexAd_list: FC<YandexAdListProps> = ({ position, adNumber }) => {
+const YandexAd_list_left: FC = () => {
 	useEffect(() => {
 		const script1 = document.createElement('script')
 		script1.innerHTML = `
       window.yaContextCb = window.yaContextCb || [];
       window.yaContextCb.push(() => {
         Ya.Context.AdvManager.render({
-          blockId: 'R-A-2461588-5',
-          renderTo: 'yandex_rtb_R-A-2461588-5-${adNumber}'
+          blockId: 'R-A-2461588-6',
+          renderTo: 'yandex_rtb_R-A-2461588-6'
         });
       });
     `
@@ -27,19 +22,15 @@ const YandexAd_list: FC<YandexAdListProps> = ({ position, adNumber }) => {
 	return (
 		<div className='flex  justify-center items-center rounded-2xl'>
 			<div
-				id={`yandex_rtb_R-A-2461588-5-${adNumber}`}
+				id={`yandex_rtb_R-A-2461588-6`}
 				style={{
-					maxHeight:
-						position === 'right' ? 'calc(100vh - 180px)' : 'calc(100vh - 40px)',
+					maxHeight: 'calc(100vh - 40px)',
 					maxWidth: '160px',
 				}}
 			>
 				<div
 					style={{
-						height:
-							position === 'right'
-								? 'calc(100vh - 180px)'
-								: 'calc(100vh - 40px)',
+						height: 'calc(100vh - 40px)',
 						width: '160px',
 					}}
 				></div>
@@ -48,4 +39,4 @@ const YandexAd_list: FC<YandexAdListProps> = ({ position, adNumber }) => {
 	)
 }
 
-export default YandexAd_list
+export default YandexAd_list_left

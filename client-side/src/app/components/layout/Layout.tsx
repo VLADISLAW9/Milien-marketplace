@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
-import YandexAd_list from '../ui/Advertisement/YandexAd_list'
+import YandexAd_list_left from '../ui/Advertisement/YandexAd_list_left'
+import YandexAd_list_right from '../ui/Advertisement/YandexAd_list_right'
 import AddAdvrt from './addAdvrt/AddAdvrt'
 import Footer from './footer/Footer'
 import Header from './header/Header'
@@ -28,10 +29,10 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 				<div className='bg-white justify-between flex relative flex-col min-h-[100vh]  max-lg:min-h-[100vh] h-[100%]'>
 					<Header />
 					<div className='fixed py-[20px] max-w-[160px] min-h-[100vh] yandexAd_list right-[20px] top-0'>
-						<YandexAd_list adNumber={1} position={'right'} />
+						<YandexAd_list_right />
 					</div>
 					<div className='fixed py-[20px] max-w-[160px] min-h-[100vh] yandexAd_list left-[20px] top-0'>
-						<YandexAd_list adNumber={2} position={'left'} />
+						<YandexAd_list_left />
 					</div>
 					{isAuth && user && location.pathname !== '/createAdvrt' && (
 						<div className='fixed z-[30] right-[67px] bottom-16	'>
