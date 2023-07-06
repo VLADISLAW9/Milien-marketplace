@@ -12,6 +12,7 @@ import UserService from './services/UserService'
 import { AUTH_URL } from './store/axios/auth-api'
 import { IAuthResponse } from './types/IAuthResponse'
 import { IUser } from './types/IUser'
+
 function App() {
 	const { isAuth, user } = useTypedSelector(state => state.user)
 	const [userData, setUserData] = useState<IUser | null>(null)
@@ -25,6 +26,7 @@ function App() {
 			)
 		}
 	)
+
 	useEffect(() => {
 		const runCheckPremium = async () => {
 			try {
@@ -47,7 +49,8 @@ function App() {
 					setLoading(true)
 					const response = await axios.post<IAuthResponse>(
 						`${AUTH_URL}/api/Token/refresh`,
-						{ accessToken, refreshToken }
+						{ accessToken, refreshToken },
+						{ withCredentials: true }
 					)
 					localStorage.setItem('token', response.data.accessToken)
 					localStorage.setItem('refresh', response.data.refreshToken)
@@ -61,6 +64,7 @@ function App() {
 				} catch (e: any) {
 					localStorage.removeItem('token')
 					localStorage.removeItem('refresh')
+
 					window.location.reload()
 				} finally {
 					setLoading(false)

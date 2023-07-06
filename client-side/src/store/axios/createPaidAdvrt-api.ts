@@ -6,6 +6,7 @@ export const CREATEPAYED_URL = 'https://api.xn--h1agbg8e4a.xn--p1ai'
 
 const $createPremiumAdvrt_api = axios.create({
 	baseURL: CREATEPAYED_URL,
+	withCredentials: true,
 })
 
 $createPremiumAdvrt_api.interceptors.request.use(config => {
@@ -26,7 +27,8 @@ $createPremiumAdvrt_api.interceptors.response.use(
 			try {
 				const response = await axios.post<IAuthResponse>(
 					`${AUTH_URL}/api/Token/refresh`,
-					{ accessToken, refreshToken }
+					{ accessToken, refreshToken },
+					{ withCredentials: true }
 				)
 				console.log(error, 'is error')
 				console.log('interceptors is working')

@@ -5,6 +5,7 @@ export const AUTH_URL = 'https://api.xn--h1agbg8e4a.xn--p1ai'
 
 const $api = axios.create({
 	baseURL: AUTH_URL,
+	withCredentials: true,
 })
 
 $api.interceptors.request.use(config => {
@@ -25,7 +26,8 @@ $api.interceptors.response.use(
 			try {
 				const response = await axios.post<IAuthResponse>(
 					`${AUTH_URL}/api/Token/refresh`,
-					{ accessToken, refreshToken }
+					{ accessToken, refreshToken },
+					{ withCredentials: true }
 				)
 				console.log(error, 'is error')
 				console.log('interceptors is working')
