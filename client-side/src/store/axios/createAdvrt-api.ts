@@ -5,8 +5,7 @@ import { AUTH_URL } from './auth-api'
 export const CREATEADVT_URL = 'https://api.xn--h1agbg8e4a.xn--p1ai'
 
 const $createAdvrt_api = axios.create({
-	baseURL: CREATEADVT_URL,
-	withCredentials: true,
+	baseURL: CREATEADVT_URL
 })
 
 $createAdvrt_api.interceptors.request.use(config => {
@@ -27,8 +26,7 @@ $createAdvrt_api.interceptors.response.use(
 			try {
 				const response = await axios.post<IAuthResponse>(
 					`${AUTH_URL}/api/Token/refresh`,
-					{ accessToken, refreshToken },
-					{ withCredentials: true }
+					{ accessToken, refreshToken }
 				)
 				console.log(error, 'is error')
 				console.log('interceptors is working')

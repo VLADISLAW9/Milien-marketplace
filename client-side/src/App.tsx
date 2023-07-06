@@ -49,8 +49,7 @@ function App() {
 					setLoading(true)
 					const response = await axios.post<IAuthResponse>(
 						`${AUTH_URL}/api/Token/refresh`,
-						{ accessToken, refreshToken },
-						{ withCredentials: true }
+						{ accessToken, refreshToken }
 					)
 					localStorage.setItem('token', response.data.accessToken)
 					localStorage.setItem('refresh', response.data.refreshToken)
