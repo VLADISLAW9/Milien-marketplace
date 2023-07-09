@@ -4,7 +4,8 @@ import { IAuthResponse } from '../../types/IAuthResponse'
 export const AUTH_URL = 'https://api.xn--h1agbg8e4a.xn--p1ai'
 
 const $api = axios.create({
-	baseURL: AUTH_URL
+	baseURL: AUTH_URL,
+	withCredentials: true,
 })
 
 $api.interceptors.request.use(config => {
@@ -20,7 +21,11 @@ $api.interceptors.response.use(
 		const accessToken = localStorage.getItem('token')
 		const refreshToken = localStorage.getItem('refresh')
 		const originalRequest = error.config
-		if (error && error.config && !error.config._isRetry) {
+		if (
+			error.response.status === 401 &&
+			error.config &&
+			!error.config._isRetry
+		) {
 			originalRequest._isRetry = true
 			try {
 				const response = await axios.post<IAuthResponse>(

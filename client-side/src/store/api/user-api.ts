@@ -6,6 +6,7 @@ export const USER_URL = 'https://api.xn--h1agbg8e4a.xn--p1ai'
 
 const $user_api = axios.create({
 	baseURL: USER_URL,
+	withCredentials: true,
 })
 
 $user_api.interceptors.request.use(config => {
@@ -21,7 +22,7 @@ $user_api.interceptors.response.use(
 		const accessToken = localStorage.getItem('token')
 		const refreshToken = localStorage.getItem('refresh')
 		const originalRequest = error.config
-		if (error && error.config && !error.config._isRetry) {
+		if (error.response.status === 401 && error.config && !error.config._isRetry) {
 			originalRequest._isRetry = true
 			try {
 				const response = await axios.post<IAuthResponse>(
@@ -33,7 +34,8 @@ $user_api.interceptors.response.use(
 				localStorage.setItem('token', response.data.accessToken)
 				localStorage.setItem('refresh', response.data.refreshToken)
 				return $user_api.request(originalRequest)
-			} catch (e) {
+			} catch (e:any) {
+				console.log(e.response)
 				console.log('Не авторизован')
 			}
 		}

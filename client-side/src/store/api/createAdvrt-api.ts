@@ -5,7 +5,8 @@ import { AUTH_URL } from './auth-api'
 export const CREATEADVT_URL = 'https://api.xn--h1agbg8e4a.xn--p1ai'
 
 const $createAdvrt_api = axios.create({
-	baseURL: CREATEADVT_URL
+	baseURL: CREATEADVT_URL,
+	withCredentials: true,
 })
 
 $createAdvrt_api.interceptors.request.use(config => {
@@ -21,7 +22,11 @@ $createAdvrt_api.interceptors.response.use(
 		const accessToken = localStorage.getItem('token')
 		const refreshToken = localStorage.getItem('refresh')
 		const originalRequest = error.config
-		if (error && error.config && !error.config._isRetry) {
+		if (
+			error.response.status === 401 &&
+			error.config &&
+			!error.config._isRetry
+		) {
 			originalRequest._isRetry = true
 			try {
 				const response = await axios.post<IAuthResponse>(

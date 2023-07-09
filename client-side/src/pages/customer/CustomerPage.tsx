@@ -57,11 +57,17 @@ const CustomerPage = () => {
 									{customer.aboutMe}
 								</p>
 							)}
+							{customer.id === 107 ? (
+								<></>
+							) : (
+								<>
+									<div className='mt-5 text-stone-500 flex items-center'>
+										<BsTelephoneFill className='mr-2 ' />
+										<p>{convertToPhoneNumber(customer.phoneNumber)}</p>
+									</div>{' '}
+								</>
+							)}
 
-							<div className='mt-5 text-stone-500 flex items-center'>
-								<BsTelephoneFill className='mr-2 ' />
-								<p>{convertToPhoneNumber(customer.phoneNumber)}</p>
-							</div>
 							<div className='mt-3 text-stone-500 flex items-center'>
 								<MdEmail className='mr-2 w-5 h-5 ' />
 								<p>{customer.email}</p>
