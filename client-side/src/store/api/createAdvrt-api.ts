@@ -5,8 +5,7 @@ import { AUTH_URL } from './auth-api'
 export const CREATEADVT_URL = 'https://api.xn--h1agbg8e4a.xn--p1ai'
 
 const $createAdvrt_api = axios.create({
-	baseURL: CREATEADVT_URL,
-	withCredentials: true,
+	baseURL: CREATEADVT_URL
 })
 
 $createAdvrt_api.interceptors.request.use(config => {
