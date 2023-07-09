@@ -18,7 +18,7 @@ export interface SignInPayload {
 }
 
 interface ICheckCode {
-	email: string
+	login: string
 	code: string
 }
 
@@ -74,7 +74,7 @@ export const checkCodeEmail = createAsyncThunk(
 	'user/checkCodeEmail',
 	async (payload: ICheckCode) => {
 		const response = await AuthService.checkEmailCode(
-			payload.email,
+			payload.login,
 			payload.code
 		)
 		return response

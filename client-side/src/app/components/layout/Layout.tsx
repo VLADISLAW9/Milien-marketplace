@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
-import YandexAd_list_left from '../ui/Advertisement/YandexAd_list_left'
 import YandexAd_list_right from '../ui/Advertisement/YandexAd_list_right'
 import AddAdvrt from './addAdvrt/AddAdvrt'
 import Footer from './footer/Footer'
@@ -15,7 +14,8 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 	const location = useLocation()
 	const { isAuth, user } = useTypedSelector(state => state.user)
 	const { isBlur } = useTypedSelector(state => state.isBlur)
-
+	const fdsf = 23
+	console.log(fdsf + 2)
 	return (
 		<>
 			{location.pathname === '/signin' ||
@@ -31,9 +31,7 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 					<div className='fixed py-[20px] max-w-[160px] min-h-[100vh] yandexAd_list right-[20px] top-0'>
 						<YandexAd_list_right />
 					</div>
-					<div className='fixed py-[20px] max-w-[160px] min-h-[100vh] yandexAd_list left-[20px] top-0'>
-						<YandexAd_list_left />
-					</div>
+
 					{isAuth && user && location.pathname !== '/createAdvrt' && (
 						<div className='fixed z-[30] right-[67px] bottom-16	'>
 							<AddAdvrt />

@@ -77,7 +77,7 @@ const LogInPage: FC = () => {
 							<BiMailSend className='scale-[.8] w-8 h-8 text-stone-400' />
 						</div>
 						<input
-							className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[300px]'
+							className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[320px]'
 							placeholder='Введите почту от вашего аккаунта'
 							value={emailValue}
 							onKeyPress={e => {

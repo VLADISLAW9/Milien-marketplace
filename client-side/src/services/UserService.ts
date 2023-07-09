@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import $user_api from '../store/axios/user-api'
+import $user_api from '../store/api/user-api'
 import { ICustomer } from '../types/ICustomer'
 import { IUserResponse } from '../types/IUserResponse'
 

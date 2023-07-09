@@ -20,7 +20,7 @@ const YandexAd_list_left: FC = () => {
 	}, [])
 
 	return (
-		<div className='flex  justify-center items-center rounded-2xl'>
+		<div className='flex justify-center items-center rounded-2xl'>
 			<div
 				id={`yandex_rtb_R-A-2461588-6`}
 				style={{

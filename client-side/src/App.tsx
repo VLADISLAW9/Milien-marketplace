@@ -9,7 +9,7 @@ import { useActions } from './hooks/use-actions'
 import { useFetching } from './hooks/use-fetching'
 import { useTypedSelector } from './hooks/use-typed-selector'
 import UserService from './services/UserService'
-import { AUTH_URL } from './store/axios/auth-api'
+import { AUTH_URL } from './store/api/auth-api'
 import { IAuthResponse } from './types/IAuthResponse'
 import { IUser } from './types/IUser'
 
@@ -72,6 +72,7 @@ function App() {
 			checker()
 		}
 	}, [])
+
 	return (
 		<UserContext.Provider value={{ userData, isUserLoading, userError }}>
 			<Layout>

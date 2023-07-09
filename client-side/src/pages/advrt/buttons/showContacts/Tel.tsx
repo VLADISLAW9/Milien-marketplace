@@ -18,9 +18,12 @@ const Tel: FC<ITelProps> = ({ customer }) => {
 			className='flex hover:text-black cursor-pointer transition-all items-center text-stone-500 border-b py-5'
 		>
 			<BsTelephoneFill className='mr-4' />
-			<h1 className='text-2xl font-semibold '>
+			<a
+				href={`tel:${customer.phoneNumber}`}
+				className='text-2xl font-semibold '
+			>
 				{convertToPhoneNumber(customer.phoneNumber)}
-			</h1>
+			</a>
 			<div className='ml-4'>
 				<RiFileCopy2Fill className='w-5 h-5' />
 			</div>

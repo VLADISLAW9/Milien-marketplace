@@ -60,7 +60,7 @@ const CustomerCard: FC<ICustomerCardProps> = ({
 								</h1>
 							</div>
 							<div className='mt-5 text-stone-500 text-center px-4 py-2 max-lg:px-6 max-lg:py-6 border max-lg:text-2xl max-lg:border-2 max-lg:border-stone-500'>
-								<p>Всего {customer_advrts?.length} объявления</p>
+								<p>Всего {customer_advrts?.length} объявления</p>	
 							</div>
 						</div>
 					</Link>

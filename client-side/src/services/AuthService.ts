@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import $api from '../store/axios/auth-api'
+import $api from '../store/api/auth-api'
 import { IAuthResponse } from '../types/IAuthResponse'
 
 export default class AuthService {
@@ -8,6 +8,14 @@ export default class AuthService {
 		password: string
 	): Promise<AxiosResponse<IAuthResponse>> {
 		return $api.post<IAuthResponse>('/api/Auth/login', { login, password })
+	}
+
+	static async checkAcceptEmail(
+		login: string
+	): Promise<AxiosResponse<boolean>> {
+		return $api.get('/api/Auth/check_accept_email', {
+			params: { login: login },
+		})
 	}
 
 	static async registration(
@@ -33,11 +41,17 @@ export default class AuthService {
 	}
 
 	static async checkEmailCode(
-		email: string,
+		login: string,
 		code: string
 	): Promise<AxiosResponse> {
 		return $api.get('/api/Auth', {
-			params: { email: email, code: code },
+			params: { login: login, code: code },
+		})
+	}
+
+	static async sendEmailCode(login: string): Promise<AxiosResponse> {
+		return $api.get('/api/Auth/send_email', {
+			params: { login: login },
 		})
 	}
 
