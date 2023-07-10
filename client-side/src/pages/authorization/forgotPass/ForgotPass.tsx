@@ -42,7 +42,7 @@ const LogInPage: FC = () => {
 	)
 	const [checker, checkerLoading, checkerError] = useFetching(async () => {
 		if (codeValue.length > 0) {
-			const checkCode = await AuthService.checkEmailCode(emailValue, codeValue)
+			const checkCode = await AuthService.checkCode(emailValue, codeValue)
 			if (checkCode) {
 				setIsTrueCode(true)
 			} else {

@@ -4,7 +4,7 @@ import { ICustomer } from '../types/ICustomer'
 export const customersApi = createApi({
 	reducerPath: 'customersApi',
 	baseQuery: fetchBaseQuery({
-		baseUrl: 'https://api.xn--h1agbg8e4a.xn--p1ai/',
+		baseUrl: 'https://api.xn--h1agbg8e4a.xn--p1ai',
 	}),
 	tagTypes: ['customer'],
 	endpoints: build => ({
@@ -14,8 +14,6 @@ export const customersApi = createApi({
 			}),
 			providesTags: result => ['customer'],
 		}),
-
-		
 	}),
 })
 

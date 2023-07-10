@@ -18,6 +18,15 @@ export default class AuthService {
 		})
 	}
 
+	static async checkCode(
+		email: string,
+		code: string
+	): Promise<AxiosResponse<boolean>> {
+		return $api.get('/api/Auth/check_code', {
+			params: { email: email, code: code },
+		})
+	}
+
 	static async registration(
 		login: string,
 		pass: string,
