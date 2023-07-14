@@ -48,19 +48,32 @@ const CustomerCard: FC<ICustomerCardProps> = ({
 					>
 						<div className='mt-14 max-lg:py-5 max-lg:px-1  p-5 w-[320px] max-lg:w-[500px] rounded-md hover:shadow-xl hover:shadow-stone-200 transition-all cursor-pointer '>
 							<div className='flex items-center'>
-								<Avatar
-									className='max-lg:h-20 max-lg:w-20'
-									sx={{
-										width: window.innerWidth < 1024 ? 80 : 60,
-										height: window.innerWidth < 1024 ? 80 : 60,
-									}}
-								/>
+								{customer.avatar === null ? (
+									<Avatar
+										className='max-lg:h-20 max-lg:w-20'
+										sx={{
+											width: window.innerWidth < 1024 ? 80 : 60,
+											height: window.innerWidth < 1024 ? 80 : 60,
+										}}
+									>
+										{customer.login?.slice(0, 1)}
+									</Avatar>
+								) : (
+									<Avatar
+										sx={{
+											width: window.innerWidth < 1024 ? 80 : 60,
+											height: window.innerWidth < 1024 ? 80 : 60,
+										}}
+									>
+										<img src={customer.avatar} />
+									</Avatar>
+								)}
 								<h1 className='text-xl ml-3 max-lg:text-3xl text-stone-500 max-lg:ml-5'>
 									{customer.login}
 								</h1>
 							</div>
 							<div className='mt-5 text-stone-500 text-center px-4 py-2 max-lg:px-6 max-lg:py-6 border max-lg:text-2xl max-lg:border-2 max-lg:border-stone-500'>
-								<p>Всего {customer_advrts?.length} объявления</p>	
+								<p>Всего {customer_advrts?.length} объявления</p>
 							</div>
 						</div>
 					</Link>

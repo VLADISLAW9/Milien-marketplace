@@ -8,4 +8,5 @@ export interface IUser {
 	age: number | null
 	phoneNumber: number | null
 	role: string | null
+	avatar: string | null
 }

@@ -37,8 +37,15 @@ const CustomerPage = () => {
 			) : customer ? (
 				<div className='mt-14 flex max-lg:flex-col'>
 					<div className='flex flex-auto w-[25%] max-lg:w-[100%] flex-col'>
-						<Avatar sx={{ width: 300, height: 300 }}>
-						</Avatar>
+						{customer.avatar === null ? (
+							<Avatar sx={{ width: 300, height: 300, fontSize: 170 }}>
+								{customer.login?.slice(0, 1)}
+							</Avatar>
+						) : (
+							<Avatar sx={{ width: 300, height: 300}}>
+								<img src={customer.avatar} />
+							</Avatar>
+						)}
 						<div className='flex mt-10 text-3xl text-center items-center'>
 							<h1>{customer.login}</h1>
 						</div>

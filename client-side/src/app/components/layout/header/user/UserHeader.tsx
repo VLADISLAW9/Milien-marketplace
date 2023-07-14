@@ -57,9 +57,18 @@ const CustomizedMenus: FC<ICustomizedMenus> = ({ user }) => {
 				placement='bottomRight'
 				trigger={['click']}
 			>
-				<Avatar sx={{ width: 50, height: 50 }}>
-					{user.login?.slice(0, 1)}
-				</Avatar>
+				{user.avatar === null ? (
+					<Avatar
+						className='max-lg:h-20 max-lg:w-20'
+						sx={{ width: 50, height: 50 }}
+					>
+						{user.login?.slice(0, 1)}
+					</Avatar>
+				) : (
+					<Avatar sx={{ width: 50, height: 50 }}>
+						<img src={user.avatar} />
+					</Avatar>
+				)}
 			</Dropdown>
 		</div>
 	)

@@ -97,10 +97,18 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 				</DialogTitle>
 				<DialogContent>
 					<div className='flex justify-center '>
-						<Avatar
-							className='mt-3 text-center mb-5'
-							sx={{ width: 150, height: 150 }}
-						/>
+						{user.avatar === null ? (
+							<Avatar
+								className='max-lg:h-20 max-lg:w-20'
+								sx={{ width: 150, height: 150 }}
+							>
+								{user.login?.slice(0, 1)}
+							</Avatar>
+						) : (
+							<Avatar sx={{ width: 150, height: 150 }}>
+								<img src={user.avatar} />
+							</Avatar>
+						)}
 					</div>
 					<TextField
 						value={newUsersData && newUsersData.firstName}

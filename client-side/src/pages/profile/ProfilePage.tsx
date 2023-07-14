@@ -61,9 +61,15 @@ const ProfilePage = () => {
 			<div className=''>
 				<div className='mt-14 flex max-lg:flex-col'>
 					<div className='flex flex-auto w-[25%] max-lg:w-[100%] flex-col'>
-						<Avatar sx={{ width: 150, height: 150, fontSize: 60 }}>
-							{userData.login?.slice(0, 1)}
-						</Avatar>
+						{userData.avatar === null ? (
+							<Avatar sx={{ width: 300, height: 300, fontSize: 170 }}>
+								{userData.login?.slice(0, 1)}
+							</Avatar>
+						) : (
+							<Avatar sx={{ width: 300, height: 300 }}>
+								<img src={userData.avatar} />
+							</Avatar>
+						)}
 						<div className='flex mt-10 text-3xl text-center items-center'>
 							<h1>{userData.login}</h1>
 						</div>
