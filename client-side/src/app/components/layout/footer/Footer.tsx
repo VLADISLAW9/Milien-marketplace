@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Footer: FC = () => {
 	return (
-		<div className='border-t mt-20 text-stone-400 max-lg:px-[25px] px-[50px] py-[20px] flex items-center justify-between'>
+		<div className='border-t text-stone-400 max-lg:px-[25px] px-[50px] py-[20px] bg-white flex items-center justify-between'>
 			<div className='w-[33%] flex  justify-start'>
 				<Link to={'/user-acception'}>Пользовательское соглашение</Link>
 			</div>

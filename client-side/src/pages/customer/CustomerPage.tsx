@@ -11,7 +11,7 @@ import { convertToPhoneNumber } from '../../utils/convertToPhoneNumber'
 
 const CustomerPage = () => {
 	const params = useParams()
-
+	
 	const {
 		data: customer,
 		isLoading: isLoadingCustomer,

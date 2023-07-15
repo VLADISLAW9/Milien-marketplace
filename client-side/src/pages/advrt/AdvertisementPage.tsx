@@ -24,6 +24,7 @@ import Album from './album/Album'
 import ShowContacts from './buttons/showContacts/ShowContacts'
 import CustomerCard from './customerCard/CustomerCard'
 import EditAdvrtModal from './editModal/EditAdvrtModal'
+import ShareButton from './shareButton/ShareButton'
 import Similar from './similar/Similar'
 
 const AdvertisementPage = () => {
@@ -173,7 +174,9 @@ const AdvertisementPage = () => {
 							</div>
 
 							{advrt.photoPath.length > 0 ? (
-								<Album images={advrt.photoPath} />
+								<div className='mt-5'>
+									<Album images={advrt.photoPath} />
+								</div>
 							) : (
 								<div className='mt-10 max-lg:mt-16 rounded-2xl h-[396px] bg-stone-100 flex justify-center items-center w-[100%] '>
 									<MdOutlineNoPhotography className='text-stone-300 w-20 h-20' />
@@ -185,7 +188,7 @@ const AdvertisementPage = () => {
 										{formatToCurrency(advrt.price)}
 									</h1>
 									<div className='flex flex-col'>
-										<div className='mt-10 '>
+										<div className='mt-10'>
 											{isAuth && userData && userData.id === customer?.id ? (
 												<>
 													<button
@@ -210,6 +213,13 @@ const AdvertisementPage = () => {
 														open={openEdit}
 														handleCloseEdit={handleCloseEdit}
 													/>
+													<div className='mt-4'>
+														<ShareButton
+															adImg={advrt.photoPath[0]}
+															adTitle={advrt.title}
+															adId={advrt.id}
+														/>
+													</div>
 												</>
 											) : (
 												<>
@@ -241,6 +251,13 @@ const AdvertisementPage = () => {
 														isError={isErrorCustomer}
 														customer={customer}
 													/>
+													<div className='mt-4'>
+														<ShareButton
+															adImg={advrt.photoPath[0]}
+															adTitle={advrt.title}
+															adId={advrt.id}
+														/>
+													</div>
 												</>
 											)}
 										</div>
@@ -307,6 +324,13 @@ const AdvertisementPage = () => {
 											open={openEdit}
 											handleCloseEdit={handleCloseEdit}
 										/>
+										<div className='mt-4'>
+											<ShareButton
+												adImg={advrt.photoPath[0]}
+												adTitle={advrt.title}
+												adId={advrt.id}
+											/>
+										</div>
 									</>
 								) : (
 									<>
@@ -340,6 +364,13 @@ const AdvertisementPage = () => {
 										/>
 									</>
 								)}
+								<div className='mt-4'>
+									<ShareButton
+										adImg={advrt.photoPath[0]}
+										adTitle={advrt.title}
+										adId={advrt.id}
+									/>
+								</div>
 							</div>
 							<CustomerCard
 								customer_advrts={customer_advrts}

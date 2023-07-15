@@ -21,7 +21,7 @@ interface IEditModal {
 
 const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 	const { user } = useTypedSelector(state => state.user)
-	const [newAvatarFile, setNewAvatarFile] = useState<RcFile | string>('')
+	const [newAvatarFile, setNewAvatarFile] = useState<File | string>('')
 	const [avatar, setAvatar] = useState('')
 	const [newUsersData, setNewUsersData] = useState(
 		user && {
@@ -109,7 +109,7 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 	const handleUploadAvatar: UploadProps['onChange'] = (
 		info: UploadChangeParam<UploadFile>
 	) => {
-		console.log(info.file.originFileObj)
+		console.log(info.file)
 		getBase64(info.file.originFileObj as RcFile, url => {
 			setAvatar(url)
 		})

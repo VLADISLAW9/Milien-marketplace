@@ -26,9 +26,9 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 					{children}
 				</main>
 			) : (
-				<div className='bg-white justify-between flex relative flex-col min-h-[100vh]  max-lg:min-h-[100vh] h-[100%]'>
+				<div className='bg-white justify-between flex relative flex-col min-h-[100vh] max-lg:min-h-[100vh] h-[100%]'>
 					<Header />
-					<div className='fixed py-[20px] max-w-[160px] min-h-[100vh] yandexAd_list right-[20px] top-0'>
+					<div className='fixed py-[20px] max-w-[160px] min-h-[100vh] yandexAd_list  right-[20px] top-0'>
 						<YandexAd_list_right />
 					</div>
 
@@ -40,8 +40,8 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 					<main
 						className={
 							isBlur
-								? 'flex-[1] mt-24 max-xl:px-[25px] px-[50px] transition-all  blur-sm'
-								: 'flex-[1] max-xl:px-[25px] mt-24 px-[50px]'
+								? 'flex-[1] bg-white  mt-24 max-xl:px-[25px] px-[50px] transition-all pb-20 blur-sm'
+								: 'flex-[1] bg-white max-xl:px-[25px] mt-24 pb-20 px-[50px]'
 						}
 					>
 						{children}

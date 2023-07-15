@@ -30,7 +30,7 @@ const Album: FC<IAlbumsProps> = ({ images }) => {
 	const currentImage = images[currentSlide]
 
 	return (
-		<div className='mt-10 relative'>
+		<div className='relative'>
 			<div
 				onMouseLeave={() => setIsHover(false)}
 				onMouseEnter={() => setIsHover(true)}
