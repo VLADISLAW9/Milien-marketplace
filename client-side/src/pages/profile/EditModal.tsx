@@ -21,7 +21,11 @@ interface IEditModal {
 
 const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 	const { user } = useTypedSelector(state => state.user)
+<<<<<<< HEAD
 	const [newAvatarFile, setNewAvatarFile] = useState<File | string>('')
+=======
+	const [newAvatarFile, setNewAvatarFile] = useState<any>('')
+>>>>>>> c78e1d84c666c9d2c943485733a621ab87af9e3d
 	const [avatar, setAvatar] = useState('')
 	const [newUsersData, setNewUsersData] = useState(
 		user && {
@@ -38,9 +42,6 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 	const handleSubmitData = async () => {
 		if (user && newUsersData) {
 			if (
-				(newUsersData.aboutMe !== user.aboutMe ||
-					newUsersData.firstName !== user.firstName ||
-					newUsersData.lastName !== user.lastName) &&
 				newUsersData.firstName &&
 				newUsersData.lastName &&
 				user.email &&
@@ -109,7 +110,12 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 	const handleUploadAvatar: UploadProps['onChange'] = (
 		info: UploadChangeParam<UploadFile>
 	) => {
+<<<<<<< HEAD
 		console.log(info.file)
+=======
+		console.log(info.file.originFileObj)
+		setNewAvatarFile(info.file.originFileObj)
+>>>>>>> c78e1d84c666c9d2c943485733a621ab87af9e3d
 		getBase64(info.file.originFileObj as RcFile, url => {
 			setAvatar(url)
 		})
@@ -124,7 +130,7 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 				<DialogContent>
 					<div className='flex justify-center flex-col gap-3 items-center '>
 						<Avatar
-							src={avatar}
+							src={avatar ? avatar : user.avatar ? user.avatar : ""}
 							className='max-lg:h-20 max-lg:w-20'
 							sx={{ width: 150, height: 150, fontSize: 50 }}
 						>
