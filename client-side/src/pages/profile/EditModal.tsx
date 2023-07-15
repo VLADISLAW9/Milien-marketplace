@@ -38,9 +38,6 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 	const handleSubmitData = async () => {
 		if (user && newUsersData) {
 			if (
-				(newUsersData.aboutMe !== user.aboutMe ||
-					newUsersData.firstName !== user.firstName ||
-					newUsersData.lastName !== user.lastName) &&
 				newUsersData.firstName &&
 				newUsersData.lastName &&
 				user.email &&
