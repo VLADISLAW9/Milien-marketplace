@@ -2,7 +2,7 @@ import axios from 'axios'
 import { IAuthResponse } from '../../types/IAuthResponse'
 import { AUTH_URL } from './auth-api'
 
-export const USER_URL = 'https://api.xn--h1agbg8e4a.xn--p1ai'
+export const USER_URL = 'http://localhost:5183'
 
 const $user_api = axios.create({
 	baseURL: USER_URL
