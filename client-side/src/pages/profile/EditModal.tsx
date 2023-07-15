@@ -125,7 +125,7 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 				<DialogContent>
 					<div className='flex justify-center flex-col gap-3 items-center '>
 						<Avatar
-							src={avatar}
+							src={avatar ? avatar : user.avatar ? user.avatar : ""}
 							className='max-lg:h-20 max-lg:w-20'
 							sx={{ width: 150, height: 150, fontSize: 50 }}
 						>
