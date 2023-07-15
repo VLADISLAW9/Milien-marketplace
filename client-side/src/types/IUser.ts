@@ -6,7 +6,7 @@ export interface IUser {
 	firstName: string | null
 	lastName: string | null
 	age: number | null
-	phoneNumber: number | null
+	phoneNumber: string | null
 	role: string | null
 	avatar: string | null
 }

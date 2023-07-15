@@ -7,6 +7,8 @@ import {
 	DialogTitle,
 	TextField,
 } from '@mui/material'
+import { Upload } from 'antd'
+import { RcFile, UploadChangeParam, UploadFile, UploadProps } from 'antd/es/upload'
 import { FC, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useTypedSelector } from '../../hooks/use-typed-selector'
@@ -19,6 +21,8 @@ interface IEditModal {
 
 const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 	const { user } = useTypedSelector(state => state.user)
+	const [newAvatarFile, setNewAvatarFile] = useState<RcFile | string>('')
+	const [avatar, setAvatar] = useState('')
 	const [newUsersData, setNewUsersData] = useState(
 		user && {
 			firstName: user.firstName,
@@ -41,18 +45,21 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 				newUsersData.lastName &&
 				user.email &&
 				user.phoneNumber &&
-				user.login
+				user.login &&
+				user.id
 			) {
 				try {
 					setIsLoading(true)
 					const response = await userService
 						.editUserData(
+							user.id,
 							user.login,
 							newUsersData.aboutMe,
 							newUsersData.firstName,
 							newUsersData.lastName,
 							user.email,
-							user.phoneNumber
+							user.phoneNumber,
+							newAvatarFile
 						)
 						.then(res => {
 							handleCloseEdit()
@@ -68,6 +75,8 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 			}
 		}
 	}
+
+	console.log(newAvatarFile)
 
 	useEffect(() => {
 		if (isAuth === true && location.pathname === '/my-profile') {
@@ -89,6 +98,23 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 		}
 	}, [])
 
+	
+
+	const getBase64 = (img: RcFile, callback: (url: string) => void) => {
+		const reader = new FileReader()
+		reader.addEventListener('load', () => callback(reader.result as string))
+		reader.readAsDataURL(img)
+	}
+
+	const handleUploadAvatar: UploadProps['onChange'] = (
+		info: UploadChangeParam<UploadFile>
+	) => {
+		console.log(info.file.originFileObj)
+		getBase64(info.file.originFileObj as RcFile, url => {
+			setAvatar(url)
+		})
+	}
+
 	return (
 		<div>
 			<Dialog open={open} onClose={handleCloseEdit}>
@@ -96,19 +122,21 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 					<h1 className='text-3xl'>Редактирование профиля</h1>
 				</DialogTitle>
 				<DialogContent>
-					<div className='flex justify-center '>
-						{user.avatar === null ? (
-							<Avatar
-								className='max-lg:h-20 max-lg:w-20'
-								sx={{ width: 150, height: 150 }}
-							>
-								{user.login?.slice(0, 1)}
-							</Avatar>
-						) : (
-							<Avatar sx={{ width: 150, height: 150 }}>
-								<img src={user.avatar} />
-							</Avatar>
-						)}
+					<div className='flex justify-center flex-col gap-3 items-center '>
+						<Avatar
+							src={avatar}
+							className='max-lg:h-20 max-lg:w-20'
+							sx={{ width: 150, height: 150, fontSize: 50 }}
+						>
+							{user.login?.slice(0, 1)}
+						</Avatar>
+						<Upload
+							onChange={handleUploadAvatar}
+							showUploadList={false}
+							maxCount={1}
+						>
+							<Button sx={{ color: '#BABABA' }}>Загрузить аватар</Button>
+						</Upload>
 					</div>
 					<TextField
 						value={newUsersData && newUsersData.firstName}

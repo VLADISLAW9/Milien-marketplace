@@ -38,11 +38,11 @@ const CustomerPage = () => {
 				<div className='mt-14 flex max-lg:flex-col'>
 					<div className='flex flex-auto w-[25%] max-lg:w-[100%] flex-col'>
 						{customer.avatar === null ? (
-							<Avatar sx={{ width: 300, height: 300, fontSize: 170 }}>
+							<Avatar sx={{width: 200, height: 200, fontSize: 60 }}>
 								{customer.login?.slice(0, 1)}
 							</Avatar>
 						) : (
-							<Avatar sx={{ width: 300, height: 300}}>
+							<Avatar sx={{ width: 200, height: 200}}>
 								<img src={customer.avatar} />
 							</Avatar>
 						)}
