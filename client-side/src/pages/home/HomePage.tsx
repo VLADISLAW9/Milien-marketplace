@@ -82,7 +82,9 @@ const HomePage: FC = () => {
 
 	return (
 		<div>
-			<CategorySection />
+			{!isAdsLoading && !isNewAdsLoading && !isNewServicesLoading && (
+				<CategorySection />
+			)}
 			{newAds.length > 0 && (
 				<>
 					<h1 className='mt-14 text-3xl'>Новые объвления</h1>
@@ -141,7 +143,12 @@ const HomePage: FC = () => {
 					)}
 				</>
 			)}
-			{!adsError && <h1 className='mt-14 text-3xl'>Рекомендации</h1>}
+			{!adsError &&
+				!isAdsLoading &&
+				!isNewAdsLoading &&
+				!isNewServicesLoading && (
+					<h1 className='mt-14 text-3xl'>Рекомендации</h1>
+				)}
 			<ul
 				className={
 					'mt-7 grid grid-cols-4 max-xl:grid-cols-3 max-lg:grid-cols-2 gap-5 max-xl:gap-3 '
