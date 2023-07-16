@@ -284,7 +284,6 @@ const CreateAdvrtPage: FC = () => {
 					)
 				})}
 			</Stepper>
-
 			<div className='flex max-lg:px-0 px-28 mt-10 flex-col min-h-[200px]'>
 				{activeStep === 0 && (
 					<Category advrtData={advrtData} setAdvrtData={setAdvrtDate} />
@@ -307,7 +306,6 @@ const CreateAdvrtPage: FC = () => {
 					</div>
 				)}
 			</div>
-
 			{activeStep === steps.length ? (
 				<div></div>
 			) : (

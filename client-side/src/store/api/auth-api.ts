@@ -4,7 +4,8 @@ import { IAuthResponse } from '../../types/IAuthResponse'
 export const AUTH_URL = 'https://api.xn--h1agbg8e4a.xn--p1ai'
 
 const $api = axios.create({
-	baseURL: AUTH_URL
+	baseURL: AUTH_URL,
+	withCredentials: true,
 })
 
 $api.interceptors.request.use(config => {

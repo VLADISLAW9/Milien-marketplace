@@ -1,4 +1,5 @@
 import { Dispatch } from '@reduxjs/toolkit'
+import { message } from 'antd'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -73,9 +74,12 @@ function App() {
 		}
 	}, [])
 
+	const [messageApi, contextHolder] = message.useMessage();
+
 	return (
 		<UserContext.Provider value={{ userData, isUserLoading, userError }}>
 			<Layout>
+				{}
 				<AppRouter />
 			</Layout>
 		</UserContext.Provider>

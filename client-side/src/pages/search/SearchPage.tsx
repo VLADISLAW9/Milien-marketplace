@@ -1,3 +1,4 @@
+import { Pagination } from 'antd'
 import axios from 'axios'
 import { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -8,13 +9,13 @@ import { categories } from '../../app/data/category'
 import { useFetching } from '../../hooks/use-fetching'
 import { useOutside } from '../../hooks/use-outside'
 import { IAdvrt } from '../../types/IAdvrt'
-import { getPageCount, getPagesArray } from '../../utils/pages'
+import { getPageCount } from '../../utils/pages'
 
 const SearchPage: FC = () => {
 	const params = useParams()
 	const navigate = useNavigate()
 	const [totalPages, setTotalPages] = useState(0)
-	const [limit, setLimit] = useState(16)
+	const [limit, setLimit] = useState(40)
 	const [page, setPage] = useState(1)
 	const [minPrice, setMinPrice] = useState<null | number>(null)
 	const [maxPrice, setMaxPrice] = useState<null | number>(null)
@@ -24,7 +25,9 @@ const SearchPage: FC = () => {
 	const [view, setView] = useState('grid')
 	const [currentCat, setCurrentCat] = useState<string | null>(null)
 	const [currentSub, setCurrentSub] = useState<string | null>(null)
-	let pagesArray = getPagesArray(totalPages)
+
+	console.log(totalPages, 'is total pages')
+
 	const [filtration, filtrationLoading, filtrationError] = useFetching(
 		async () => {
 			const filter = await axios.get(
@@ -56,24 +59,21 @@ const SearchPage: FC = () => {
 			)
 			setFoundAds([...response.data])
 			const totalCount = response.headers['count']
+			console.log(totalCount, 'is total ads', limit, 'is limit')
 			setTotalPages(getPageCount(totalCount, limit))
 		}
 	)
 
-	const handleChangeView = (
-		event: React.MouseEvent<HTMLElement>,
-		nextView: string
-	) => {
-		setView(nextView)
-	}
-
 	useEffect(() => {
 		searchingAds()
-	}, [page])
+	}, [page, true])
 
 	const changePage = (page: number) => {
 		setPage(page)
-		window.scrollTo(0, 0)
+		const root = document.getElementById('root')
+		if (root) {
+			root.scrollTo(0, 0)
+		}
 	}
 
 	const handleFilter = () => {
@@ -257,20 +257,14 @@ const SearchPage: FC = () => {
 							</ul>
 						)
 					)}
-					<ul className='mt-5 flex justify-center'>
-						{pagesArray.map(p => (
-							<li
-								onClick={() => changePage(p)}
-								className={
-									page !== p
-										? 'text-xl cursor-pointer mr-3 w-8 h-8 rounded-full flex justify-center items-center  text-white bg-[#166340]'
-										: 'text-xl border-[#166430] border mr-3 w-8 h-8 rounded-full flex justify-center items-center  text-[#166430] bg-white'
-								}
-							>
-								{p}
-							</li>
-						))}
-					</ul>
+					{totalPages > 1 && (
+						<Pagination
+							className='mt-10 flex justify-center'
+							onChange={changePage}
+							current={page}
+							total={totalPages * 10}
+						/>
+					)}
 				</div>
 			</div>
 		</div>

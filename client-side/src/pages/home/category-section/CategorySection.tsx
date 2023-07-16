@@ -64,11 +64,11 @@ const CategorySection = () => {
 				</li>
 				<li
 					onClick={() => {
-						handleNavigateToCategory('Электротехника')
+						handleNavigateToCategory('Электроника')
 					}}
 					className='w-[300px] cursor-pointer transition-colors hover:bg-[#ececec]  overflow-hidden relative h-[100px] rounded-2xl px-5 py-2 text-[15px] bg-[#F5F5F4]'
 				>
-					<h1 className='z-30'>Электротехника</h1>
+					<h1 className='z-30'>Электроника</h1>
 					<div>
 						<img
 							className='w-[200px] z-20 max-lg:top-3 absolute -right-2 -top-5 h-[200px]'

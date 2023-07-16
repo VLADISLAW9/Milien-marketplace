@@ -82,7 +82,7 @@ const HomePage: FC = () => {
 
 	return (
 		<div>
-			{!isAdsLoading && !isNewAdsLoading && !isNewServicesLoading && (
+			{!adsError && !isAdsLoading && !isNewAdsLoading && !isNewServicesLoading && (
 				<CategorySection />
 			)}
 			{newAds.length > 0 && (
