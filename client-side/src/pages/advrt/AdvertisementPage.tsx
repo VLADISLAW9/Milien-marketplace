@@ -174,7 +174,7 @@ const AdvertisementPage = () => {
 							</div>
 
 							{advrt.photoPath.length > 0 ? (
-								<div className='mt-5'>
+								<div className='mt-10'>
 									<Album images={advrt.photoPath} />
 								</div>
 							) : (
@@ -324,13 +324,7 @@ const AdvertisementPage = () => {
 											open={openEdit}
 											handleCloseEdit={handleCloseEdit}
 										/>
-										<div className='mt-4'>
-											<ShareButton
-												adImg={advrt.photoPath[0]}
-												adTitle={advrt.title}
-												adId={advrt.id}
-											/>
-										</div>
+										
 									</>
 								) : (
 									<>

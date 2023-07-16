@@ -13,9 +13,56 @@ export const calculateDaysAgo = (date: any) => {
 		return 'сегодня'
 	} else if (daysDiff === 1) {
 		return 'вчера'
+	} else if (daysDiff > 10) {
+		const formattedDate = formatDate(createdDate)
+		return formattedDate
 	} else {
 		const declension = getDeclension(daysDiff)
 		return `${daysDiff} ${declension} назад`
+	}
+}
+
+const formatDate = (date: Date) => {
+	const day = date.getDate()
+	const month = date.toLocaleString('default', { month: 'long' })
+	const monthInGenitive = getMonthInGenitive(month)
+
+	if (date.getFullYear() !== new Date().getFullYear()) {
+		const year = date.getFullYear()
+		return `${day} ${monthInGenitive} ${year} года`
+	} else {
+		return `${day} ${monthInGenitive}`
+	}
+}
+
+const getMonthInGenitive = (month: string) => {
+	switch (month) {
+		case 'январь':
+			return 'января'
+		case 'февраль':
+			return 'февраля'
+		case 'март':
+			return 'марта'
+		case 'апрель':
+			return 'апреля'
+		case 'май':
+			return 'мая'
+		case 'июнь':
+			return 'июня'
+		case 'июль':
+			return 'июля'
+		case 'август':
+			return 'августа'
+		case 'сентябрь':
+			return 'сентября'
+		case 'октябрь':
+			return 'октября'
+		case 'ноябрь':
+			return 'ноября'
+		case 'декабрь':
+			return 'декабря'
+		default:
+			return month
 	}
 }
 

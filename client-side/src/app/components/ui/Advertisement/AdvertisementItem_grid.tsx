@@ -29,7 +29,10 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	onRemoveAdFromMyAds,
 }) => {
 	const handleClick = () => {
-		window.scrollTo(0, 0)
+		let root = document.getElementById('root')
+		if (root) {
+			root.scrollTo(0, 0)
+		}
 	}
 	const location = useLocation()
 	const [isHover, setIsHover] = useState(false)
@@ -190,6 +193,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 			>
 				<Link
 					onClick={handleClick}
+					target="_blank"
 					to={`/advertisement/${advrt.id}`}
 					className='flex justify-center'
 				>

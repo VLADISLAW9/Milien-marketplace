@@ -13,14 +13,14 @@ interface ShareButtonProps {
 
 const ShareButton: FC<ShareButtonProps> = ({ adId, adImg, adTitle }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false)
-	const [messageApi, contextHolder] = message.useMessage();
+	const [messageApi, contextHolder] = message.useMessage()
 
 	const success = () => {
-    messageApi.open({
-      type: 'success',
-      content: 'Ссылка скопирована',
-    });
-  };
+		messageApi.open({
+			type: 'success',
+			content: 'Ссылка скопирована',
+		})
+	}
 
 	const showModal = () => {
 		setIsModalOpen(true)
@@ -47,7 +47,7 @@ const ShareButton: FC<ShareButtonProps> = ({ adId, adImg, adTitle }) => {
 
 	return (
 		<>
-			{contextHolder}	
+			{contextHolder}
 			<Button
 				size='large'
 				icon={<RollbackOutlined className='-translate-y-1' />}
@@ -67,7 +67,7 @@ const ShareButton: FC<ShareButtonProps> = ({ adId, adImg, adTitle }) => {
 						<li>
 							<Tooltip title='Вконтакте'>
 								<Button
-									href={`https://vk.com/share.php?url=https://xn--h1agbg8e4a.xn--p1ai/advertisement/${adId}&title=${adTitle}&image=${adImg}`}
+									href={`https://vk.com/share.php?url=https://мильён.рф/advertisement/${adId}&title=${adTitle}&image=${adImg}`}
 									target='_blank'
 									style={{
 										width: 70,
@@ -85,12 +85,13 @@ const ShareButton: FC<ShareButtonProps> = ({ adId, adImg, adTitle }) => {
 						<li>
 							<Tooltip title='Одноклассники'>
 								<Button
-									href={`https://connect.ok.ru/offer?url=https://xn--h1agbg8e4a.xn--p1ai/advertisement/${adId}&title=${adTitle}&imageUrl=${adImg}`}
+									href={`https://connect.ok.ru/offer?url=https://мильён.рф/advertisement/${adId}&title=${adTitle}&imageUrl=${adImg}`}
 									target='_blank'
 									style={{
 										width: 70,
 										height: 70,
-										color: '#FF7700',
+										backgroundColor: '#FF7700',
+										color: '#fff',
 										borderColor: '#FF7700',
 									}}
 									className='flex justify-center items-center'
@@ -102,12 +103,13 @@ const ShareButton: FC<ShareButtonProps> = ({ adId, adImg, adTitle }) => {
 						<li>
 							<Tooltip title='Телеграмм'>
 								<Button
-									href={`https://t.me/share/url?url=https://xn--h1agbg8e4a.xn--p1ai/advertisement/${adId}&text=${adTitle}`}
+									href={`https://t.me/share/url?url=https://мильён.рф/advertisement/${adId}&text=${adTitle}`}
 									target='_blank'
 									style={{
 										width: 70,
 										height: 70,
-										color: '#29A9EB',
+										backgroundColor: '#29A9EB',
+										color: '#fff',
 										borderColor: '#29A9EB',
 									}}
 									className='flex justify-center items-center'
@@ -119,13 +121,14 @@ const ShareButton: FC<ShareButtonProps> = ({ adId, adImg, adTitle }) => {
 						<li>
 							<Tooltip title='WhatsApp'>
 								<Button
-									href={`whatsapp://send?text=${adTitle} - https://xn--h1agbg8e4a.xn--p1ai/advertisement/${adId}&image=${adImg}`}
+									href={`whatsapp://send?text=${adTitle} - https://мильён.рф/advertisement/${adId}&image=${adImg}`}
 									data-action='share/whatsapp/share'
 									target='_blank'
 									style={{
 										width: 70,
 										height: 70,
-										color: '#00A884',
+										backgroundColor:'#00A884',
+										color: '#fff',
 										borderColor: '#00A884',
 									}}
 									className='flex justify-center items-center'
@@ -139,7 +142,7 @@ const ShareButton: FC<ShareButtonProps> = ({ adId, adImg, adTitle }) => {
 					<h1 className='text-center font-medium mb-3'>Скопировать ссылку</h1>
 					<div className='text-center items-center justify-center mb-3 flex gap-3'>
 						<h1 className='py-2 border-b'>
-							https://xn--h1agbg8e4a.xn--p1ai/advertisement/{adId}
+							https://мильён.рф/advertisement/{adId}
 						</h1>
 						<button
 							className='p-2 rounded-xl bg-[#166430] text-white'

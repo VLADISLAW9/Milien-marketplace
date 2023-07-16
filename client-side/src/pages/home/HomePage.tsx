@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { FC, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
 import YandexAd_grid from '../../app/components/ui/Advertisement/YandexAd_grid'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
@@ -8,6 +9,7 @@ import { useFetching } from '../../hooks/use-fetching'
 import { useObserver } from '../../hooks/use-observer'
 import { IAdvrt } from '../../types/IAdvrt'
 import { getPageCount, getPagesArray } from '../../utils/pages'
+import CategorySection from './category-section/CategorySection'
 
 const HomePage: FC = () => {
 	const [ads, setAds] = useState<IAdvrt[]>([])
@@ -18,6 +20,7 @@ const HomePage: FC = () => {
 	const [page, setPage] = useState(1)
 	const lastElement = useRef<any>()
 	let pagesArray = getPagesArray(totalPages)
+	const navigate = useNavigate()
 
 	const [fetchNewServices, isNewServicesLoading, newServicesError] =
 		useFetching(async () => {
@@ -79,6 +82,7 @@ const HomePage: FC = () => {
 
 	return (
 		<div>
+			<CategorySection />
 			{newAds.length > 0 && (
 				<>
 					<h1 className='mt-14 text-3xl'>Новые объвления</h1>
