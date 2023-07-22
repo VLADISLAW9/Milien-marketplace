@@ -14,6 +14,7 @@ import { useFetching } from '../../hooks/use-fetching'
 import { useTypedSelector } from '../../hooks/use-typed-selector'
 import UserService from '../../services/UserService'
 import { IAdvrt } from '../../types/IAdvrt'
+import { ICustomer } from '../../types/ICustomer'
 import EditModal from './EditModal'
 
 const ProfilePage = () => {
@@ -27,6 +28,9 @@ const ProfilePage = () => {
 	const { setUser, setUserAds } = useActions()
 	const [messageApi, contextHolder] = message.useMessage()
 	const [open, setOpen] = useState(false)
+	const [countSubscribers, setCountSubscribers] = useState(0)
+	const [mySubs, seMySub] = useState<ICustomer[] | never[]>([])
+
 	const [fetchUserData, isLoading, userDataError] = useFetching(async () => {
 		const fetcher = await UserService.getUserData()
 		setUserData(fetcher.data.user)
@@ -35,6 +39,16 @@ const ProfilePage = () => {
 			setUserDataAds([...fetcher.data.userAds, ...userAds])
 			dispatch(setUserAds(fetcher.data.userAds))
 		}
+	})
+
+	const [fetchCountSubscribers] = useFetching(async () => {
+		const response = await UserService.getCountSubscribers(userData.id)
+		setCountSubscribers(response.data)
+	})
+
+	const [fetchCountOfSubs] = useFetching(async () => {
+		const response = await UserService.getMyCountOfSub()
+		seMySub(response.data)
 	})
 
 	const messageRemoveFromFav = () => {
@@ -51,6 +65,7 @@ const ProfilePage = () => {
 
 	useEffect(() => {
 		fetchUserData()
+		fetchCountOfSubs()
 	}, [])
 
 	const handleOpenEdit = () => {
@@ -92,13 +107,18 @@ const ProfilePage = () => {
 								<h1>{userData.login}</h1>
 							</div>
 							<div className='mt-2'>
-								<h1 className='text-stone-400'>
+								<h1 className='text-stone-500'>
 									{userData.firstName} {userData.lastName}
 								</h1>
 							</div>
-							<div className='mt-3'>
+							<div className='mt-2'>
+								<h1 className=' text-stone-500'>
+									{countSubscribers} подписчиков, {mySubs.length} подписок
+								</h1>
+							</div>
+							<div className='mt-2'>
 								{userData.aboutMe && (
-									<p>
+									<p className='text-stone-500'>
 										<span className='text-stone-500 font-bold'>Обо мне: </span>
 										{userData.aboutMe}
 									</p>

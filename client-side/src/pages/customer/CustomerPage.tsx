@@ -7,33 +7,43 @@ import AdvertisementItem_grid from '../../app/components/ui/Advertisement/Advert
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useFetching } from '../../hooks/use-fetching'
+import { useTypedSelector } from '../../hooks/use-typed-selector'
 import { useGetAdvrtsByCustomerIdQuery } from '../../services/AdvrtsService'
 import { useGetCustomerByIdQuery } from '../../services/CustomerService'
 import SubscribeService from '../../services/SubsribeService'
+import UserService from '../../services/UserService'
 import { convertToPhoneNumber } from '../../utils/convertToPhoneNumber'
 
 const CustomerPage = () => {
+	const { isAuth } = useTypedSelector(state => state.user)
 	const params = useParams()
 	const [isSub, setIsSub] = useState<any>(false)
+	const [countOfSub, setCountOfSub] = useState(0)
+
+	const [fetchUserCountOfSubs] = useFetching(async () => {
+		const response = await UserService.getCountSubscribers(Number(params.id))
+		setCountOfSub(response.data)
+	})
 
 	const [checkedSubOnUser, isLoadingCheckedSubOnUser, isErrorCheckedOnUser] =
 		useFetching(async () => {
-			const response = SubscribeService.CheckIsSub(Number(params.id))
-			setIsSub(response)
+			const response = await SubscribeService.CheckIsSub(Number(params.id))
+			setIsSub(response.data)
 		})
 
 	const [subOnUser, isLoadinSub, isErrorSub] = useFetching(async () => {
-		const response = SubscribeService.SubscibeOnUser(Number(params.id))
+		const response = await SubscribeService.SubscibeOnUser(Number(params.id))
 		setIsSub(true)
 	})
 
 	const [unSub, isLoadingUnSub, isErrorUnSub] = useFetching(async () => {
-		const response = SubscribeService.UnsubscibeOnUser(Number(params.id))
+		const response = await SubscribeService.UnsubscibeOnUser(Number(params.id))
 		setIsSub(false)
 	})
 
 	useEffect(() => {
 		checkedSubOnUser()
+		fetchUserCountOfSubs()
 	}, [])
 
 	const {
@@ -60,7 +70,7 @@ const CustomerPage = () => {
 				</div>
 			) : customer ? (
 				<div className='mt-14 flex max-lg:flex-col'>
-					<div className='flex flex-auto w-[25%] max-lg:w-[100%] flex-col'>
+					<div className='flex flex-auto w-[25%] mr-2 max-lg:w-[100%] flex-col'>
 						{customer.avatar === null ? (
 							<Avatar sx={{ width: 200, height: 200, fontSize: 60 }}>
 								{customer.login?.slice(0, 1)}
@@ -77,14 +87,19 @@ const CustomerPage = () => {
 							className='mt-2
 						'
 						>
-							<h1 className='text-stone-400'>
+							<h1 className='text-stone-500'>
 								{customer.firstName} {customer.lastName}
 							</h1>
 						</div>
-						<div></div>
-						<div className='mt-3'>
+						<div className='mt-2'>
+							<h1 className=' text-stone-500'> {countOfSub} подписчиков</h1>
+						</div>
+						<div className='mt-2'>
 							{customer.aboutMe && (
-								<p>
+								<p
+									className='text-stone-500'
+									style={{ whiteSpace: 'pre-wrap' }}
+								>
 									<span className='text-stone-500 font-bold'>Обо мне: </span>
 									{customer.aboutMe}
 								</p>
@@ -105,20 +120,24 @@ const CustomerPage = () => {
 								<p>{customer.email}</p>
 							</div>
 							<div className='mt-10'>
-								{!isSub ? (
-									<button
-										onClick={subOnUser}
-										className='bg-[#F17E1B] rounded-md text-[#fff] hover:opacity-80 transition-opacity w-[100%] px-4 py-3'
-									>
-										Подписаться
-									</button>
-								) : (
-									<button
-										onClick={unSub}
-										className='bg-[#F9CBA4] rounded-md text-[#F17E1B] hover:opacity-80 transition-opacity w-[100%] px-4 py-3'
-									>
-										Отписаться
-									</button>
+								{isAuth && (
+									<>
+										{isSub ? (
+											<button
+												onClick={unSub}
+												className='bg-[#F9CBA4] rounded-md text-[#F17E1B] hover:opacity-80 transition-opacity w-[100%] px-4 py-3'
+											>
+												Отписаться
+											</button>
+										) : (
+											<button
+												onClick={subOnUser}
+												className='bg-[#F17E1B] rounded-md text-[#fff] hover:opacity-80 transition-opacity w-[100%] px-4 py-3'
+											>
+												Подписаться
+											</button>
+										)}
+									</>
 								)}
 							</div>
 						</div>

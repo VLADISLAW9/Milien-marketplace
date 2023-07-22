@@ -3,6 +3,16 @@ import $user_api from '../store/api/user-api'
 import { IUserResponse } from '../types/IUserResponse'
 
 export default class UserService {
+	static async getCountSubscribers(userId: number): Promise<AxiosResponse> {
+		return $user_api.get('/Subscriptions/GetCountOfSubscribers', {
+			params: { userId: userId },
+		})
+	}
+
+	static async getMyCountOfSub(): Promise<AxiosResponse> {
+		return $user_api.get('/Subscriptions/GetMySubscriptions')
+	}
+
 	static async getUserData(): Promise<AxiosResponse<IUserResponse>> {
 		return $user_api.get<IUserResponse>('/Customer/User/GetOwnAds')
 	}
@@ -24,7 +34,7 @@ export default class UserService {
 		formData.append('firstName', firstName)
 		formData.append('lastName', lastName)
 		formData.append('email', email)
-		formData.append('phoneNumber',phoneNumber)
+		formData.append('phoneNumber', phoneNumber)
 		formData.append(`avatar`, avatar ? avatar : '')
 
 		return $user_api.put('/Customer/User/EditProfile', formData, {
