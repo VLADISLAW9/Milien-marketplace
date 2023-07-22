@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { logout } from '../../../../../store/slices/userSlice'
 import { IUser } from '../../../../../types/IUser'
+import Notification from './notifications/Notification'
 
 interface ICustomizedMenus {
 	user: IUser
@@ -51,6 +52,7 @@ const CustomizedMenus: FC<ICustomizedMenus> = ({ user }) => {
 			<Link to='/favorite'>
 				<BsSuitHeartFill className='text-stone-400 w-[22px] h-[22px]  hover:text-red-500 transition-colors' />
 			</Link>
+			<Notification />
 			<Dropdown
 				className='ml-5 cursor-pointer'
 				menu={{ items }}

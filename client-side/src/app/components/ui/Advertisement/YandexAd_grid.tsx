@@ -29,7 +29,11 @@ const YandexAd_grid: FC<IYandexAd_grid> = ({ adNumber }) => {
 				id={`yandex_rtb_R-A-2461588-4-${adNumber}`}
 				style={{ maxHeight: '500px', maxWidth: '337px' }}
 			>
-				<div style={{ height: '500px', width: '337px' }}></div>
+				<div style={{ height: '500px', width: '337px' }}>
+					<div className='p-5'>
+						<div className='bg-[#F5F5F4] h-[250px] rounded-2xl w-[100%]'></div>
+					</div>
+				</div>
 			</div>
 		</li>
 	)

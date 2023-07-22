@@ -15,7 +15,7 @@ export default class FavoriteAdvrtService {
 
 	static async RemoveFromFavourite(
 		id: number
-	): Promise<AxiosResponse<boolean>> {
+	): Promise<AxiosResponse> {
 		return $user_api.delete('/Ad/RemoveFromFavorite', { params: { id: id } })
 	}
 
