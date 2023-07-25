@@ -34,11 +34,13 @@ const CustomerPage = () => {
 	const [subOnUser, isLoadinSub, isErrorSub] = useFetching(async () => {
 		const response = await SubscribeService.SubscibeOnUser(Number(params.id))
 		setIsSub(true)
+		fetchUserCountOfSubs()
 	})
 
 	const [unSub, isLoadingUnSub, isErrorUnSub] = useFetching(async () => {
 		const response = await SubscribeService.UnsubscibeOnUser(Number(params.id))
 		setIsSub(false)
+		fetchUserCountOfSubs()
 	})
 
 	useEffect(() => {
@@ -60,7 +62,7 @@ const CustomerPage = () => {
 
 	return (
 		<div className=''>
-			{isLoadingCustomer ? (
+			{isLoadingCustomer && isLoadingCheckedSubOnUser ? (
 				<div className='flex justify-center items-center mt-44'>
 					<Loader />
 				</div>
@@ -120,7 +122,7 @@ const CustomerPage = () => {
 								<p>{customer.email}</p>
 							</div>
 							<div className='mt-10'>
-								{isAuth && (
+								{isAuth && !isLoadingCheckedSubOnUser && (
 									<>
 										{isSub ? (
 											<button

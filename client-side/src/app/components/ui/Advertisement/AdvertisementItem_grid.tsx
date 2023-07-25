@@ -1,12 +1,9 @@
 import { DeleteOutlined, HeartOutlined } from '@ant-design/icons'
 import { CardMedia, Checkbox } from '@mui/material'
-import { Carousel, message, Modal } from 'antd'
+import { Button, Carousel, message, Modal, Tooltip } from 'antd'
 import { FC, useContext, useEffect, useState } from 'react'
-import {
-	MdDeleteOutline,
-	MdFavoriteBorder,
-	MdOutlineNoPhotography,
-} from 'react-icons/md'
+import { BsSuitHeartFill } from 'react-icons/bs'
+import { MdFavoriteBorder, MdOutlineNoPhotography } from 'react-icons/md'
 import { Link, useLocation } from 'react-router-dom'
 import { UserContext } from '../../../../context/UserContext'
 import { useFetching } from '../../../../hooks/use-fetching'
@@ -40,6 +37,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 	const [isFav, setIsFav] = useState(false)
 	const { isAuth } = useTypedSelector(state => state.user)
 	const { userData } = useContext(UserContext)
+	const [countOfFav, setCountOfFav] = useState<any>(0)
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [messageApi, contextHolder] = message.useMessage()
 
@@ -107,6 +105,13 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 		}
 	}
 
+	const [fetchCountOfFav, isLoadingCountOfFav, isErrorCountOfFav] = useFetching(
+		async () => {
+			const response = await FavoriteAdvrtService.GetCountOfFavourites(advrt.id)
+			setCountOfFav(response.data)
+		}
+	)
+
 	useEffect(() => {
 		if (isAuth) {
 			try {
@@ -121,6 +126,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 				console.log(e)
 			}
 		}
+		fetchCountOfFav()
 	}, [])
 
 	const [deleteAd, deleteLoading, deleteError] = useFetching(async () => {
@@ -166,53 +172,75 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 								}}
 							/>
 						)}
-					{isHover &&
-						isAuth &&
+					{isAuth &&
 						userData &&
 						advrt.customerId === userData.id &&
 						location.pathname === '/my-profile' && (
-							<>
-								<button
-									onClick={showModal}
-									className='text-red-500 hover:text-red-700 transition-colors'
-								>
-									<MdDeleteOutline className='w-6 h-6' />
-								</button>
-								<Modal
-									title={
-										<div>
-											<h1 className='text-xl'>Внимание</h1>
-										</div>
-									}
-									open={isModalOpen}
-									onOk={handleOk}
-									onCancel={handleCancel}
-									footer={[
-										<button
-											onClick={handleCancel}
-											className='mr-5 px-4 py-2 w-[100px] bg-[#166430] rounded-3xl text-white'
-										>
-											Отмена
-										</button>,
-										<button
-											onClick={handleDeleteAdvtr}
-											className='px-4 py-2 w-[100px] text-[#166430] border border-[#166430] rounded-3xl '
-										>
-											Принять
-										</button>,
-									]}
-								>
-									{advrt.premium ? (
-										<p className='my-10 text-lg'>
-											Если вы удалите это объявление, то пропадет пакет
-											"Премиум" .
-											<br /> Вы действительно хотите удалить объявление?
-										</p>
-									) : (
-										<p>Вы действительно хотите удалить объявление</p>
-									)}
-								</Modal>
-							</>
+							<div className='translate-y-1 flex flex-col items-end gap-2'>
+								<Tooltip title="Добавлено в избранное"  className='cursor-pointer flex items-center gap-2'>
+									<h1
+										className={
+											advrt.premium ? 'text-sm text-gray-200' : 'text-sm'
+										}
+									>
+										{countOfFav}
+									</h1>
+									<BsSuitHeartFill className='w-4 h-4 text-red-600' />
+								</Tooltip>
+								<>
+									<Button
+										icon={<DeleteOutlined className='mr-1' />}
+										className='flex items-center'
+										size='small'
+										style={
+											advrt.premium
+												? {
+														color: 'white',
+														backgroundColor: 'red',
+														borderColor: 'red',
+												  }
+												: { color: 'red', borderColor: 'red' }
+										}
+										onClick={showModal}
+									>
+										<h1>Удалить</h1>
+									</Button>
+									<Modal
+										title={
+											<div>
+												<h1 className='text-xl'>Внимание</h1>
+											</div>
+										}
+										open={isModalOpen}
+										onOk={handleOk}
+										onCancel={handleCancel}
+										footer={[
+											<button
+												onClick={handleCancel}
+												className='mr-5 px-4 py-2 w-[100px] bg-[#166430] rounded-3xl text-white'
+											>
+												Отмена
+											</button>,
+											<button
+												onClick={handleDeleteAdvtr}
+												className='px-4 py-2 w-[100px] text-[#166430] border border-[#166430] rounded-3xl '
+											>
+												Принять
+											</button>,
+										]}
+									>
+										{advrt.premium ? (
+											<p className='my-10 text-lg'>
+												Если вы удалите это объявление, то пропадет пакет
+												"Премиум" .
+												<br /> Вы действительно хотите удалить объявление?
+											</p>
+										) : (
+											<p>Вы действительно хотите удалить объявление</p>
+										)}
+									</Modal>
+								</>
+							</div>
 						)}
 				</div>
 				<li

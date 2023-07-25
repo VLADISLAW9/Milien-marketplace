@@ -3,6 +3,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
 import YandexAd_grid from '../../app/components/ui/Advertisement/YandexAd_grid'
+import HomeCarousel from '../../app/components/ui/carousels/home/HomeCarousel'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useFetching } from '../../hooks/use-fetching'
@@ -82,9 +83,18 @@ const HomePage: FC = () => {
 
 	return (
 		<div>
-			{!adsError && !isAdsLoading && !isNewAdsLoading && !isNewServicesLoading && (
-				<CategorySection />
-			)}
+			{!adsError &&
+				!isAdsLoading &&
+				!isNewAdsLoading &&
+				!isNewServicesLoading && (
+					<>
+						<div className='mt-12 mb-12'>
+							<HomeCarousel />
+						</div>
+
+						<CategorySection />
+					</>
+				)}
 			{newAds.length > 0 && (
 				<>
 					<h1 className='mt-14 text-3xl'>Новые объвления</h1>

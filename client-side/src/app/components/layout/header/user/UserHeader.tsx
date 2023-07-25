@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { logout } from '../../../../../store/slices/userSlice'
 import { IUser } from '../../../../../types/IUser'
-import Notification from './notifications/Notification'
+import Notification from './Notification'
 
 interface ICustomizedMenus {
 	user: IUser

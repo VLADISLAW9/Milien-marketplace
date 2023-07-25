@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { BsTelephoneFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useActions } from '../../hooks/use-actions'
@@ -15,6 +15,7 @@ import { useTypedSelector } from '../../hooks/use-typed-selector'
 import UserService from '../../services/UserService'
 import { IAdvrt } from '../../types/IAdvrt'
 import { ICustomer } from '../../types/ICustomer'
+import { convertToPhoneNumber } from '../../utils/convertToPhoneNumber'
 import EditModal from './EditModal'
 
 const ProfilePage = () => {
@@ -113,7 +114,13 @@ const ProfilePage = () => {
 							</div>
 							<div className='mt-2'>
 								<h1 className=' text-stone-500'>
-									{countSubscribers} подписчиков, {mySubs.length} подписок
+									{countSubscribers} подписчиков,
+									<Link
+										className='ml-[4px] hover:text-stone-600'
+										to='/my-subscriptions'
+									>
+										{mySubs.length} подписок
+									</Link>
 								</h1>
 							</div>
 							<div className='mt-2'>
@@ -126,7 +133,7 @@ const ProfilePage = () => {
 
 								<div className='mt-5 text-stone-500 flex items-center'>
 									<BsTelephoneFill className='mr-2 ' />
-									<p>{userData.phoneNumber}</p>
+									<p>{convertToPhoneNumber(userData.phoneNumber)}</p>
 								</div>
 								<div className='mt-3 text-stone-500 flex items-center'>
 									<MdEmail className='mr-2 w-5 h-5 ' />

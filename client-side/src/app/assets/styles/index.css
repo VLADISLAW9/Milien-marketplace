@@ -76,13 +76,11 @@ body {
 	#root::-webkit-scrollbar {
 		width: 0px; /* ширина всей полосы прокрутки */
 	}
-	
+
 	.header {
 		@apply inset-x-[0px];
 	}
 }
-
-
 
 /* Loader */
 .lds-ring {
@@ -257,4 +255,9 @@ body {
 }
 .contant_box_404 {
 	margin-top: -50px;
+}
+
+.slick-track {
+	display: flex;
+	gap: 15px;
 }

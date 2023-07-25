@@ -13,9 +13,13 @@ export default class FavoriteAdvrtService {
 		return $user_api.get('/Ad/IsFavoite', { params: { id: id } })
 	}
 
-	static async RemoveFromFavourite(
-		id: number
-	): Promise<AxiosResponse> {
+	static async GetCountOfFavourites(
+		adId: number
+	): Promise<AxiosResponse<number>> {
+		return $user_api.get('/Ad/GetCountOfFavorite', { params: { adId: adId } })
+	}
+
+	static async RemoveFromFavourite(id: number): Promise<AxiosResponse> {
 		return $user_api.delete('/Ad/RemoveFromFavorite', { params: { id: id } })
 	}
 
