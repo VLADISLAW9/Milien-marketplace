@@ -1,7 +1,7 @@
 import { DeleteOutlined } from '@ant-design/icons'
 import { Avatar } from '@mui/material'
 import { Dispatch } from '@reduxjs/toolkit'
-import { message } from 'antd'
+import { Divider, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { BsTelephoneFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
@@ -15,8 +15,13 @@ import { useTypedSelector } from '../../hooks/use-typed-selector'
 import UserService from '../../services/UserService'
 import { IAdvrt } from '../../types/IAdvrt'
 import { ICustomer } from '../../types/ICustomer'
+import {
+	getSubscribersString,
+	getSubscriptionString,
+} from '../../utils/convertToCorrectFormatSubs'
 import { convertToPhoneNumber } from '../../utils/convertToPhoneNumber'
 import EditModal from './EditModal'
+import { FiSettings } from 'react-icons/fi'
 
 const ProfilePage = () => {
 	const { isAuth, errorMessage, isLoadingAuth } = useTypedSelector(
@@ -42,15 +47,19 @@ const ProfilePage = () => {
 		}
 	})
 
-	const [fetchCountSubscribers] = useFetching(async () => {
-		const response = await UserService.getCountSubscribers(userData.id)
-		setCountSubscribers(response.data)
-	})
+	const [fetchCountSubscribers, isLoadingCountSubscribers] = useFetching(
+		async () => {
+			const response = await UserService.getCountSubscribers(userData.id)
+			setCountSubscribers(response.data)
+		}
+	)
 
-	const [fetchCountOfSubs] = useFetching(async () => {
-		const response = await UserService.getMyCountOfSub()
-		seMySub(response.data)
-	})
+	const [fetchCountSubscriptions, isLoadingCountSubscriptions] = useFetching(
+		async () => {
+			const response = await UserService.getMyCountOfSub()
+			seMySub(response.data)
+		}
+	)
 
 	const messageRemoveFromFav = () => {
 		messageApi.open({
@@ -63,11 +72,6 @@ const ProfilePage = () => {
 			},
 		})
 	}
-
-	useEffect(() => {
-		fetchUserData()
-		fetchCountOfSubs()
-	}, [])
 
 	const handleOpenEdit = () => {
 		setOpen(true)
@@ -82,7 +86,24 @@ const ProfilePage = () => {
 		messageRemoveFromFav()
 	}
 
-	if (isLoading || isLoadingAuth || !userData) {
+	useEffect(() => {
+		fetchUserData()
+	}, [])
+
+	useEffect(() => {
+		if (userData?.id) {
+			fetchCountSubscribers()
+			fetchCountSubscriptions()
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [userData?.id])
+
+	if (
+		isLoading ||
+		(isLoadingAuth && isLoadingCountSubscribers) ||
+		isLoadingCountSubscriptions ||
+		userData === null
+	) {
 		return (
 			<div className='flex justify-center items-center mt-44'>
 				<Loader />
@@ -107,31 +128,38 @@ const ProfilePage = () => {
 							<div className='flex mt-10 text-3xl text-center items-center'>
 								<h1>{userData.login}</h1>
 							</div>
-							<div className='mt-2'>
+							<div className='mt-5 flex gap-5 '>
+								<div className='text-stone-500'>
+									<h1 className='text-xl font-medium '>{countSubscribers}</h1>
+									<p className='text-stone-500 '>
+										{getSubscribersString(countSubscribers)}
+									</p>
+								</div>
+								<Link className='text-stone-500' to='/my-subscriptions'>
+									<h1 className='text-xl font-medium '>{mySubs.length}</h1>
+									<p className='text-stone-500 '>
+										{' '}
+										{getSubscriptionString(mySubs.length)}
+									</p>
+								</Link>
+							</div>
+							<Divider />
+							<div className=''>
 								<h1 className='text-stone-500'>
+									<span className='text-stone-500 font-bold'>Ваше имя: </span>
 									{userData.firstName} {userData.lastName}
 								</h1>
 							</div>
-							<div className='mt-2'>
-								<h1 className=' text-stone-500'>
-									{countSubscribers} подписчиков,
-									<Link
-										className='ml-[4px] hover:text-stone-600'
-										to='/my-subscriptions'
-									>
-										{mySubs.length} подписок
-									</Link>
-								</h1>
-							</div>
-							<div className='mt-2'>
+
+							<div className='mt-3'>
 								{userData.aboutMe && (
 									<p className='text-stone-500'>
 										<span className='text-stone-500 font-bold'>Обо мне: </span>
 										{userData.aboutMe}
 									</p>
 								)}
-
-								<div className='mt-5 text-stone-500 flex items-center'>
+								<Divider />
+								<div className=' text-stone-500 flex items-center'>
 									<BsTelephoneFill className='mr-2 ' />
 									<p>{convertToPhoneNumber(userData.phoneNumber)}</p>
 								</div>
@@ -140,13 +168,14 @@ const ProfilePage = () => {
 									<p>{userData.email}</p>
 								</div>
 							</div>
-
-							<div className='mt-10 text-center'>
+							<Divider />
+							<div className=' text-center'>
 								<button
 									onClick={handleOpenEdit}
-									className='bg-[#F9CBA4] rounded-md text-[#F17E1B] hover:opacity-80 transition-opacity w-[100%] px-4 py-3'
+									className='bg-[#F9CBA4] rounded-md text-[#F17E1B] hover:opacity-80 transition-opacity w-[100%] px-4 py-3 flex items-center gap-2 justify-center'
 								>
-									Редактировать
+									<FiSettings/>
+									<h1>Редактировать</h1>	
 								</button>
 							</div>
 							<EditModal open={open} handleCloseEdit={handleCloseEdit} />

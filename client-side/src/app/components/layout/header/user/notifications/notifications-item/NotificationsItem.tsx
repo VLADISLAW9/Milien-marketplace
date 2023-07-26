@@ -12,7 +12,6 @@ const NotificationsItem: FC<NotificationsItemProps> = ({
 	data,
 	handleHideModal,
 }) => {
-	
 	const onClickOnLink = () => {
 		handleHideModal()
 	}
@@ -29,7 +28,7 @@ const NotificationsItem: FC<NotificationsItemProps> = ({
 					<Avatar
 						src={data.customer.avatar}
 						style={{ width: '40px', height: '40px' }}
-					/>
+					></Avatar>
 				</div>
 				<div className='ml-2 -translate-y-[5px]'>
 					<h1 className='font-medium text-[16px]'>{data.customer.login}</h1>
