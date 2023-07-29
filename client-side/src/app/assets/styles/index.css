@@ -5,8 +5,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Nunito:wght@400;500;600;700;800;900;1000&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Playfair+Display:wght@400;500&display=swap');
 
-@import "~slick-carousel/slick/slick.css"; 
-@import "~slick-carousel/slick/slick-theme.css";
+@import '~slick-carousel/slick/slick.css';
+@import '~slick-carousel/slick/slick-theme.css';
 
 html,
 body {
@@ -265,38 +265,44 @@ body {
 	gap: 15px;
 }
 
-
-
-/* .slick-arrow {
-	position: absolute;
-	z-index: 100;
-	top: 75px;
+.album-container > .slick-slider > .slick-list > .slick-track {
+	gap: 0px;
+}
+.album-thumbnail {
+	margin-right: 5px;
+	transition: all 0.3s ease;
+	cursor: pointer;
 }
 
-.slick-prev:before {
-	width: 42px;
-	height: 42px;
-	font-size: 30px;
-	box-shadow: rgba(0, 0, 0, 0.06) 0px 4px 8px 0px;
-	border-radius: 8px;
-	background: center center no-repeat rgb(255, 255, 255);
-	opacity: 1;
+.album-thumbnail:hover {
+	transform: scale(103%);
 }
 
-.slick-next:before {
-	width: 42px;
-	height: 42px;
-	font-size: 30px;
-	box-shadow: rgba(0, 0, 0, 0.06) 0px 4px 8px 0px;
-	border-radius: 8px;
-	background: center center no-repeat rgb(255, 255, 255);
-	opacity: 1;
+.album-dots {
+	display: flex;
+	bottom: 0;
+	margin-bottom: 10px;
 }
 
-.slick-next {
-	right: 65px;
+.album-control-btn {
+	background-color: #000;
+	color: #fff;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 36px;
+	width: 36px;
+	border-radius: 50%;
 }
 
-.slick-prev {
-	left: 48px;
-} */
+.album-control-icon {
+	width: 20px;
+	height: 20px;
+}
+
+.rotate-180 {
+	transform: rotate(180deg);
+}

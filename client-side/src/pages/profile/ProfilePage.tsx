@@ -4,6 +4,7 @@ import { Dispatch } from '@reduxjs/toolkit'
 import { Divider, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { BsTelephoneFill } from 'react-icons/bs'
+import { FiSettings } from 'react-icons/fi'
 import { MdEmail } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
@@ -21,7 +22,6 @@ import {
 } from '../../utils/convertToCorrectFormatSubs'
 import { convertToPhoneNumber } from '../../utils/convertToPhoneNumber'
 import EditModal from './EditModal'
-import { FiSettings } from 'react-icons/fi'
 
 const ProfilePage = () => {
 	const { isAuth, errorMessage, isLoadingAuth } = useTypedSelector(
@@ -153,7 +153,10 @@ const ProfilePage = () => {
 
 							<div className='mt-3'>
 								{userData.aboutMe && (
-									<p className='text-stone-500'>
+									<p
+										style={{ whiteSpace: 'pre-wrap' }}
+										className='text-stone-500'
+									>
 										<span className='text-stone-500 font-bold'>Обо мне: </span>
 										{userData.aboutMe}
 									</p>
@@ -174,8 +177,8 @@ const ProfilePage = () => {
 									onClick={handleOpenEdit}
 									className='bg-[#F9CBA4] rounded-md text-[#F17E1B] hover:opacity-80 transition-opacity w-[100%] px-4 py-3 flex items-center gap-2 justify-center'
 								>
-									<FiSettings/>
-									<h1>Редактировать</h1>	
+									<FiSettings />
+									<h1>Редактировать</h1>
 								</button>
 							</div>
 							<EditModal open={open} handleCloseEdit={handleCloseEdit} />

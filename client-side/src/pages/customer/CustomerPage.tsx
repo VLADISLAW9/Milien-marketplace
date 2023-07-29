@@ -1,4 +1,5 @@
 import { Avatar } from '@mui/material'
+import { Divider } from 'antd'
 import { useEffect, useState } from 'react'
 import { BsTelephoneFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
@@ -12,6 +13,7 @@ import { useGetAdvrtsByCustomerIdQuery } from '../../services/AdvrtsService'
 import { useGetCustomerByIdQuery } from '../../services/CustomerService'
 import SubscribeService from '../../services/SubsribeService'
 import UserService from '../../services/UserService'
+import { getSubscribersString } from '../../utils/convertToCorrectFormatSubs'
 import { convertToPhoneNumber } from '../../utils/convertToPhoneNumber'
 
 const CustomerPage = () => {
@@ -85,18 +87,23 @@ const CustomerPage = () => {
 						<div className='flex mt-10 text-3xl text-center items-center'>
 							<h1>{customer.login}</h1>
 						</div>
-						<div
-							className='mt-2
-						'
-						>
+						<div className='mt-5 flex gap-5 '>
+							<div className='text-stone-500'>
+								<h1 className='text-xl font-medium '>{countOfSub}</h1>
+								<p className='text-stone-500 '>
+									{getSubscribersString(countOfSub)}
+								</p>
+							</div>
+						</div>
+						<Divider />
+						<div className=''>
 							<h1 className='text-stone-500'>
+								<span className='text-stone-500 font-bold'> Имя: </span>
 								{customer.firstName} {customer.lastName}
 							</h1>
 						</div>
-						<div className='mt-2'>
-							<h1 className=' text-stone-500'> {countOfSub} подписчиков</h1>
-						</div>
-						<div className='mt-2'>
+
+						<div className='mt-3'>
 							{customer.aboutMe && (
 								<p
 									className='text-stone-500'
@@ -106,6 +113,7 @@ const CustomerPage = () => {
 									{customer.aboutMe}
 								</p>
 							)}
+							<Divider />
 							{customer.id === 107 ? (
 								<></>
 							) : (

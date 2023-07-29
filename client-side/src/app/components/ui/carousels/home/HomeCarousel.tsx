@@ -38,13 +38,13 @@ const HomeCarousel = () => {
 		<>
 			<div className='relative slick-initialized'>
 				<button
-					className='w-[32px] h-[32px] flex justify-center items-center absolute bg-white rounded-lg shadow-lg z-[100] left-[50px] top-[68px] hover:bg-stone-100 transition-colors'
+					className='w-[32px] h-[32px] flex justify-center items-center absolute bg-white rounded-lg shadow-lg z-[10] left-[50px] max-lg:hidden top-[68px] hover:bg-stone-100 transition-colors'
 					onClick={previous}
 				>
 					<GrNext className='rotate-180' />
 				</button>
 				<button
-					className='w-[32px] h-[32px] flex justify-center items-center absolute bg-white rounded-lg shadow-lg z-[100] right-[50px] top-[68px] hover:bg-stone-100 transition-colors'
+					className='w-[32px] h-[32px] flex justify-center items-center absolute bg-white max-lg:hidden  rounded-lg shadow-lg z-[10] right-[50px] top-[68px] hover:bg-stone-100 transition-colors'
 					onClick={next}
 				>
 					<GrNext />
@@ -53,40 +53,50 @@ const HomeCarousel = () => {
 			<Slider ref={sliderRef} {...settings}>
 				<div
 					onClick={handleClickOnCarouselItem}
-					className='bg-[#E0DCAC] cursor-pointer relative overflow-hidden rounded-xl h-[170px] max-xl:h-[220px] px-[36px] py-[18px]'
+					className='bg-[#E0DCAC] cursor-pointer relative overflow-hidden rounded-xl h-[170px]  px-[36px] py-[18px]'
 				>
 					<div className='h-[100%] flex flex-col justify-end'>
-						<h1 className='text-xl font-medium text-[#454649]'>
+						<h1 className='text-xl z-[20] font-medium text-[#454649]'>
 							Пользовательское соглашение
 						</h1>
-						<p className='text-base font-light'>
+						<p className='text-base z-[20] font-light'>
 							Лицензионное соглашение с пользователем
 						</p>
 					</div>
-					<div className='absolute -top-[10px] -right-10 max-xl:top-10 max-2xl:-right-20 max-xl:left-40 max-xl:right-20 max-xl:top-0'>
-						<img className='max-xl:w-[200px] w-[300px] ' src='/polzSogl.png' />
+					<div className='absolute z-[10] -top-[10px] -right-10 max-2xl:-right-20 '>
+						<img className='w-[300px] max-lg:opacity-25 ' src='/polzSogl.png' />
 					</div>
 				</div>
 				<div className='bg-[#b5fa9c] relative overflow-hidden rounded-xl h-[170px] px-[36px] py-[18px]'>
 					<div className='h-[100%] flex flex-col justify-end'>
-						<h1 className='text-xl font-medium text-[#454649]'>
+						<h1 className='text-xl z-[20] font-medium text-[#454649]'>
 							Наши преимущества
 						</h1>
-						<p className='text-base font-light'>О преимуществах нашего сайта</p>
+						<p className='text-base z-[20]  font-light'>
+							О преимуществах нашего сайта
+						</p>
 					</div>
 					<div className='absolute -top-10 -right-5 '>
-						<img className='w-[300px] -rotate-[24deg]' src='/nashi.png' />
+						<img
+							className='w-[300px] z-[10] max-lg:opacity-30 -rotate-[24deg]'
+							src='/nashi.png'
+						/>
 					</div>
 				</div>
 				<div className='bg-[#EAD8FE] relative overflow-hidden rounded-xl h-[170px] px-[36px] py-[18px]'>
 					<div className='h-[100%] flex flex-col justify-end'>
-						<h1 className='text-xl font-medium text-[#454649]'>
+						<h1 className='text-xl z-[20] font-medium text-[#454649]'>
 							Руководство по сайту
 						</h1>
-						<p className='text-base font-light'>Как пользоваться платформой</p>
+						<p className='text-base z-[20] font-light'>
+							Как пользоваться платформой
+						</p>
 					</div>
 					<div className='absolute -top-10 -right-10 '>
-						<img className='w-[400px]' src='/rukovdstvo.png' />
+						<img
+							className='w-[400px] z-[10] max-lg:opacity-25'
+							src='/rukovdstvo.png'
+						/>
 					</div>
 				</div>
 			</Slider>

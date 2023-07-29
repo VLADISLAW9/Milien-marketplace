@@ -204,7 +204,7 @@ const AdvertisementPage = () => {
 								</div>
 
 								{advrt.photoPath.length > 0 ? (
-									<div className='mt-10'>
+									<div className='mt-4'>
 										<Album images={advrt.photoPath} />
 									</div>
 								) : (
