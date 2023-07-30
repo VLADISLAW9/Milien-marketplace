@@ -1,24 +1,35 @@
 import { Avatar } from '@mui/material'
-import { Dispatch } from '@reduxjs/toolkit'
 import { Dropdown } from 'antd'
 import { FC } from 'react'
 import { AiOutlineUser } from 'react-icons/ai'
 import { BsSuitHeartFill } from 'react-icons/bs'
 import { MdLogout } from 'react-icons/md'
-import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { logout } from '../../../../../store/slices/userSlice'
 import { IUser } from '../../../../../types/IUser'
 import Notification from './Notification'
+import useSignalRConnection  from '../../../../../hooks/use-signalR-connection'
+import { useDispatch } from 'react-redux'
 
 interface ICustomizedMenus {
 	user: IUser
 }
 
 const CustomizedMenus: FC<ICustomizedMenus> = ({ user }) => {
-	const dispatch = useDispatch<Dispatch<any>>()
+	const getAccessToken = async () => {
+		const token = localStorage.getItem('token')
+		return token || ''
+	}
+
+	const connection = useSignalRConnection(getAccessToken)
+
+	const dispatch = useDispatch<any>()
+
 	const handleExit = () => {
 		dispatch(logout())
+		connection.off('UserStatusChanged',() => {
+			console.log('user was exit')
+		})
 	}
 
 	const items: any = [

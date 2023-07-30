@@ -1,6 +1,6 @@
-import { Avatar } from '@mui/material'
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
+import AvatarItem from '../../../app/components/ui/avatar/AvatarItem'
 import ErrorMessage from '../../../app/components/ui/error/ErrorMessage'
 import Loader from '../../../app/components/ui/spiner/Loader'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
@@ -48,26 +48,14 @@ const CustomerCard: FC<ICustomerCardProps> = ({
 					>
 						<div className='mt-14 max-lg:py-5 max-lg:px-1  p-5 w-[320px] max-lg:w-[500px] rounded-md hover:shadow-xl hover:shadow-stone-200 transition-all cursor-pointer '>
 							<div className='flex items-center'>
-								{customer.avatar === null ? (
-									<Avatar
-										className='max-lg:h-20 max-lg:w-20'
-										sx={{
-											width: window.innerWidth < 1024 ? 80 : 60,
-											height: window.innerWidth < 1024 ? 80 : 60,
-										}}
-									>
-										{customer.login?.slice(0, 1)}
-									</Avatar>
-								) : (
-									<Avatar
-										sx={{
-											width: window.innerWidth < 1024 ? 80 : 60,
-											height: window.innerWidth < 1024 ? 80 : 60,
-										}}
-									>
-										<img src={customer.avatar} />
-									</Avatar>
-								)}
+								<AvatarItem
+									badgeS='9'
+									offset={[-8, 55]}
+									fontSize={'20'}
+									height={'60'}
+									user={customer}
+									width={'60'}
+								/>
 								<h1 className='text-xl ml-3 max-lg:text-3xl text-stone-500 max-lg:ml-5'>
 									{customer.login}
 								</h1>

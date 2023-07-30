@@ -76,6 +76,8 @@ const CustomerPage = () => {
 				<div className='mt-14 flex max-lg:flex-col'>
 					<div className='flex flex-auto w-[25%] mr-2 max-lg:w-[100%] flex-col'>
 						<AvatarItem
+							badgeS='15'
+							offset={[-36, 180]}
 							fontSize={'60'}
 							height={'200'}
 							width={'200'}

@@ -1,6 +1,6 @@
-import { Avatar } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import AvatarItem from '../../app/components/ui/avatar/AvatarItem'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useFetching } from '../../hooks/use-fetching'
 import UserService from '../../services/UserService'
@@ -20,7 +20,7 @@ const MySubscribtions = () => {
 
 	return (
 		<div>
-			<h1 className='mt-14 mb-5 text-3xl'>Мои подписки - {subs.length} шт.</h1>
+			<h1 className='mt-14 mb-5 text-3xl'>Мои подписки</h1>
 			{isLoading ? (
 				<div className='flex justify-center items-center mt-36'>
 					<Loader />
@@ -35,13 +35,15 @@ const MySubscribtions = () => {
 								className='flex flex-col items-center gap-3'
 								to={`/customer/${sub.id}`}
 							>
-								<Avatar
-									src={sub.avatar}
-									sx={{ width: 160, height: 160, fontSize: 50 }}
-								>
-									{sub.login.slice(0, 1).toLocaleUpperCase()}
-								</Avatar>
-								<h1 className='text-lg text-stone-500'>{sub.login}</h1>
+								<AvatarItem
+									badgeS='15'
+									fontSize='50'
+									height='170'
+									width='170'
+									offset={[-20, 170]}
+									user={sub}
+								/>
+								<h1 className='text-lg text-stone-600'>{sub.login}</h1>
 							</Link>
 						</li>
 					))}

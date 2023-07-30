@@ -1,3 +1,4 @@
+import * as signalR from '@microsoft/signalr'
 import { Dispatch } from '@reduxjs/toolkit'
 import { message } from 'antd'
 import axios from 'axios'
@@ -17,8 +18,6 @@ import { IUser } from './types/IUser'
 
 function App() {
 	const getAccessToken = async () => {
-		// Здесь реализуйте ваш механизм получения токена аутентификации
-		// Например, можете использовать localStorage или cookies
 		const token = localStorage.getItem('token')
 		return token || ''
 	}
@@ -27,7 +26,6 @@ function App() {
 	const [isUserLoading, setIsUserLoading] = useState(false)
 	const [userError, setUserError] = useState('')
 	const { setUser, setUserAds, setAuth, setLoading, removeUser } = useActions()
-	const connnection = useSignalRConnection(getAccessToken)
 	const [checkPremium, checkPremiumLoading, checkPremiumError] = useFetching(
 		async () => {
 			const checkerPremium = await axios.delete(
@@ -35,6 +33,7 @@ function App() {
 			)
 		}
 	)
+	const connnection = useSignalRConnection(getAccessToken)
 
 	useEffect(() => {
 		const runCheckPremium = async () => {
