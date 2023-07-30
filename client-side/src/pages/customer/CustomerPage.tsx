@@ -1,10 +1,10 @@
-import { Avatar } from '@mui/material'
 import { Divider } from 'antd'
 import { useEffect, useState } from 'react'
 import { BsTelephoneFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
+import AvatarItem from '../../app/components/ui/avatar/AvatarItem'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useFetching } from '../../hooks/use-fetching'
@@ -75,15 +75,12 @@ const CustomerPage = () => {
 			) : customer ? (
 				<div className='mt-14 flex max-lg:flex-col'>
 					<div className='flex flex-auto w-[25%] mr-2 max-lg:w-[100%] flex-col'>
-						{customer.avatar === null ? (
-							<Avatar sx={{ width: 200, height: 200, fontSize: 60 }}>
-								{customer.login?.slice(0, 1)}
-							</Avatar>
-						) : (
-							<Avatar sx={{ width: 200, height: 200 }}>
-								<img src={customer.avatar} />
-							</Avatar>
-						)}
+						<AvatarItem
+							fontSize={'60'}
+							height={'200'}
+							width={'200'}
+							user={customer}
+						/>
 						<div className='flex mt-10 text-3xl text-center items-center'>
 							<h1>{customer.login}</h1>
 						</div>
