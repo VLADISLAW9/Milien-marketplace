@@ -40,7 +40,7 @@ const MySubscribtions = () => {
 									fontSize='50'
 									height='170'
 									width='170'
-									offset={[-20, 170]}
+									offset={[-30, 150]}
 									user={sub}
 								/>
 								<h1 className='text-lg text-stone-600'>{sub.login}</h1>

@@ -1,6 +1,6 @@
 import { CardMedia } from '@mui/material'
 import { Image } from 'antd'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { GrNext } from 'react-icons/gr'
 import Slider from 'react-slick'
 
@@ -53,23 +53,6 @@ const Album: FC<AlbumProps> = ({ images }) => {
 		),
 	}
 
-	useEffect(() => {
-		// Add event listener for key presses
-		document.addEventListener('keydown', handleKeyPress)
-		return () => {
-			// Clean up event listener when the component unmounts
-			document.removeEventListener('keydown', handleKeyPress)
-		}
-	}, [])
-
-	const handleKeyPress = (event: KeyboardEvent) => {
-		if (event.key === 'ArrowLeft') {
-			prevSlide()
-		} else if (event.key === 'ArrowRight') {
-			nextSlide()
-		}
-	}
-
 	return (
 		<div className='relative album-container'>
 			<Image.PreviewGroup
@@ -101,23 +84,27 @@ const Album: FC<AlbumProps> = ({ images }) => {
 				</Slider>
 			</Image.PreviewGroup>
 
-			<div className='absolute top-[42%] -left-[10px]'>
-				<button
-					onClick={prevSlide}
-					className='w-[40px] h-[40px] flex justify-center items-center bg-white rounded-lg shadow-lg z-[100] hover:bg-stone-100 transition-colors'
-				>
-					<GrNext className='rotate-180' />
-				</button>
-			</div>
+			{images.length > 1 && (
+				<>
+					<div className='absolute top-[42%] -left-[10px]'>
+						<button
+							onClick={prevSlide}
+							className='w-[40px] h-[40px] flex justify-center items-center bg-white rounded-lg shadow-lg z-[100] hover:bg-stone-100 transition-colors'
+						>
+							<GrNext className='rotate-180' />
+						</button>
+					</div>
 
-			<div className='absolute top-[42%] -right-[10px]'>
-				<button
-					onClick={nextSlide}
-					className='w-[40px] h-[40px] flex justify-center items-center bg-white rounded-lg shadow-lg z-[100] hover:bg-stone-100 transition-colors'
-				>
-					<GrNext />
-				</button>
-			</div>
+					<div className='absolute top-[42%] -right-[10px]'>
+						<button
+							onClick={nextSlide}
+							className='w-[40px] h-[40px] flex justify-center items-center bg-white rounded-lg shadow-lg z-[100] hover:bg-stone-100 transition-colors'
+						>
+							<GrNext />
+						</button>
+					</div>
+				</>
+			)}
 		</div>
 	)
 }
