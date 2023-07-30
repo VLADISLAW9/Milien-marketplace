@@ -1,6 +1,7 @@
 import * as signalR from '@microsoft/signalr'
 import { Avatar, Badge } from 'antd'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
+import useSignalRConnection from '../../../../hooks/use-signalR-connection'
 import { ICustomer } from '../../../../types/ICustomer'
 import { IUser } from '../../../../types/IUser'
 
@@ -12,71 +13,21 @@ interface AvatarItemProps {
 }
 
 const AvatarItem: FC<AvatarItemProps> = ({ height, width, user, fontSize }) => {
-	const baseUrl = 'https://api.xn--h1agbg8e4a.xn--p1ai'
-	const connectionRef = useRef<signalR.HubConnection | null>(null)
-	const [onlineUsers, setOnlineUsers] = useState<number[]>([])
 	const [isOnline, setIsOnline] = useState(false)
+	const getAccessToken = async () => {
+		const token = localStorage.getItem('token')
+		return token || ''
+	}
 
-	useEffect(() => {
-		async function getAccessToken() {
-			try {
-				// Здесь реализуйте ваш механизм получения токена аутентификации
-				// Например, можете использовать localStorage или cookies
-				const token = localStorage.getItem('token')
-				return token || ''
-			} catch (error) {
-				throw new Error('Failed to get access token.')
-			}
-		}
+	const [connection] = useSignalRConnection(getAccessToken)
 
-		async function configureSignalRConnection() {
-			const token = await getAccessToken()
-			const connection = new signalR.HubConnectionBuilder()
-				.withUrl(`${baseUrl}/status`, {
-					accessTokenFactory: async () => token,
-				})
-				.build()
-
-			connection.on('UserStatusChanged', (userId, isOnline) => {
-				setOnlineUsers(prevOnlineUsers =>
-					isOnline
-						? [...prevOnlineUsers, userId]
-						: prevOnlineUsers.filter(id => id !== userId)
-				)
-			})
-
-			connection
-				.start()
-				.then(() => {
-					console.log('SignalR connection established.')
-				})
-				.catch(error => {
-					console.error('Error connecting to SignalR:', error)
-				})
-
-			connectionRef.current = connection
-		}
-
-		configureSignalRConnection()
-
-		return () => {
-			if (connectionRef.current) {
-				connectionRef.current.stop()
-			}
-		}
-	}, [])
-
-	// Новая функция для вызова IsUserOnline на сервере
 	const checkUserOnlineStatus = async (userId: any) => {
 		try {
 			if (
-				connectionRef.current &&
-				connectionRef.current.state === signalR.HubConnectionState.Connected
+				connection &&
+				connection.state === signalR.HubConnectionState.Connected
 			) {
-				const isUserOnline = await connectionRef.current.invoke(
-					'IsUserOnline',
-					userId
-				)
+				const isUserOnline = await connection.invoke('IsUserOnline', userId)
 				console.log('IsOnline before?', isOnline)
 				console.log('Online?', isUserOnline)
 				setIsOnline(isUserOnline) // Fix: Update setIsOnline with the correct value
@@ -88,15 +39,16 @@ const AvatarItem: FC<AvatarItemProps> = ({ height, width, user, fontSize }) => {
 	}
 
 	useEffect(() => {
-		checkUserOnlineStatus(user.id)
-	})
+		checkUserOnlineStatus(82)
+		console.log('fsdaifnasdbipfasdbfie3424321')
+	},[])
+
 	return (
 		<Badge
 			offset={[-36, 180]}
 			style={{ width: '15px', height: '15px' }}
-			dot={true}
-			color={isOnline ? 'green' : '##8c8c8c'}
-			status={isOnline ? 'success' : 'default'}
+			dot={isOnline}
+			status={'success'}
 		>
 			<Avatar
 				src={user.avatar}

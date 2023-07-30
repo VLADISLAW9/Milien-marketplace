@@ -8,6 +8,7 @@ import Layout from './app/components/layout/Layout'
 import { UserContext } from './context/UserContext'
 import { useActions } from './hooks/use-actions'
 import { useFetching } from './hooks/use-fetching'
+import useSignalRConnection from './hooks/use-signalR-connection'
 import { useTypedSelector } from './hooks/use-typed-selector'
 import UserService from './services/UserService'
 import { AUTH_URL } from './store/api/auth-api'
@@ -15,11 +16,18 @@ import { IAuthResponse } from './types/IAuthResponse'
 import { IUser } from './types/IUser'
 
 function App() {
+	const getAccessToken = async () => {
+		// Здесь реализуйте ваш механизм получения токена аутентификации
+		// Например, можете использовать localStorage или cookies
+		const token = localStorage.getItem('token')
+		return token || ''
+	}
 	const { isAuth, user } = useTypedSelector(state => state.user)
 	const [userData, setUserData] = useState<IUser | null>(null)
 	const [isUserLoading, setIsUserLoading] = useState(false)
 	const [userError, setUserError] = useState('')
 	const { setUser, setUserAds, setAuth, setLoading, removeUser } = useActions()
+	const connnection = useSignalRConnection(getAccessToken)
 	const [checkPremium, checkPremiumLoading, checkPremiumError] = useFetching(
 		async () => {
 			const checkerPremium = await axios.delete(
@@ -74,12 +82,11 @@ function App() {
 		}
 	}, [])
 
-	const [messageApi, contextHolder] = message.useMessage();
+	const [messageApi, contextHolder] = message.useMessage()
 
 	return (
 		<UserContext.Provider value={{ userData, isUserLoading, userError }}>
 			<Layout>
-				{}
 				<AppRouter />
 			</Layout>
 		</UserContext.Provider>
