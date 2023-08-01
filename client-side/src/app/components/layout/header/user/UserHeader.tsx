@@ -4,12 +4,13 @@ import { FC } from 'react'
 import { AiOutlineUser } from 'react-icons/ai'
 import { BsSuitHeartFill } from 'react-icons/bs'
 import { MdLogout } from 'react-icons/md'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import useSignalRConnection from '../../../../../hooks/use-signalR-connection'
 import { logout } from '../../../../../store/slices/userSlice'
 import { IUser } from '../../../../../types/IUser'
+import ChatIcon from './chat-icon/ChatIcon'
 import Notification from './Notification'
-import useSignalRConnection  from '../../../../../hooks/use-signalR-connection'
-import { useDispatch } from 'react-redux'
 
 interface ICustomizedMenus {
 	user: IUser
@@ -27,7 +28,7 @@ const CustomizedMenus: FC<ICustomizedMenus> = ({ user }) => {
 
 	const handleExit = () => {
 		dispatch(logout())
-		connection.off('UserStatusChanged',() => {
+		connection.off('UserStatusChanged', () => {
 			console.log('user was exit')
 		})
 	}
@@ -61,8 +62,9 @@ const CustomizedMenus: FC<ICustomizedMenus> = ({ user }) => {
 	return (
 		<div className='flex items-center'>
 			<Link to='/favorite'>
-				<BsSuitHeartFill className='text-stone-400 w-[22px] h-[22px]  hover:text-red-500 transition-colors' />
+				<BsSuitHeartFill className='text-stone-400 w-[22px] h-[22px]  hover:text-red-500 -translate-y-[1.5px] transition-colors' />
 			</Link>
+			<ChatIcon />
 			<Notification />
 			<Dropdown
 				className='ml-5 cursor-pointer'

@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { GrNext } from 'react-icons/gr'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick-theme.css'
 import 'slick-carousel/slick/slick.css'
@@ -67,7 +67,7 @@ const HomeCarousel = () => {
 						<img className='w-[300px] max-lg:opacity-25 ' src='/polzSogl.png' />
 					</div>
 				</div>
-				<div className='bg-[#b5fa9c] relative overflow-hidden rounded-xl h-[170px] px-[36px] py-[18px]'>
+				<Link to='/opportunities' className='bg-[#b5fa9c] relative overflow-hidden rounded-xl h-[170px] px-[36px] py-[18px]'>
 					<div className='h-[100%] flex flex-col justify-end'>
 						<h1 className='text-xl z-[20] font-medium text-[#454649]'>
 							Наши преимущества
@@ -82,7 +82,7 @@ const HomeCarousel = () => {
 							src='/nashi.png'
 						/>
 					</div>
-				</div>
+				</Link>
 				<div className='bg-[#EAD8FE] relative overflow-hidden rounded-xl h-[170px] px-[36px] py-[18px]'>
 					<div className='h-[100%] flex flex-col justify-end'>
 						<h1 className='text-xl z-[20] font-medium text-[#454649]'>

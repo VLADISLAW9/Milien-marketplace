@@ -3,8 +3,9 @@ import { Avatar } from '@mui/material'
 import { Dispatch } from '@reduxjs/toolkit'
 import { Divider, message } from 'antd'
 import { useEffect, useState } from 'react'
+import { AiOutlineHeart, AiOutlineSetting } from 'react-icons/ai'
+import { BiMessage } from 'react-icons/bi'
 import { BsTelephoneFill } from 'react-icons/bs'
-import { FiSettings } from 'react-icons/fi'
 import { MdEmail } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
@@ -172,16 +173,35 @@ const ProfilePage = () => {
 								</div>
 							</div>
 							<Divider />
-							<div className=' text-center'>
+
+							<EditModal open={open} handleCloseEdit={handleCloseEdit} />
+							<div className='text-stone-500 hover:text-stone-700 transition-all'>
 								<button
 									onClick={handleOpenEdit}
-									className='bg-[#F9CBA4] rounded-md text-[#F17E1B] hover:opacity-80 transition-opacity w-[100%] px-4 py-3 flex items-center gap-2 justify-center'
+									className='flex  items-center gap-2 '
 								>
-									<FiSettings />
-									<h1>Редактировать</h1>
+									<BiMessage className='translate-y-[2px] w-[25px] h-[25px]' />
+									<h1>Мои сообщения</h1>
 								</button>
 							</div>
-							<EditModal open={open} handleCloseEdit={handleCloseEdit} />
+							<div className='text-stone-500 hover:text-stone-700 transition-all'>
+								<button
+									onClick={handleOpenEdit}
+									className='flex mt-4 items-center gap-2 '
+								>
+									<AiOutlineHeart className='w-[25px] h-[25px]' />
+									<h1>Мои избранные</h1>
+								</button>
+							</div>
+							<div className='text-stone-500 hover:text-stone-700 transition-all'>
+								<button
+									onClick={handleOpenEdit}
+									className='flex mt-4 items-center gap-2 '
+								>
+									<AiOutlineSetting className='w-[25px] h-[25px]' />
+									<h1>Редактировать профиль</h1>
+								</button>
+							</div>
 						</div>
 						<div className='flex ml-14 flex-auto max-lg:w-[100%] max-lg:ml-0 max-xl:mt-10  w-[80%] flex-col'>
 							<h1 className='text-3xl font-'>Мои объявления</h1>

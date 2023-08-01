@@ -89,8 +89,8 @@ const HeaderSearch = () => {
 								<li
 									className={
 										category.name === selectCategory
-											? 'rounded-xl flex items-center justify-between	text-lg bg-stone-200 max-lg:text-3xl py-2 px-3 max-lg:mb-7   cursor-pointer font-medium'
-											: 'rounded-xl	flex items-center justify-between text-lg py-2  px-3 max-lg:text-3xl hover:bg-stone-200  max-lg:mb-7 transition-colors cursor-pointer font-medium'
+											? 'rounded-xl flex items-center justify-between	text-lg bg-stone-100 max-lg:text-3xl py-2 px-3 max-lg:mb-7   cursor-pointer font-medium'
+											: 'rounded-xl	flex items-center justify-between text-lg py-2  px-3 max-lg:text-3xl hover:bg-stone-100  max-lg:mb-7 transition-colors cursor-pointer font-medium'
 									}
 									key={category.name}
 									onClick={() => handleCategoryClick(category.name)}

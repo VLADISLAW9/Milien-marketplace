@@ -26,7 +26,7 @@ const AvatarItem: FC<AvatarItemProps> = ({
 	const getAccessToken = async () => {
 		const token = localStorage.getItem('token')
 		return token || ''
-	}
+	} 
 	const connnection = useSignalRConnection(getAccessToken)
 
 	const checkUserOnlineStatus = async (userId: any) => {
