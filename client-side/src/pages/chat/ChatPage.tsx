@@ -1,13 +1,45 @@
 import { SearchOutlined } from '@ant-design/icons'
 import { Input, Select } from 'antd'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useFetching } from '../../hooks/use-fetching'
 import useSignalRConnectionChat from '../../hooks/use-signalR-chat'
-import { useTypedSelector } from '../../hooks/use-typed-selector'
+import ChatService from '../../services/ChatService'
+import { ICustomer } from '../../types/ICustomer'
+import { IGetCurrentCorresponence } from '../../types/IGetCurrentCorresponence'
 import ChatItem from './chat-item/ChatItem'
 import Messager from './messager/Messager'
 
 const ChatPage: FC = () => {
-	const { user } = useTypedSelector(state => state.user)
+	const params = useParams()
+	const [currentCorresponence, setCurrentCorresponence] = useState<
+		IGetCurrentCorresponence[] | null
+	>(null)
+	const [allCorresponences, setAllCorresponences] = useState<
+		ICustomer[] | never[]
+	>([])
+	const [currentCompanion, setCurrentCompanion] = useState<ICustomer | null>(
+		null
+	)
+
+	const fetchCurrentCorresponence = async (id: number) => {
+		try {
+			const response = await ChatService.GetCurrentCorresponence(id)
+			setCurrentCorresponence(response.data)
+		} catch (e: any) {
+			console.log('Ошибка при получении переписки с пользоватьлем')
+		}
+	}
+
+	const [
+		fetchAllCorresponences,
+		isLoadingAllCorresponences,
+		isErrorAllCorresponences,
+	] = useFetching(async () => {
+		const response = await ChatService.GetAllCorresponences()
+		setAllCorresponences(response.data)
+	})
+
 	const getAccessToken = async () => {
 		const token = localStorage.getItem('token')
 		return token || ''
@@ -15,14 +47,16 @@ const ChatPage: FC = () => {
 
 	const connection = useSignalRConnectionChat(getAccessToken)
 
-	const SendMessage = async () => {
-		const sendler = await connection.invoke('SendMessage', "82", "Привет")
-		console.log(sendler, 'is send')
+	const SendMessage = async (recipientId: number, text: string) => {
+		console.log('is send message')
+		const sendler = await connection.invoke('SendMessage', String(recipientId), text)
+		fetchAllCorresponences()
+		fetchCurrentCorresponence(recipientId)
 	}
 
 	useEffect(() => {
-		SendMessage()
-	})
+		fetchAllCorresponences()
+	}, [])
 
 	return (
 		<div>
@@ -44,10 +78,24 @@ const ChatPage: FC = () => {
 						/>
 					</div>
 					<ul className='flex flex-col mt-5'>
-						<ChatItem />
+						{allCorresponences.map(chat => (
+							<div
+								key={chat.id}
+								onClick={() => {
+									fetchCurrentCorresponence(chat.id)
+									setCurrentCompanion(chat)
+								}}
+							>
+								<ChatItem content={chat} />
+							</div>
+						))}
 					</ul>
 				</div>
-				<Messager />
+				<Messager
+					SendMessage={SendMessage}
+					companion={currentCompanion}
+					content={currentCorresponence ? currentCorresponence : []}
+				/>
 			</div>
 		</div>
 	)

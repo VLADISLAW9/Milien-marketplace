@@ -1,6 +1,7 @@
 import { DeleteOutlined, EllipsisOutlined } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
 import { FC } from 'react'
+import { ICustomer } from '../../../types/ICustomer'
 
 const items: MenuProps['items'] = [
 	{
@@ -23,13 +24,22 @@ const items: MenuProps['items'] = [
 	},
 ]
 
-const ChatItem: FC = () => {
+interface ChatItemProps {
+	content: ICustomer
+}
+
+const ChatItem: FC<ChatItemProps> = ({ content }) => {
 	return (
-		<li className='hover:bg-[#F5F5F4] shadow-stone-200 shadow-lg transition-all px-5 py-4 rounded-lg flex items-center justify-between gap-3'>
-			<Avatar style={{ width: 50, height: 50 }} />
+		<li className='hover:bg-[#F5F5F4]  transition-all px-5 py-4 rounded-lg flex items-center cursor-pointer justify-between gap-3'>
+			<Avatar
+				className='flex justify-center items-center'
+				src={content.avatar}
+				style={{ width: 50, height: 50, fontSize: 23 }}
+			>
+				{content.login.slice(0, 1)}
+			</Avatar>
 			<div className='flex-1'>
-				<h1 className='font-medium '>Fame</h1>
-				<p className='font-light text-sm'>Ты че, уебок, меня наебал!</p>
+				<h1 className='font-medium '>{content.login}</h1>
 			</div>
 			<div className='flex flex-col items-end gap-1 translate-y-[5px]'>
 				<h1 className='text-xs text-stone-400'>16 июл</h1>

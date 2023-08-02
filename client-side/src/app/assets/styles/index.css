@@ -306,3 +306,17 @@ body {
 .rotate-180 {
 	transform: rotate(180deg);
 }
+
+.messager__chat::-webkit-scrollbar {
+	width: 4px; /* ширина всей полосы прокрутки */
+}
+
+.messager__chat::-webkit-scrollbar-track {
+	@apply bg-[#F5F5F4] /* цвет зоны отслеживания */;
+}
+
+.messager__chat::-webkit-scrollbar-thumb {
+	@apply bg-[#D5D2D0]; /* цвет бегунка */
+	border-radius: 20px; /* округлось бегунка */
+	@apply shadow-xl;
+}
