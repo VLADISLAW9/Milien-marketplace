@@ -1,9 +1,9 @@
-import { RollbackOutlined } from '@ant-design/icons'
 import { Button, Divider, message, Modal, Tooltip } from 'antd'
 import { FC, useState } from 'react'
 import { AiOutlineWhatsApp } from 'react-icons/ai'
 import { FaCopy, FaOdnoklassniki } from 'react-icons/fa'
 import { SlPaperPlane, SlSocialVkontakte } from 'react-icons/sl'
+import { CiShare1 } from 'react-icons/ci'
 
 interface ShareButtonProps {
 	adId: number
@@ -48,11 +48,8 @@ const ShareButton: FC<ShareButtonProps> = ({ adId, adImg, adTitle }) => {
 	return (
 		<>
 			{contextHolder}
-			<Button
-				size='large'
-				icon={<RollbackOutlined className='-translate-y-1' />}
-				onClick={showModal}
-			>
+			<Button type='text' className='flex items-center gap-2' size='small' onClick={showModal}>
+				<CiShare1 className='w-4 h-4'/>
 				Поделиться
 			</Button>
 			<Modal
@@ -127,7 +124,7 @@ const ShareButton: FC<ShareButtonProps> = ({ adId, adImg, adTitle }) => {
 									style={{
 										width: 70,
 										height: 70,
-										backgroundColor:'#00A884',
+										backgroundColor: '#00A884',
 										color: '#fff',
 										borderColor: '#00A884',
 									}}

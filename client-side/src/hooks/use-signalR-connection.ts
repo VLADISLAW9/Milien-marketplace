@@ -1,7 +1,7 @@
 import * as signalR from '@microsoft/signalr'
 import { useEffect, useRef, useState } from 'react'
 
-const baseUrl = 'https://api.xn--h1agbg8e4a.xn--p1ai' // 
+const baseUrl = 'https://api.xn--h1agbg8e4a.xn--p1ai' //
 
 const useSignalRConnection = (accessTokenFactory: () => Promise<string>) => {
 	const connectionRef = useRef<any>(null)

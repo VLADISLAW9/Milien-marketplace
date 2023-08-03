@@ -320,3 +320,7 @@ body {
 	border-radius: 20px; /* округлось бегунка */
 	@apply shadow-xl;
 }
+
+:where(.css-dev-only-do-not-override-ed5zg0).ant-image {
+	display: none;
+}

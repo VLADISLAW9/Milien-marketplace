@@ -1,11 +1,12 @@
-import { CheckOutlined, DeleteOutlined, HeartOutlined } from '@ant-design/icons'
+import { DeleteOutlined, HeartOutlined } from '@ant-design/icons'
 import { Dispatch } from '@reduxjs/toolkit'
-import { message } from 'antd'
+import { Button, message } from 'antd'
 import { useContext, useEffect, useState } from 'react'
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 import { BsHeart } from 'react-icons/bs'
 import { MdOutlineNoPhotography } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import ErrorMessage from '../../app/components/ui/error/ErrorMessage'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { UserContext } from '../../context/UserContext'
@@ -204,7 +205,7 @@ const AdvertisementPage = () => {
 								</div>
 
 								{advrt.photoPath.length > 0 ? (
-									<div className='mt-4'>
+									<div className='mt-10'>
 										<Album images={advrt.photoPath} />
 									</div>
 								) : (
@@ -357,28 +358,12 @@ const AdvertisementPage = () => {
 										</>
 									) : (
 										<>
-											{!isFavAd && advrt ? (
-												<button
-													disabled={favLoading}
-													onClick={handleAddToFav}
-													className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex h-[68px] w-[320px] justify-center  items-center text-xl text-white'
-												>
-													{!favLoading && (
-														<>
-															<h1>Добавить в избранное</h1>
-															<BsHeart className='ml-3' />
-														</>
-													)}
-												</button>
-											) : (
-												<button
-													onClick={handleDeleteFromFav}
-													className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex w-[320px] justify-center  items-center text-xl text-white'
-												>
-													Удалить из избранного
-													<BsHeart className='ml-3' />
-												</button>
-											)}
+											<Link
+												to={`/chat/${customer?.id}`}
+												className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex h-[68px] w-[320px] justify-center  items-center text-xl text-white'
+											>
+												<h1>Написать продавцу</h1>
+											</Link>
 
 											<ShowContacts
 												isLoading={isLoadingCustomer}
@@ -387,12 +372,34 @@ const AdvertisementPage = () => {
 											/>
 										</>
 									)}
-									<div className='mt-4'>
+									<div className='mt-4 flex gap-4'>
 										<ShareButton
 											adImg={advrt.photoPath[0]}
 											adTitle={advrt.title}
 											adId={advrt.id}
 										/>
+										{!isFavAd && advrt ? (
+											<Button
+												disabled={favLoading}
+												onClick={handleAddToFav}
+												className='flex w-[190px] items-center gap-2'
+												size='small'
+												type='text'
+											>
+												<AiOutlineHeart className='w-4 h-4' />
+												Добавить в избранное
+											</Button>
+										) : (
+											<Button
+												onClick={handleDeleteFromFav}
+												className='flex w-[190px] items-center gap-2'
+												size='small'
+												type='text'
+											>
+												<AiFillHeart className='w-4 h-4 text-red-500' />
+												Удалить из избранного
+											</Button>
+										)}
 									</div>
 								</div>
 								<CustomerCard

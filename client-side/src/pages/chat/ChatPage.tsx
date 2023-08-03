@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import { useFetching } from '../../hooks/use-fetching'
 import useSignalRConnectionChat from '../../hooks/use-signalR-chat'
 import ChatService from '../../services/ChatService'
+import UsersService from '../../services/UsersService'
 import { ICustomer } from '../../types/ICustomer'
 import { IGetCurrentCorresponence } from '../../types/IGetCurrentCorresponence'
 import ChatItem from './chat-item/ChatItem'
@@ -21,6 +22,16 @@ const ChatPage: FC = () => {
 	const [currentCompanion, setCurrentCompanion] = useState<ICustomer | null>(
 		null
 	)
+
+	const fetchUserByParamsId = async () => {
+		try {
+			const response = await UsersService.GetUserById(Number(params.id))
+			fetchCurrentCorresponence(response.data.id)
+			setCurrentCompanion(response.data)
+		} catch (e: any) {
+			console.log(e)
+		}
+	}
 
 	const fetchCurrentCorresponence = async (id: number) => {
 		try {
@@ -47,15 +58,26 @@ const ChatPage: FC = () => {
 
 	const connection = useSignalRConnectionChat(getAccessToken)
 
-	const SendMessage = async (recipientId: number, text: string) => {
+	const SendMessage = async (recipientId: number, message: string) => {
 		console.log('is send message')
-		const sendler = await connection.invoke('SendMessage', String(recipientId), text)
+		const sendler = await connection.invoke(
+			'SendMessage',
+			String(recipientId),
+			message
+		)
 		fetchAllCorresponences()
-		fetchCurrentCorresponence(recipientId)
+	}
+
+	const handleClickToUser = (chat: ICustomer) => {
+		fetchCurrentCorresponence(chat.id)
+		setCurrentCompanion(chat)
 	}
 
 	useEffect(() => {
 		fetchAllCorresponences()
+		if (params.id) {
+			fetchUserByParamsId()
+		}
 	}, [])
 
 	return (
@@ -79,13 +101,7 @@ const ChatPage: FC = () => {
 					</div>
 					<ul className='flex flex-col mt-5'>
 						{allCorresponences.map(chat => (
-							<div
-								key={chat.id}
-								onClick={() => {
-									fetchCurrentCorresponence(chat.id)
-									setCurrentCompanion(chat)
-								}}
-							>
+							<div key={chat.id} onClick={() => handleClickToUser(chat)}>
 								<ChatItem content={chat} />
 							</div>
 						))}

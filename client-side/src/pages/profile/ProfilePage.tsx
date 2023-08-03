@@ -136,7 +136,8 @@ const ProfilePage = () => {
 										{getSubscribersString(countSubscribers)}
 									</p>
 								</div>
-								<Link className='text-stone-500' to='/my-subscriptions'>
+								<Link className='text-stone-500' 
+								to='/my-subscriptions'>
 									<h1 className='text-xl font-medium '>{mySubs.length}</h1>
 									<p className='text-stone-500 '>
 										{' '}
@@ -175,7 +176,7 @@ const ProfilePage = () => {
 							<Divider />
 
 							<EditModal open={open} handleCloseEdit={handleCloseEdit} />
-							<div className='text-stone-500 hover:text-stone-700 transition-all'>
+							<Link to='/chat' className='text-stone-500 hover:text-stone-700 transition-all'>
 								<button
 									onClick={handleOpenEdit}
 									className='flex  items-center gap-2 '
@@ -183,8 +184,8 @@ const ProfilePage = () => {
 									<BiMessage className='translate-y-[2px] w-[25px] h-[25px]' />
 									<h1>Мои сообщения</h1>
 								</button>
-							</div>
-							<div className='text-stone-500 hover:text-stone-700 transition-all'>
+							</Link>
+							<Link to='/favorite' className='text-stone-500 hover:text-stone-700 transition-all'>
 								<button
 									onClick={handleOpenEdit}
 									className='flex mt-4 items-center gap-2 '
@@ -192,7 +193,7 @@ const ProfilePage = () => {
 									<AiOutlineHeart className='w-[25px] h-[25px]' />
 									<h1>Мои избранные</h1>
 								</button>
-							</div>
+							</Link>
 							<div className='text-stone-500 hover:text-stone-700 transition-all'>
 								<button
 									onClick={handleOpenEdit}

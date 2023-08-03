@@ -5,6 +5,7 @@ import {
 } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
 import { FC, useEffect, useRef, useState } from 'react'
+import useSignalRConnectionChat from '../../../hooks/use-signalR-chat'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
 import { formatFromDateToDMY } from '../../../types/formatFromDateToDMY'
 import { formatFromDateToTime } from '../../../types/formatFromDateToTime'
@@ -39,6 +40,10 @@ interface MessagerProps {
 }
 
 const Messager: FC<MessagerProps> = ({ companion, content, SendMessage }) => {
+	const getAccessToken = async () => {
+		const token = localStorage.getItem('token')
+		return token || ''
+	}
 	const { user } = useTypedSelector(state => state.user)
 	const [message, setMessage] = useState('')
 	const chatRef = useRef<HTMLDivElement | null>(null)
@@ -52,12 +57,15 @@ const Messager: FC<MessagerProps> = ({ companion, content, SendMessage }) => {
 	}
 
 	useEffect(() => {
-		if (chatRef.current) {
-			chatRef.current.scrollTop = chatRef.current.scrollHeight
+		if (chatRef && chatRef.current) {
+			const { scrollHeight, clientHeight } = chatRef.current
+			chatRef.current.scrollTo({
+				left: 0,
+				top: scrollHeight - clientHeight,
+				behavior: 'smooth',
+			})
 		}
 	}, [content])
-
-	console.log(content)
 
 	if (!companion) {
 		return (

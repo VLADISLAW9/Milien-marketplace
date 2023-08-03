@@ -48,7 +48,7 @@ const Album: FC<AlbumProps> = ({ images }) => {
 		beforeChange: (current: number, next: number) => setCurrentSlide(next),
 		appendDots: (dots: any) => (
 			<div>
-				<ul className='flex'> {dots} </ul>
+				<ul className='mt-[3px] grid grid-cols-7 gap-y-2 gap-x-[4px]'> {dots} </ul>
 			</div>
 		),
 	}
@@ -86,7 +86,7 @@ const Album: FC<AlbumProps> = ({ images }) => {
 
 			{images.length > 1 && (
 				<>
-					<div className='absolute top-[42%] -left-[10px]'>
+					<div className='absolute top-[37%] -left-[10px]'>
 						<button
 							onClick={prevSlide}
 							className='w-[40px] h-[40px] flex justify-center items-center bg-white rounded-lg shadow-lg z-[100] hover:bg-stone-100 transition-colors'
@@ -95,7 +95,7 @@ const Album: FC<AlbumProps> = ({ images }) => {
 						</button>
 					</div>
 
-					<div className='absolute top-[42%] -right-[10px]'>
+					<div className='absolute top-[37%] -right-[10px]'>
 						<button
 							onClick={nextSlide}
 							className='w-[40px] h-[40px] flex justify-center items-center bg-white rounded-lg shadow-lg z-[100] hover:bg-stone-100 transition-colors'

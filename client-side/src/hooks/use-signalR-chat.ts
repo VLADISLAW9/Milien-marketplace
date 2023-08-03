@@ -1,9 +1,12 @@
 import * as signalR from '@microsoft/signalr'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { IGetCurrentCorresponence } from '../types/IGetCurrentCorresponence'
 
 const baseUrl = 'https://api.xn--h1agbg8e4a.xn--p1ai' //
 
-const useSignalRConnectionChat = (accessTokenFactory: () => Promise<string>) => {
+const useSignalRConnectionChat = (
+	accessTokenFactory: () => Promise<string>
+) => {
 	const connectionRef = useRef<any>(null)
 
 	useEffect(() => {
@@ -18,10 +21,10 @@ const useSignalRConnectionChat = (accessTokenFactory: () => Promise<string>) => 
 			connection
 				.start()
 				.then(() => {
-					console.log('SignalR CHAT connection established.')
+					console.log('К чату все успешно подключено.')
 				})
 				.catch(error => {
-					console.error('Error connecting to SignalR CHAT:', error)
+					console.log('Ошибка при подключении к чату:', error)
 				})
 
 			connectionRef.current = connection
