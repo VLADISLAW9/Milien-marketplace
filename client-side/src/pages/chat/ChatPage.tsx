@@ -14,8 +14,15 @@ const ChatPage: FC = () => {
 	const params = useParams()
 	const [connection, setConnection] = useState<any>()
 	const [allChats, setAllChats] = useState<ICustomer[]>([])
-	const [messages, setMessages] = useState<IGetCurrentCorresponence[]>([])
+	const [messages, setMessages] = useState<any[]>([])
 	const [companion, setCompanion] = useState<ICustomer>()
+
+	const fetchCurrentCorrespondences = async () => {
+		const response = await ChatService.GetCurrentCorresponence(
+			Number(params.id)
+		)
+		setMessages(response.data)
+	}
 
 	const joinRoom = async () => {
 		const getAccessToken = async () => {
@@ -31,14 +38,12 @@ const ChatPage: FC = () => {
 			.configureLogging(LogLevel.Information)
 			.build()
 
-		await connection.start().then(() => {
-			console.log('К чату все подключено')
+		connection.on('ReceiveMessage', (message: any) => {
+			setMessages([...messages, message])
+			console.log('ReceiveMessage is working')
 		})
 
-		connection.on('ReceiveMessage', (receiver: string, message: string) => {
-			setMessages((messages: any) => [...messages, { message }])
-			console.log('ReceiveMessage')
-		})
+		await connection.start().then(() => {})
 
 		connection.onclose(e => {
 			setConnection(null)
@@ -77,9 +82,14 @@ const ChatPage: FC = () => {
 
 	useEffect(() => {
 		fetchAllCorrespondences()
+		fetchCurrentCorrespondences()
 		fetchUserById()
 		joinRoom()
 	}, [])
+
+	useEffect(() => {
+		fetchCurrentCorrespondences()
+	}, [params])
 
 	return (
 		<div>
