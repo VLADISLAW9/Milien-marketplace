@@ -12,14 +12,12 @@ import { ICustomer } from '../../../types/ICustomer'
 import { IGetCurrentCorresponence } from '../../../types/IGetCurrentCorresponence'
 
 interface IMessagerProps {
-	joinRoom: (user: ICustomer) => Promise<void>
 	sendMessage: (receiver: string, message: string) => Promise<void>
 	messages: IGetCurrentCorresponence[]
 	companion: ICustomer | undefined
 }
 
 const Messager: FC<IMessagerProps> = ({
-	joinRoom,
 	messages,
 	sendMessage,
 	companion,

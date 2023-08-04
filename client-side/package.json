@@ -9,6 +9,7 @@
     "@dnd-kit/utilities": "^3.2.1",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@microsoft/signalr": "^7.0.9",
     "@mui/material": "^5.12.3",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",

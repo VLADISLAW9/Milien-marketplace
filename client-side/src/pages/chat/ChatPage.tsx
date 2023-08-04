@@ -9,6 +9,7 @@ import { ICustomer } from '../../types/ICustomer'
 import { IGetCurrentCorresponence } from '../../types/IGetCurrentCorresponence'
 import ChatItem from './chat-item/ChatItem'
 import Messager from './messager/Messager'
+import { number } from 'prop-types'
 
 const ChatPage: FC = () => {
 	const params = useParams()
@@ -17,29 +18,29 @@ const ChatPage: FC = () => {
 	const [messages, setMessages] = useState<any[]>([])
 	const [companion, setCompanion] = useState<ICustomer>()
 
-	const fetchCurrentCorrespondences = async () => {
+	const fetchCurrentCorrespondences = async (id : number) => {
 		const response = await ChatService.GetCurrentCorresponence(
-			Number(params.id)
+			id
 		)
 		setMessages(response.data)
 	}
 
-	const joinRoom = async () => {
+	const joinRoom = async (userId : string) => {
 		const getAccessToken = async () => {
 			const token = localStorage.getItem('token')
 			return token || ''
 		}
 		const token = await getAccessToken()
 		const connection = new HubConnectionBuilder()
-			.withUrl('https://api.xn--h1agbg8e4a.xn--p1ai/chat', {
+			.withUrl(`http://localhost:5115/chat?userId=${userId}`, {
 				accessTokenFactory: async () => token,
 			})
 			.withAutomaticReconnect()
 			.configureLogging(LogLevel.Information)
 			.build()
 
-		connection.on('ReceiveMessage', (message: any) => {
-			setMessages([...messages, message])
+		connection.on('ReceiveMessage', (messageEntity : IGetCurrentCorresponence) => {
+			fetchCurrentCorrespondences(messageEntity.recipientId)
 			console.log('ReceiveMessage is working')
 		})
 
@@ -82,14 +83,9 @@ const ChatPage: FC = () => {
 
 	useEffect(() => {
 		fetchAllCorrespondences()
-		fetchCurrentCorrespondences()
+		fetchCurrentCorrespondences(Number(params.id))
 		fetchUserById()
-		joinRoom()
 	}, [])
-
-	useEffect(() => {
-		fetchCurrentCorrespondences()
-	}, [params])
 
 	return (
 		<div>
@@ -112,7 +108,7 @@ const ChatPage: FC = () => {
 					</div>
 					<ul className='flex flex-col mt-5'>
 						{allChats.map(user => (
-							<Link onClick={() => setCompanion(user)} to={`/chat/${user.id}`}>
+							<Link onClick={() => {setCompanion(user); joinRoom(String(user.id)); fetchCurrentCorrespondences(user.id)}} to={`/chat/${user.id}`}>
 								<ChatItem content={user} key={user.id} />
 							</Link>
 						))}
@@ -122,7 +118,6 @@ const ChatPage: FC = () => {
 					companion={companion}
 					messages={messages}
 					sendMessage={sendMessage}
-					joinRoom={joinRoom}
 				/>
 			</div>
 		</div>
