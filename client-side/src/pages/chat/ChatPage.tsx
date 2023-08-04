@@ -1,9 +1,8 @@
 import { SearchOutlined } from '@ant-design/icons'
+import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 import { Input, Select } from 'antd'
 import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useFetching } from '../../hooks/use-fetching'
-import useSignalRConnectionChat from '../../hooks/use-signalR-chat'
+import { Link, useParams } from 'react-router-dom'
 import ChatService from '../../services/ChatService'
 import UsersService from '../../services/UsersService'
 import { ICustomer } from '../../types/ICustomer'
@@ -13,71 +12,73 @@ import Messager from './messager/Messager'
 
 const ChatPage: FC = () => {
 	const params = useParams()
-	const [currentCorresponence, setCurrentCorresponence] = useState<
-		IGetCurrentCorresponence[] | null
-	>(null)
-	const [allCorresponences, setAllCorresponences] = useState<
-		ICustomer[] | never[]
-	>([])
-	const [currentCompanion, setCurrentCompanion] = useState<ICustomer | null>(
-		null
-	)
+	const [connection, setConnection] = useState<any>()
+	const [allChats, setAllChats] = useState<ICustomer[]>([])
+	const [messages, setMessages] = useState<IGetCurrentCorresponence[]>([])
+	const [companion, setCompanion] = useState<ICustomer>()
 
-	const fetchUserByParamsId = async () => {
+	const joinRoom = async () => {
+		const getAccessToken = async () => {
+			const token = localStorage.getItem('token')
+			return token || ''
+		}
+		const token = await getAccessToken()
+		const connection = new HubConnectionBuilder()
+			.withUrl('https://api.xn--h1agbg8e4a.xn--p1ai/chat', {
+				accessTokenFactory: async () => token,
+			})
+			.withAutomaticReconnect()
+			.configureLogging(LogLevel.Information)
+			.build()
+
+		await connection.start().then(() => {
+			console.log('К чату все подключено')
+		})
+
+		connection.on('ReceiveMessage', (receiver: string, message: string) => {
+			setMessages((messages: any) => [...messages, { message }])
+			console.log('ReceiveMessage')
+		})
+
+		connection.onclose(e => {
+			setConnection(null)
+			setMessages([])
+		})
+
+		setConnection(connection)
+	}
+
+	const closeConnection = async () => {
 		try {
-			const response = await UsersService.GetUserById(Number(params.id))
-			fetchCurrentCorresponence(response.data.id)
-			setCurrentCompanion(response.data)
+			await connection.stop()
 		} catch (e: any) {
-			console.log(e)
+			console.log('Произошла ошибка при отключении от чата', e)
 		}
 	}
 
-	const fetchCurrentCorresponence = async (id: number) => {
+	const sendMessage = async (receiver: string, message: string) => {
+		console.log(receiver, message, 'is data of sendMessage method')
 		try {
-			const response = await ChatService.GetCurrentCorresponence(id)
-			setCurrentCorresponence(response.data)
-		} catch (e: any) {
-			console.log('Ошибка при получении переписки с пользоватьлем')
+			await connection.invoke('SendMessageToGroup', receiver, message)
+		} catch (e) {
+			console.log('Произошла ошибка при отправке сообщения', e)
 		}
 	}
 
-	const [
-		fetchAllCorresponences,
-		isLoadingAllCorresponences,
-		isErrorAllCorresponences,
-	] = useFetching(async () => {
+	const fetchUserById = async () => {
+		const response = await UsersService.GetUserById(Number(params.id))
+		setCompanion(response.data)
+	}
+
+	const fetchAllCorrespondences = async () => {
 		const response = await ChatService.GetAllCorresponences()
-		setAllCorresponences(response.data)
-	})
-
-	const getAccessToken = async () => {
-		const token = localStorage.getItem('token')
-		return token || ''
-	}
-
-	const connection = useSignalRConnectionChat(getAccessToken)
-
-	const SendMessage = async (recipientId: number, message: string) => {
-		console.log('is send message')
-		const sendler = await connection.invoke(
-			'SendMessage',
-			String(recipientId),
-			message
-		)
-		fetchAllCorresponences()
-	}
-
-	const handleClickToUser = (chat: ICustomer) => {
-		fetchCurrentCorresponence(chat.id)
-		setCurrentCompanion(chat)
+		setAllChats(response.data)
 	}
 
 	useEffect(() => {
-		fetchAllCorresponences()
-		if (params.id) {
-			fetchUserByParamsId()
-		}
+		fetchAllCorrespondences()
+		fetchUserById()
+		joinRoom()
 	}, [])
 
 	return (
@@ -100,17 +101,18 @@ const ChatPage: FC = () => {
 						/>
 					</div>
 					<ul className='flex flex-col mt-5'>
-						{allCorresponences.map(chat => (
-							<div key={chat.id} onClick={() => handleClickToUser(chat)}>
-								<ChatItem content={chat} />
-							</div>
+						{allChats.map(user => (
+							<Link onClick={() => setCompanion(user)} to={`/chat/${user.id}`}>
+								<ChatItem content={user} key={user.id} />
+							</Link>
 						))}
 					</ul>
 				</div>
 				<Messager
-					SendMessage={SendMessage}
-					companion={currentCompanion}
-					content={currentCorresponence ? currentCorresponence : []}
+					companion={companion}
+					messages={messages}
+					sendMessage={sendMessage}
+					joinRoom={joinRoom}
 				/>
 			</div>
 		</div>

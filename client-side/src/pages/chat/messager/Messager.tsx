@@ -4,68 +4,57 @@ import {
 	SendOutlined,
 } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
-import { FC, useEffect, useRef, useState } from 'react'
-import useSignalRConnectionChat from '../../../hooks/use-signalR-chat'
+import { FC, useState } from 'react'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
 import { formatFromDateToDMY } from '../../../types/formatFromDateToDMY'
 import { formatFromDateToTime } from '../../../types/formatFromDateToTime'
 import { ICustomer } from '../../../types/ICustomer'
 import { IGetCurrentCorresponence } from '../../../types/IGetCurrentCorresponence'
 
-const items: MenuProps['items'] = [
-	{
-		label: (
-			<div className='flex items-center gap-2'>
-				<Avatar style={{ width: 20, height: 20 }} />
-				<h1>Перейти в профиль</h1>
-			</div>
-		),
-		key: '1',
-	},
-	{
-		label: (
-			<div className='flex items-center gap-2'>
-				<DeleteOutlined style={{ width: 20 }} />
-				<h1>Удалить чат</h1>
-			</div>
-		),
-		key: '0',
-	},
-]
-
-interface MessagerProps {
-	SendMessage: (recipientId: number, text: string) => void
-	companion: ICustomer | null
-	content: IGetCurrentCorresponence[]
+interface IMessagerProps {
+	joinRoom: (user: ICustomer) => Promise<void>
+	sendMessage: (receiver: string, message: string) => Promise<void>
+	messages: IGetCurrentCorresponence[]
+	companion: ICustomer | undefined
 }
 
-const Messager: FC<MessagerProps> = ({ companion, content, SendMessage }) => {
-	const getAccessToken = async () => {
-		const token = localStorage.getItem('token')
-		return token || ''
-	}
+const Messager: FC<IMessagerProps> = ({
+	joinRoom,
+	messages,
+	sendMessage,
+	companion,
+}) => {
+	const items: MenuProps['items'] = [
+		{
+			label: (
+				<div className='flex items-center gap-2'>
+					<Avatar style={{ width: 20, height: 20 }} />
+					<h1>Перейти в профиль</h1>
+				</div>
+			),
+			key: '1',
+		},
+		{
+			label: (
+				<div className='flex items-center gap-2'>
+					<DeleteOutlined style={{ width: 20 }} />
+					<h1>Удалить чат</h1>
+				</div>
+			),
+			key: '0',
+		},
+	]
+
 	const { user } = useTypedSelector(state => state.user)
 	const [message, setMessage] = useState('')
-	const chatRef = useRef<HTMLDivElement | null>(null)
 
 	const handleSendMessage = (e: any) => {
 		e.preventDefault()
-		if (companion && message.length > 0) {
-			SendMessage(companion.id, message)
+		if (companion) {
+			sendMessage(String(companion.id), message)
 			setMessage('')
 		}
 	}
-
-	useEffect(() => {
-		if (chatRef && chatRef.current) {
-			const { scrollHeight, clientHeight } = chatRef.current
-			chatRef.current.scrollTo({
-				left: 0,
-				top: scrollHeight - clientHeight,
-				behavior: 'smooth',
-			})
-		}
-	}, [content])
 
 	if (!companion) {
 		return (
@@ -102,12 +91,12 @@ const Messager: FC<MessagerProps> = ({ companion, content, SendMessage }) => {
 					</div>
 				</div>
 				{/* Chat */}
-				<div ref={chatRef} className='flex-1 overflow-y-scroll messager__chat'>
+				<div className='flex-1 overflow-y-scroll messager__chat'>
 					<ul className='flex flex-col-reverse gap-5 p-6'>
-						{content.map((message, index) => {
+						{messages.map((message, index) => {
 							const currentDate = new Date(message.dateOfDispatch)
 							const nextMessage =
-								index < content.length - 1 ? content[index + 1] : null
+								index < messages.length - 1 ? messages[index + 1] : null
 							const nextMessageDate = nextMessage
 								? new Date(nextMessage.dateOfDispatch)
 								: null
@@ -117,7 +106,7 @@ const Messager: FC<MessagerProps> = ({ companion, content, SendMessage }) => {
 								currentDate.toDateString() !== nextMessageDate.toDateString()
 							return (
 								<>
-									{index !== content.length - 1 && showDate && (
+									{index !== messages.length - 1 && showDate && (
 										<li className='text-center text-gray-500 my-2'>
 											{formatFromDateToDMY(currentDate)}
 										</li>
@@ -182,6 +171,7 @@ const Messager: FC<MessagerProps> = ({ companion, content, SendMessage }) => {
 						</div>
 						<Button
 							disabled={message.length === 0}
+							onClick={handleSendMessage}
 							type='text'
 							size='large'
 							className='flex translate-x-2 justify-center items-center text-stone-500'

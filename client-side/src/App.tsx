@@ -1,4 +1,3 @@
-import * as signalR from '@microsoft/signalr'
 import { Dispatch } from '@reduxjs/toolkit'
 import { message } from 'antd'
 import axios from 'axios'
@@ -33,7 +32,7 @@ function App() {
 			)
 		}
 	)
-	const connnection = useSignalRConnection(getAccessToken)
+	const connection = useSignalRConnection(getAccessToken)
 
 	useEffect(() => {
 		const runCheckPremium = async () => {
