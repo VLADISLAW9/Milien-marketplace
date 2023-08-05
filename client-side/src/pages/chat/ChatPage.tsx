@@ -19,6 +19,11 @@ const ChatPage: FC = () => {
 	const [messages, setMessages] = useState<IGetCurrentCorresponence[]>([])
 	const [companion, setCompanion] = useState<ICustomer>()
 
+	const fetchAllCorrespondences = async () => {
+		const response = await ChatService.GetAllCorresponences()
+		setAllChats(response.data)
+	}
+
 	const fetchCurrentCorrespondences = async (id: number) => {
 		const response = await ChatService.GetCurrentCorresponence(id)
 		setMessages(response.data)
@@ -42,6 +47,7 @@ const ChatPage: FC = () => {
 			'ReceiveMessage',
 			(messageEntity: IGetCurrentCorresponence) => {
 				setMessages(messages => [messageEntity, ...messages])
+				fetchAllCorrespondences()
 			}
 		)
 
@@ -80,10 +86,7 @@ const ChatPage: FC = () => {
 		setCompanion(response.data)
 	}
 
-	const fetchAllCorrespondences = async () => {
-		const response = await ChatService.GetAllCorresponences()
-		setAllChats(response.data)
-	}
+	
 
 	useEffect(() => {
 		fetchAllCorrespondences()
