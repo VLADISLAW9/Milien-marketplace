@@ -14,8 +14,6 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 	const location = useLocation()
 	const { isAuth, user } = useTypedSelector(state => state.user)
 	const { isBlur } = useTypedSelector(state => state.isBlur)
-	const fdsf = 23
-	console.log(fdsf + 2)
 	return (
 		<>
 			{location.pathname === '/signin' ||

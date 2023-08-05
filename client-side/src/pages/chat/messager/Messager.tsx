@@ -4,12 +4,11 @@ import {
 	SendOutlined,
 } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
-import { FC, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
-import { formatFromDateToDMY } from '../../../types/formatFromDateToDMY'
-import { formatFromDateToTime } from '../../../types/formatFromDateToTime'
 import { ICustomer } from '../../../types/ICustomer'
 import { IGetCurrentCorresponence } from '../../../types/IGetCurrentCorresponence'
+import { formatFromDateToTime } from '../../../utils/formatFromDateToTime'
 
 interface IMessagerProps {
 	sendMessage: (receiver: string, message: string) => Promise<void>
@@ -17,11 +16,7 @@ interface IMessagerProps {
 	companion: ICustomer | undefined
 }
 
-const Messager: FC<IMessagerProps> = ({
-	messages,
-	sendMessage,
-	companion,
-}) => {
+const Messager: FC<IMessagerProps> = ({ messages, sendMessage, companion }) => {
 	const items: MenuProps['items'] = [
 		{
 			label: (
@@ -42,9 +37,20 @@ const Messager: FC<IMessagerProps> = ({
 			key: '0',
 		},
 	]
-
 	const { user } = useTypedSelector(state => state.user)
 	const [message, setMessage] = useState('')
+	const messageRef = useRef<any>()
+
+	useEffect(() => {
+		if (messageRef && messageRef.current) {
+			const { scrollHeight, clientHeight } = messageRef.current
+			messageRef.current.scrollTo({
+				left: 0,
+				top: scrollHeight - clientHeight,
+				behavior: 'smooth',
+			})
+		}
+	}, [messages])
 
 	const handleSendMessage = (e: any) => {
 		e.preventDefault()
@@ -89,73 +95,55 @@ const Messager: FC<IMessagerProps> = ({
 					</div>
 				</div>
 				{/* Chat */}
-				<div className='flex-1 overflow-y-scroll messager__chat'>
-					<ul className='flex flex-col-reverse gap-5 p-6'>
-						{messages.map((message, index) => {
-							const currentDate = new Date(message.dateOfDispatch)
-							const nextMessage =
-								index < messages.length - 1 ? messages[index + 1] : null
-							const nextMessageDate = nextMessage
-								? new Date(nextMessage.dateOfDispatch)
-								: null
-
-							const showDate =
-								!nextMessageDate ||
-								currentDate.toDateString() !== nextMessageDate.toDateString()
-							return (
-								<>
-									{index !== messages.length - 1 && showDate && (
-										<li className='text-center text-gray-500 my-2'>
-											{formatFromDateToDMY(currentDate)}
-										</li>
-									)}
-
-									{message.recipientId !== user.id ? (
-										<li>
-											<div className='flex gap-2 justify-end'>
-												<h1 className='text-stone-400  flex items-end text-[11px]'>
-													{formatFromDateToTime(currentDate)}
-												</h1>
-												<div className='bg-white px-4 py-3  max-w-[60%] rounded-lg'>
-													{message.text}
+				<div
+					ref={messageRef}
+					className='flex-1 overflow-y-scroll messager__chat'
+				>
+					<ul className='flex flex-col gap-5 p-6'>
+						{messages
+							.slice()
+							.reverse()
+							.map((message, index) => {
+								const date = new Date(message.dateOfDispatch)
+								return (
+									<>
+										<li key={message.id}>
+											{message.recipientId !== user.id ? (
+												<div className='flex gap-2 justify-end'>
+													<h1 className='text-stone-400  flex items-end text-[11px]'>
+														{formatFromDateToTime(date)}
+													</h1>
+													<div className='bg-white px-4 py-3  max-w-[60%] rounded-lg'>
+														{message.text}
+													</div>
+													<Avatar
+														src={user.avatar}
+														style={{ width: 35, height: 35 }}
+													/>
 												</div>
-												<Avatar
-													src={user.avatar}
-													style={{ width: 35, height: 35 }}
-												/>
-											</div>
-										</li>
-									) : (
-										<div className='flex flex-col-reverse'>
-											<li className='flex gap-3'>
-												<Avatar
-													src={companion?.avatar}
-													style={{ width: 35, height: 35 }}
-												/>
-												<div className='bg-white px-4 py-3 max-w-[60%] rounded-lg'>
-													{message.text}
+											) : (
+												<div className='flex gap-3'>
+													<Avatar
+														src={companion?.avatar}
+														style={{ width: 35, height: 35 }}
+													/>
+													<div className='bg-white px-4 py-3 max-w-[60%] rounded-lg'>
+														{message.text}
+													</div>
+													<h1 className='text-stone-400 flex items-end text-xs'>
+														{formatFromDateToTime(date)}
+													</h1>
 												</div>
-												<h1 className='text-stone-400 flex items-end text-xs'>
-													{formatFromDateToTime(currentDate)}
-												</h1>
-											</li>
-										</div>
-									)}
-								</>
-							)
-						})}
+											)}
+										</li>
+									</>
+								)
+							})}
 					</ul>
 				</div>
 				{/* Chat */}
 				<form onSubmit={handleSendMessage}>
 					<div className='rounded-b-lg py-4 px-8 bg-white shadow-lg shadow-stone-200  flex items-center justify-between'>
-						{/* <Button
-						type='text'
-						size='large'
-						className='flex justify-center items-center text-stone-500'
-						icon={<PaperClipOutlined />}
-					/> */}
-
 						<div className='flex-1 ml-3 mr-3'>
 							<input
 								value={message}

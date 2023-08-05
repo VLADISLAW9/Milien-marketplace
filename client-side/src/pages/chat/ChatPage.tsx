@@ -3,52 +3,56 @@ import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 import { Input, Select } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { useTypedSelector } from '../../hooks/use-typed-selector'
 import ChatService from '../../services/ChatService'
 import UsersService from '../../services/UsersService'
 import { ICustomer } from '../../types/ICustomer'
 import { IGetCurrentCorresponence } from '../../types/IGetCurrentCorresponence'
 import ChatItem from './chat-item/ChatItem'
 import Messager from './messager/Messager'
-import { number } from 'prop-types'
 
 const ChatPage: FC = () => {
+	const { user } = useTypedSelector(state => state.user)
 	const params = useParams()
 	const [connection, setConnection] = useState<any>()
 	const [allChats, setAllChats] = useState<ICustomer[]>([])
-	const [messages, setMessages] = useState<any[]>([])
+	const [messages, setMessages] = useState<IGetCurrentCorresponence[]>([])
 	const [companion, setCompanion] = useState<ICustomer>()
 
-	const fetchCurrentCorrespondences = async (id : number) => {
-		const response = await ChatService.GetCurrentCorresponence(
-			id
-		)
+	const fetchCurrentCorrespondences = async (id: number) => {
+		const response = await ChatService.GetCurrentCorresponence(id)
 		setMessages(response.data)
 	}
 
-	const joinRoom = async (userId : string) => {
+	const joinRoom = async (userId: string) => {
 		const getAccessToken = async () => {
 			const token = localStorage.getItem('token')
 			return token || ''
 		}
 		const token = await getAccessToken()
 		const connection = new HubConnectionBuilder()
-			.withUrl(`http://localhost:5115/chat?userId=${userId}`, {
+			.withUrl(`https://api.xn--h1agbg8e4a.xn--p1ai/chat?userId=${userId}`, {
 				accessTokenFactory: async () => token,
 			})
 			.withAutomaticReconnect()
 			.configureLogging(LogLevel.Information)
 			.build()
 
-		connection.on('ReceiveMessage', (messageEntity : IGetCurrentCorresponence) => {
-			fetchCurrentCorrespondences(messageEntity.recipientId)
-			console.log('ReceiveMessage is working')
-		})
+		connection.on(
+			'ReceiveMessage',
+			(messageEntity: IGetCurrentCorresponence) => {
+				setMessages(messages => [messageEntity, ...messages])
+			}
+		)
 
-		await connection.start().then(() => {})
+		await connection.start().then(() => {
+			console.log('к чату все успешно подключено')
+		})
 
 		connection.onclose(e => {
 			setConnection(null)
 			setMessages([])
+			console.log('вы отключились от чата')
 		})
 
 		setConnection(connection)
@@ -83,16 +87,20 @@ const ChatPage: FC = () => {
 
 	useEffect(() => {
 		fetchAllCorrespondences()
-		fetchCurrentCorrespondences(Number(params.id))
 		fetchUserById()
 	}, [])
+
+	useEffect(() => {
+		fetchCurrentCorrespondences(Number(params.id))
+		joinRoom(String(params.id))
+	}, [params.id])
 
 	return (
 		<div>
 			<h1 className='mt-14 mb-5 text-3xl'>Сообщения</h1>
 			<div className='flex gap-10 mt-10'>
 				<div className='w-[40%] h-[100%]'>
-					<div className='flex gap-3'>
+					{/* <div className='flex gap-3'>
 						<Select
 							defaultValue='all'
 							style={{ width: 220 }}
@@ -105,10 +113,16 @@ const ChatPage: FC = () => {
 							placeholder='Поиск по сообщениям'
 							prefix={<SearchOutlined className='pr-1' />}
 						/>
-					</div>
+					</div> */}
 					<ul className='flex flex-col mt-5'>
 						{allChats.map(user => (
-							<Link onClick={() => {setCompanion(user); joinRoom(String(user.id)); fetchCurrentCorrespondences(user.id)}} to={`/chat/${user.id}`}>
+							<Link
+								onClick={() => {
+									setCompanion(user)
+									closeConnection()
+								}}
+								to={`/chat/${user.id}`}
+							>
 								<ChatItem content={user} key={user.id} />
 							</Link>
 						))}
