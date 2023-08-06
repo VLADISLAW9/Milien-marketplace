@@ -3,23 +3,34 @@ import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 import { Input, Select } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { useTypedSelector } from '../../hooks/use-typed-selector'
+import Loader from '../../app/components/ui/spiner/Loader'
+import { useFetching } from '../../hooks/use-fetching'
 import ChatService from '../../services/ChatService'
 import UsersService from '../../services/UsersService'
 import { ICustomer } from '../../types/ICustomer'
+import { IGetAllCorresponences } from '../../types/IGetAllCorresponences'
 import { IGetCurrentCorresponence } from '../../types/IGetCurrentCorresponence'
 import ChatItem from './chat-item/ChatItem'
 import Messager from './messager/Messager'
 
 const ChatPage: FC = () => {
-	const { user } = useTypedSelector(state => state.user)
 	const params = useParams()
+	const [isLoadingChat, setIsLoadingChat] = useState(false)
 	const [connection, setConnection] = useState<any>()
-	const [allChats, setAllChats] = useState<ICustomer[]>([])
+	const [allChats, setAllChats] = useState<IGetAllCorresponences[]>([])
 	const [messages, setMessages] = useState<IGetCurrentCorresponence[]>([])
 	const [companion, setCompanion] = useState<ICustomer>()
 
-	const fetchAllCorrespondences = async () => {
+	const [
+		fetchAllCorrespondences,
+		isLoadingAllCorrespondences,
+		isErrorAllCorrespondence,
+	] = useFetching(async () => {
+		const response = await ChatService.GetAllCorresponences()
+		setAllChats(response.data)
+	})
+
+	const fetchAllCorrespondencesWithoutLoading = async () => {
 		const response = await ChatService.GetAllCorresponences()
 		setAllChats(response.data)
 	}
@@ -30,6 +41,7 @@ const ChatPage: FC = () => {
 	}
 
 	const joinRoom = async (userId: string) => {
+		setIsLoadingChat(true)
 		const getAccessToken = async () => {
 			const token = localStorage.getItem('token')
 			return token || ''
@@ -47,12 +59,13 @@ const ChatPage: FC = () => {
 			'ReceiveMessage',
 			(messageEntity: IGetCurrentCorresponence) => {
 				setMessages(messages => [messageEntity, ...messages])
-				fetchAllCorrespondences()
+				fetchAllCorrespondencesWithoutLoading()
 			}
 		)
 
 		await connection.start().then(() => {
 			console.log('к чату все успешно подключено')
+			setIsLoadingChat(false)
 		})
 
 		connection.onclose(e => {
@@ -86,8 +99,6 @@ const ChatPage: FC = () => {
 		setCompanion(response.data)
 	}
 
-	
-
 	useEffect(() => {
 		fetchAllCorrespondences()
 		fetchUserById()
@@ -103,7 +114,7 @@ const ChatPage: FC = () => {
 			<h1 className='mt-14 mb-5 text-3xl'>Сообщения</h1>
 			<div className='flex gap-10 mt-10'>
 				<div className='w-[40%] h-[100%]'>
-					{/* <div className='flex gap-3'>
+					<div className='flex gap-3'>
 						<Select
 							defaultValue='all'
 							style={{ width: 220 }}
@@ -116,22 +127,39 @@ const ChatPage: FC = () => {
 							placeholder='Поиск по сообщениям'
 							prefix={<SearchOutlined className='pr-1' />}
 						/>
-					</div> */}
+					</div>
 					<ul className='flex flex-col mt-5'>
-						{allChats.map(user => (
-							<Link
-								onClick={() => {
-									setCompanion(user)
-									closeConnection()
-								}}
-								to={`/chat/${user.id}`}
-							>
-								<ChatItem content={user} key={user.id} />
-							</Link>
-						))}
+						{isErrorAllCorrespondence ? (
+							<></>
+						) : isLoadingAllCorrespondences ? (
+							<div className='flex justify-center mt-32'>
+								<Loader />
+							</div>
+						) : allChats.length > 0 ? (
+							<>
+								{allChats.map(chat => (
+									<Link
+										onClick={() => {
+											setCompanion(chat.customer)
+											closeConnection()
+										}}
+										to={`/chat/${chat.customer.id}`}
+									>
+										<ChatItem content={chat} key={chat.customer.id} />
+									</Link>
+								))}
+							</>
+						) : (
+							<div className='flex justify-center items-center mt-32'>
+								<h1 className='text-lg text-stone-500'>
+									У вас нет историй переписок
+								</h1>
+							</div>
+						)}
 					</ul>
 				</div>
 				<Messager
+					isLoadingChat={isLoadingChat}
 					companion={companion}
 					messages={messages}
 					sendMessage={sendMessage}

@@ -5,18 +5,25 @@ import {
 } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
 import { FC, useEffect, useRef, useState } from 'react'
+import Loader from '../../../app/components/ui/spiner/Loader'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
 import { ICustomer } from '../../../types/ICustomer'
 import { IGetCurrentCorresponence } from '../../../types/IGetCurrentCorresponence'
 import { formatFromDateToTime } from '../../../utils/formatFromDateToTime'
 
 interface IMessagerProps {
+	isLoadingChat: boolean
 	sendMessage: (receiver: string, message: string) => Promise<void>
 	messages: IGetCurrentCorresponence[]
 	companion: ICustomer | undefined
 }
 
-const Messager: FC<IMessagerProps> = ({ messages, sendMessage, companion }) => {
+const Messager: FC<IMessagerProps> = ({
+	messages,
+	sendMessage,
+	companion,
+	isLoadingChat,
+}) => {
 	const items: MenuProps['items'] = [
 		{
 			label: (
@@ -63,6 +70,68 @@ const Messager: FC<IMessagerProps> = ({ messages, sendMessage, companion }) => {
 	if (!companion) {
 		return (
 			<div className='w-[60%] min-h-[100%] bg-[#F5F5F4] rounded-lg flex flex-col justify-between h-[72vh]'></div>
+		)
+	} else if (isLoadingChat) {
+		return (
+			<div className='w-[60%] min-h-[100%] bg-[#F5F5F4] rounded-lg flex flex-col justify-between h-[72vh]'>
+				<div className=' rounded-t-lg  py-5 px-8 bg-white shadow-lg shadow-stone-200  left-0 right-0 top-0 flex gap-3 items-start items-center justify-between'>
+					<Avatar
+						className='flex justify-center items-center'
+						style={{ width: 40, height: 40, fontSize: 19 }}
+						src={companion?.avatar}
+					>
+						{companion?.login.slice(0, 1)}
+					</Avatar>
+					<div className='flex-1'>
+						<h1>{companion?.login}</h1>
+						<p className='font-light text-xs'>В сети</p>
+					</div>
+					<div>
+						<Dropdown
+							placement='bottomRight'
+							menu={{ items }}
+							trigger={['click']}
+						>
+							<Button
+								type='text'
+								className='flex justify-center items-center '
+								size='small'
+								icon={<EllipsisOutlined />}
+							/>
+						</Dropdown>
+					</div>
+				</div>
+				{/* Chat */}
+				<div className='flex-1 overflow-y-scroll messager__chat'>
+					<div className='flex justify-center mt-44'>
+						<Loader />
+					</div>
+				</div>
+				{/* Chat */}
+				<form onSubmit={handleSendMessage}>
+					<div className='rounded-b-lg py-4 px-8 bg-white shadow-lg shadow-stone-200  flex items-center justify-between'>
+						<div className='flex-1 ml-3 mr-3'>
+							<input
+								value={message}
+								onChange={(e: any) => {
+									setMessage(e.target.value)
+								}}
+								className='w-[100%] border px-6 py-3 rounded-lg outline-none'
+								placeholder='Написать сообщение'
+								type='text'
+							/>
+						</div>
+						<Button
+							disabled={message.length === 0}
+							onClick={handleSendMessage}
+							type='text'
+							size='large'
+							className='flex translate-x-2 justify-center items-center text-stone-500'
+							icon={<SendOutlined />}
+						/>
+					</div>
+				</form>
+			</div>
 		)
 	} else {
 		return (

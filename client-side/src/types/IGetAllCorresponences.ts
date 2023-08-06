@@ -1,5 +1,7 @@
 import { ICustomer } from './ICustomer'
 
 export interface IGetAllCorresponences {
-	user: ICustomer
+	customer: ICustomer
+	message: string
+	dateOfDispatch: Date
 }
