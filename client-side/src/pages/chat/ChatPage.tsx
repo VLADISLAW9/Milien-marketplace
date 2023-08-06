@@ -2,7 +2,7 @@ import { SearchOutlined } from '@ant-design/icons'
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 import { Input, Select } from 'antd'
 import { FC, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useFetching } from '../../hooks/use-fetching'
 import ChatService from '../../services/ChatService'
@@ -14,6 +14,7 @@ import ChatItem from './chat-item/ChatItem'
 import Messager from './messager/Messager'
 
 const ChatPage: FC = () => {
+	const navigate = useNavigate()
 	const params = useParams()
 	const [isLoadingChat, setIsLoadingChat] = useState(false)
 	const [connection, setConnection] = useState<any>()
@@ -138,15 +139,17 @@ const ChatPage: FC = () => {
 						) : allChats.length > 0 ? (
 							<>
 								{allChats.map(chat => (
-									<Link
+									<div
 										onClick={() => {
-											setCompanion(chat.customer)
-											closeConnection()
+											if (chat.customer.id !== Number(params.id)) {
+												setCompanion(chat.customer)
+												closeConnection()
+												navigate(`/chat/${chat.customer.id}`)
+											}
 										}}
-										to={`/chat/${chat.customer.id}`}
 									>
 										<ChatItem content={chat} key={chat.customer.id} />
-									</Link>
+									</div>
 								))}
 							</>
 						) : (

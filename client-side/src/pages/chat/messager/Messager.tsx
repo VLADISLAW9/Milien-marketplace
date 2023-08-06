@@ -57,7 +57,7 @@ const Messager: FC<IMessagerProps> = ({
 				behavior: 'smooth',
 			})
 		}
-	}, [messages])
+	}, [messages, isLoadingChat])
 
 	const handleSendMessage = (e: any) => {
 		e.preventDefault()

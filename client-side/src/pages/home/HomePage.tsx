@@ -166,7 +166,7 @@ const HomePage: FC = () => {
 			>
 				{ads.map((advrt, index) => (
 					<React.Fragment key={advrt.id}>
-						<AdvertisementItem_grid key={advrt.id} advrt_data={advrt} />
+						<AdvertisementItem_grid  key={advrt.id} advrt_data={advrt} />
 						{index !== 0 && (index + 1) % 5 === 0 && (
 							<YandexAd_grid adNumber={index / 5} />
 						)}
