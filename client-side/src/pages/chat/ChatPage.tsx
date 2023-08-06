@@ -2,7 +2,7 @@ import { SearchOutlined } from '@ant-design/icons'
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 import { Input, Select } from 'antd'
 import { FC, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useFetching } from '../../hooks/use-fetching'
 import ChatService from '../../services/ChatService'
@@ -14,11 +14,16 @@ import ChatItem from './chat-item/ChatItem'
 import Messager from './messager/Messager'
 
 const ChatPage: FC = () => {
-	const navigate = useNavigate()
 	const params = useParams()
+	const [searchValue, setSearchValue] = useState('')
 	const [isLoadingChat, setIsLoadingChat] = useState(false)
 	const [connection, setConnection] = useState<any>()
 	const [allChats, setAllChats] = useState<IGetAllCorresponences[]>([])
+	const [searchResults, setSearchResults] = useState<IGetAllCorresponences[]>(
+		[]
+	)
+	const [isLoadingSearch, setIsLoadingSearch] = useState(false)
+
 	const [messages, setMessages] = useState<IGetCurrentCorresponence[]>([])
 	const [companion, setCompanion] = useState<ICustomer>()
 
@@ -100,10 +105,31 @@ const ChatPage: FC = () => {
 		setCompanion(response.data)
 	}
 
+	const findMessage = async () => {
+		try {
+			setIsLoadingSearch(true)
+			const response = await ChatService.FindMessage(searchValue)
+			setSearchResults(response.data)
+		} catch (error) {
+			// Обработка ошибки, если необходимо
+		} finally {
+			setIsLoadingSearch(false)
+		}
+	}
+
 	useEffect(() => {
 		fetchAllCorrespondences()
 		fetchUserById()
 	}, [])
+
+	useEffect(() => {
+		if (searchValue.length > 0) {
+			findMessage()
+		} else {
+			setSearchResults([])
+			fetchAllCorrespondences()
+		}
+	}, [searchValue])
 
 	useEffect(() => {
 		fetchCurrentCorrespondences(Number(params.id))
@@ -124,10 +150,13 @@ const ChatPage: FC = () => {
 								{ value: 'unread	', label: 'Непрочитанные' },
 							]}
 						/>
-						<Input
+						{/* <Input
+							onChange={(e: any) => {
+								setSearchValue(e.target.value)
+							}}
 							placeholder='Поиск по сообщениям'
 							prefix={<SearchOutlined className='pr-1' />}
-						/>
+						/> */}
 					</div>
 					<ul className='flex flex-col mt-5'>
 						{isErrorAllCorrespondence ? (
@@ -136,20 +165,26 @@ const ChatPage: FC = () => {
 							<div className='flex justify-center mt-32'>
 								<Loader />
 							</div>
-						) : allChats.length > 0 ? (
+						) : searchResults.length > 0 && searchValue.length > 0 ? (
+							searchResults.map(chat => (
+								<ChatItem
+									params={params}
+									setCompanion={setCompanion}
+									closeConnection={closeConnection}
+									content={chat}
+									key={chat.customer.id}
+								/>
+							))
+						) : allChats.length > 0 && searchValue.length === 0 ? (
 							<>
 								{allChats.map(chat => (
-									<div
-										onClick={() => {
-											if (chat.customer.id !== Number(params.id)) {
-												setCompanion(chat.customer)
-												closeConnection()
-												navigate(`/chat/${chat.customer.id}`)
-											}
-										}}
-									>
-										<ChatItem content={chat} key={chat.customer.id} />
-									</div>
+									<ChatItem
+										params={params}
+										setCompanion={setCompanion}
+										closeConnection={closeConnection}
+										content={chat}
+										key={chat.customer.id}
+									/>
 								))}
 							</>
 						) : (

@@ -176,14 +176,14 @@ const Messager: FC<IMessagerProps> = ({
 								const date = new Date(message.dateOfDispatch)
 								return (
 									<>
-										<li key={message.id}>
+										<li className='break-all' key={message.id}>
 											{message.recipientId !== user.id ? (
 												<div className='flex gap-2 justify-end'>
 													<h1 className='text-stone-400  flex items-end text-[11px]'>
 														{formatFromDateToTime(date)}
 													</h1>
 													<div className='bg-white px-4 py-3  max-w-[60%] rounded-lg'>
-														{message.text}
+														<p>{message.text}</p>
 													</div>
 													<Avatar
 														src={user.avatar}
@@ -197,7 +197,7 @@ const Messager: FC<IMessagerProps> = ({
 														style={{ width: 35, height: 35 }}
 													/>
 													<div className='bg-white px-4 py-3 max-w-[60%] rounded-lg'>
-														{message.text}
+														<p>{message.text}</p>
 													</div>
 													<h1 className='text-stone-400 flex items-end text-xs'>
 														{formatFromDateToTime(date)}

@@ -17,4 +17,12 @@ export default class ChatService {
 			params: { recipientId: recipientId },
 		})
 	}
+
+	static async FindMessage(
+		query: string
+	): Promise<AxiosResponse<IGetAllCorresponences[]>> {
+		return $user_api.get<IGetAllCorresponences[]>('/Chat/FindCorrespondence', {
+			params: { query: query },
+		})
+	}
 }
