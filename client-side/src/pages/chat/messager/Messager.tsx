@@ -61,7 +61,7 @@ const Messager: FC<IMessagerProps> = ({
 
 	const handleSendMessage = (e: any) => {
 		e.preventDefault()
-		if (companion) {
+		if (companion && message.length > 0) {
 			sendMessage(String(companion.id), message)
 			setMessage('')
 		}
