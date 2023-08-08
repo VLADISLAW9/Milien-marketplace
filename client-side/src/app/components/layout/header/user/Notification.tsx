@@ -81,7 +81,7 @@ const Notification: FC = () => {
 							</div>
 						)}
 					</ul>
-					<div className='flex justify-center'>
+					<div className='flex justify-center mt-10 pb-5'>
 						<Button onClick={handleClearNotifications} size='large'>
 							Прочитать все
 						</Button>

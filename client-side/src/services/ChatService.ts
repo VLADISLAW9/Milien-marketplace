@@ -25,4 +25,8 @@ export default class ChatService {
 			params: { query: query },
 		})
 	}
+
+	static async GetCountOfUnreadingMessages(): Promise<AxiosResponse<number>> {
+		return $user_api.get<number>('/Chat/CountOfUnreadingMessages')
+	}
 }

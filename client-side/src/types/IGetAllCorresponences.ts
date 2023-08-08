@@ -4,4 +4,5 @@ export interface IGetAllCorresponences {
 	customer: ICustomer
 	message: string
 	dateOfDispatch: Date
+	isRead: boolean
 }

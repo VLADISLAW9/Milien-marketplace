@@ -6,4 +6,5 @@ export interface IGetCurrentCorresponence {
 	recipientId: number
 	text:string
 	dateOfDispatch: Date
+	isRead: boolean
 }

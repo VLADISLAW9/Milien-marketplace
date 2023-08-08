@@ -4,6 +4,7 @@ import {
 	SendOutlined,
 } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
+import TextArea from 'antd/es/input/TextArea'
 import { FC, useEffect, useRef, useState } from 'react'
 import Loader from '../../../app/components/ui/spiner/Loader'
 import { useTypedSelector } from '../../../hooks/use-typed-selector'
@@ -67,6 +68,8 @@ const Messager: FC<IMessagerProps> = ({
 		}
 	}
 
+	
+
 	if (!companion) {
 		return (
 			<div className='w-[60%] min-h-[100%] bg-[#F5F5F4] rounded-lg flex flex-col justify-between h-[72vh]'></div>
@@ -84,7 +87,7 @@ const Messager: FC<IMessagerProps> = ({
 					</Avatar>
 					<div className='flex-1'>
 						<h1>{companion?.login}</h1>
-						<p className='font-light text-xs'>В сети</p>
+						{/* <p className='font-light text-xs'>В сети</p> */}
 					</div>
 					<div>
 						<Dropdown
@@ -111,18 +114,22 @@ const Messager: FC<IMessagerProps> = ({
 				<form onSubmit={handleSendMessage}>
 					<div className='rounded-b-lg py-4 px-8 bg-white shadow-lg shadow-stone-200  flex items-center justify-between'>
 						<div className='flex-1 ml-3 mr-3'>
-							<input
+							<TextArea
+								readOnly={true}
+								// disabled={true}
 								value={message}
 								onChange={(e: any) => {
 									setMessage(e.target.value)
 								}}
-								className='w-[100%] border px-6 py-3 rounded-lg outline-none'
-								placeholder='Написать сообщение'
-								type='text'
+								maxLength={2000}
+								placeholder='Загрузка чата...'
+								size='large'
+								className='flex items-center px-4 py-2'
+								autoSize={{ minRows: 1, maxRows: 6 }}
 							/>
 						</div>
 						<Button
-							disabled={message.length === 0}
+							disabled={true}
 							onClick={handleSendMessage}
 							type='text'
 							size='large'
@@ -146,7 +153,7 @@ const Messager: FC<IMessagerProps> = ({
 					</Avatar>
 					<div className='flex-1'>
 						<h1>{companion?.login}</h1>
-						<p className='font-light text-xs'>В сети</p>
+						{/* <p className='font-light text-xs'>В сети</p> */}
 					</div>
 					<div>
 						<Dropdown
@@ -217,14 +224,16 @@ const Messager: FC<IMessagerProps> = ({
 				<form onSubmit={handleSendMessage}>
 					<div className='rounded-b-lg py-4 px-8 bg-white shadow-lg shadow-stone-200  flex items-center justify-between'>
 						<div className='flex-1 ml-3 mr-3'>
-							<input
+							<TextArea
 								value={message}
 								onChange={(e: any) => {
 									setMessage(e.target.value)
 								}}
-								className='w-[100%] border px-6 py-3 rounded-lg outline-none'
-								placeholder='Написать сообщение'
-								type='text'
+								maxLength={2000}
+								placeholder='Напишите сообщения...'
+								size='large'
+								className='flex items-center px-4 py-2'
+								autoSize={{ minRows: 1, maxRows: 6 }}
 							/>
 						</div>
 						<Button

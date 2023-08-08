@@ -144,7 +144,7 @@ const ChatPage: FC = () => {
 					<div className='flex gap-3'>
 						<Select
 							defaultValue='all'
-							style={{ width: 220 }}
+							style={{ width: 190 }}
 							options={[
 								{ value: 'all', label: 'Все сообщения' },
 								{ value: 'unread	', label: 'Непрочитанные' },

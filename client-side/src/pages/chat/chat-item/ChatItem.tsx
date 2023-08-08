@@ -1,10 +1,11 @@
 import { DeleteOutlined, EllipsisOutlined } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Link, Params, useNavigate } from 'react-router-dom'
+import AvatarItem from '../../../app/components/ui/avatar/AvatarItem'
 import { ICustomer } from '../../../types/ICustomer'
 import { IGetAllCorresponences } from '../../../types/IGetAllCorresponences'
-import { formatFromDateToDMY } from '../../../utils/formatFromDateToDMY'
+import { formatFromDateToCounts } from '../../../utils/formatFromDateToCounts'
 
 interface ChatItemProps {
 	params: Readonly<Params<string>>
@@ -21,18 +22,26 @@ const ChatItem: FC<ChatItemProps> = ({
 }) => {
 	const navigate = useNavigate()
 	const dateOfDispatch = new Date(content.dateOfDispatch)
+	const [isReadState, setIsReadState] = useState(content.isRead)
 
 	const handleClickToUser = () => {
 		if (content.customer.id !== Number(params.id)) {
 			closeConnection()
 			setCompanion(content.customer)
 			navigate(`/chat/${content.customer.id}`)
+			setIsReadState(true)
 		}
 	}
 
 	const handleMoreClick = (event: any) => {
 		event.stopPropagation()
 	}
+
+	useEffect(() => {
+		if (content.customer.id === Number(params.id)) {
+			setIsReadState(true)
+		}
+	}, [])
 
 	const items: MenuProps['items'] = [
 		{
@@ -53,19 +62,6 @@ const ChatItem: FC<ChatItemProps> = ({
 			),
 			key: '1',
 		},
-		
-		{
-			label: (
-				<Link
-					to={`/customer/${content.customer.id}`}
-					className='flex items-center gap-2'
-				>
-					
-					<h1>Перейти к объявлению</h1>
-				</Link>
-			),
-			key: '2',
-		},
 		{
 			label: (
 				<div className='flex items-center gap-2'>
@@ -82,23 +78,45 @@ const ChatItem: FC<ChatItemProps> = ({
 			className='hover:bg-[#F5F5F4]  transition-all px-5 py-4 rounded-lg flex items-center cursor-pointer justify-between relative'
 		>
 			<div className='flex gap-3'>
-				<Avatar
+				<AvatarItem
+					badgeS='10'
+					offset={[-10, 45]}
+					user={content.customer}
+					height={'50'}
+					width={'50'}
+					fontSize={'23'}
+				/>
+				{/* <Avatar
 					className='flex justify-center items-center'
 					src={content.customer.avatar}
 					style={{ width: 50, height: 50, fontSize: 23 }}
 				>
 					{content.customer.login.slice(0, 1)}
-				</Avatar>
+				</Avatar> */}
 				<div className='flex-1 truncate'>
-					<h1 className='font-medium '>{content.customer.login}</h1>
-					<p className='line-clamp-1 text-stone-500 text-sm'>
+					<h1 className={isReadState ? 'font-medium' : 'font-bold'}>
+						{content.customer.login}
+					</h1>
+					<p
+						className={
+							isReadState
+								? 'line-clamp-1 max-w-[400px] break-all text-stone-500 text-sm'
+								: 'line-clamp-1 w-[200px] text-sm font-bold text-black'
+						}
+					>
 						{content.message}
 					</p>
 				</div>
 			</div>
 			<div className='flex flex-col items-end gap-1 translate-y-[5px]'>
-				<h1 className='text-xs text-stone-400'>
-					{formatFromDateToDMY(dateOfDispatch).slice(0, 5)}
+				<h1
+					className={
+						isReadState
+							? 'text-xs text-stone-400'
+							: 'text-xs text-black font-bold'
+					}
+				>
+					{formatFromDateToCounts(dateOfDispatch)}
 				</h1>
 				<Dropdown placement='bottomRight' menu={{ items }} trigger={['click']}>
 					<Button
