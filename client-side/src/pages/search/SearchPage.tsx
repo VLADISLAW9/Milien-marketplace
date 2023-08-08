@@ -122,7 +122,7 @@ const SearchPage: FC = () => {
 							setTownValue(e.target.value)
 						}}
 						placeholder='Введите город '
-						className='border-2 outline-none rounded-3xl text-base px-4 py-2'
+						className='border-2 outline-none rounded-xl text-base px-4 py-2'
 					/>
 					<div className=' mt-8 mb-10	'>
 						<button
@@ -134,7 +134,7 @@ const SearchPage: FC = () => {
 					</div>
 				</div>
 				<div className='flex-initial max-lg:hidden w-[30%] '>
-					<h1 className='text-2xl mb-5'>Город</h1>
+					<h1 className='text-xl mb-5'>Город</h1>
 					<input
 						value={townValue ? townValue : ''}
 						type='text'
@@ -142,9 +142,9 @@ const SearchPage: FC = () => {
 							setTownValue(e.target.value)
 						}}
 						placeholder='Введите город '
-						className='border-2 outline-none rounded-3xl text-base px-4 py-2'
+						className='border-2 outline-none rounded-xl text-base px-3 py-1'
 					/>
-					<h1 className='text-2xl mt-8 mb-3'>Категории</h1>
+					<h1 className='text-xl mt-8 mb-3'>Категории</h1>
 					<ul ref={ref} className='ml-5'>
 						{categories.map(cat => (
 							<>
@@ -193,15 +193,15 @@ const SearchPage: FC = () => {
 						))}
 					</ul>
 					<div className='mt-12'>
-						<h1 className='text-2xl'>Цена</h1>
-						<div className='flex mt-3 gap-5 ml-5'>
+						<h1 className='text-xl'>Цена</h1>
+						<div className='flex mt-3 gap-5'>
 							<input
 								type='number'
 								value={minPrice ? minPrice : ''}
 								onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 									setMinPrice(Number(e.target.value))
 								}}
-								className='placeholder:text-lg border-stone-400 outline-none border-b px-3 py-2 text-lg w-[150px]'
+								className='placeholder:text-base border-stone-400 outline-none border-b px-3 py-1 text-base w-[150px]'
 								placeholder='от'
 							/>
 							<input
@@ -210,7 +210,7 @@ const SearchPage: FC = () => {
 								onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 									setMaxPrice(Number(e.target.value))
 								}}
-								className='w-[150px] border-stone-400 border-b px-3 py-2 outline-none text-lg placeholder:text-lg'
+								className='w-[150px] border-stone-400 border-b px-3 py-1 outline-none text-base placeholder:text-base'
 								placeholder='до, в рублях'
 							/>
 						</div>
@@ -218,13 +218,13 @@ const SearchPage: FC = () => {
 					<div className='flex justify-center mt-12	'>
 						<button
 							onClick={handleFilter}
-							className='text-white text-xl bg-[#166430] px-6 rounded-3xl py-2 h-[50px] w-[150px]'
+							className='text-white flex justify-center items-center text-lg bg-[#166430] px-4 rounded-3xl py-2 h-[45px] w-[150px]'
 						>
 							Найти
 						</button>
 					</div>
 				</div>
-				<div className='flex-initial justify-center max-lg:w-[100%] w-[70%]'>
+				<div className='flex-initial justify-center max-lg:w-[100%] w-[75%]'>
 					{searchingLoading ? (
 						<div className='flex justify-center items-center mt-24'>
 							<Loader />
@@ -244,14 +244,14 @@ const SearchPage: FC = () => {
 								className={
 									view === 'list'
 										? ' flex flex-col justify-center items-center gap-5'
-										: ' grid grid-cols-3 max-lg:grid-cols-2 max-lg:gap-3 gap-5 '
+										: ' grid grid-cols-4 max-lg:grid-cols-2 max-lg:gap-3 gap-5 '
 								}
 							>
 								{foundAds.map(advrt =>
 									view === 'list' ? (
 										<AdvertisementItem_list key={advrt.id} advrt_data={advrt} />
 									) : (
-										<AdvertisementItem_grid key={advrt.id} advrt_data={advrt} />
+										<AdvertisementItem_grid mini={true} key={advrt.id} advrt_data={advrt} />
 									)
 								)}
 							</ul>

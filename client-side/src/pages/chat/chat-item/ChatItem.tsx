@@ -30,7 +30,7 @@ const ChatItem: FC<ChatItemProps> = ({
 		}
 	}
 
-	const handleMoreClick = (event:any) => {
+	const handleMoreClick = (event: any) => {
 		event.stopPropagation()
 	}
 
@@ -52,6 +52,19 @@ const ChatItem: FC<ChatItemProps> = ({
 				</Link>
 			),
 			key: '1',
+		},
+		
+		{
+			label: (
+				<Link
+					to={`/customer/${content.customer.id}`}
+					className='flex items-center gap-2'
+				>
+					
+					<h1>Перейти к объявлению</h1>
+				</Link>
+			),
+			key: '2',
 		},
 		{
 			label: (

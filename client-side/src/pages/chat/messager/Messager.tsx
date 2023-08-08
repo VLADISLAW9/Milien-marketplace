@@ -193,9 +193,12 @@ const Messager: FC<IMessagerProps> = ({
 											) : (
 												<div className='flex gap-3'>
 													<Avatar
+														className='flex justify-center items-center'
 														src={companion?.avatar}
 														style={{ width: 35, height: 35 }}
-													/>
+													>
+														{companion.login.slice(0, 1)}
+													</Avatar>
 													<div className='bg-white px-4 py-3 max-w-[60%] rounded-lg'>
 														<p>{message.text}</p>
 													</div>
