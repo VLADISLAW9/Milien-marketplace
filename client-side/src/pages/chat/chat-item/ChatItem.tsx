@@ -78,21 +78,21 @@ const ChatItem: FC<ChatItemProps> = ({
 			className='hover:bg-[#F5F5F4]  transition-all px-5 py-4 rounded-lg flex items-center cursor-pointer justify-between relative'
 		>
 			<div className='flex gap-3'>
-				<AvatarItem
+				{/* <AvatarItem
 					badgeS='10'
-					offset={[-10, 45]}
+					offset={[-10, 50]}
 					user={content.customer}
 					height={'50'}
 					width={'50'}
 					fontSize={'23'}
-				/>
-				{/* <Avatar
+				/> */}
+				<Avatar
 					className='flex justify-center items-center'
 					src={content.customer.avatar}
 					style={{ width: 50, height: 50, fontSize: 23 }}
 				>
 					{content.customer.login.slice(0, 1)}
-				</Avatar> */}
+				</Avatar>
 				<div className='flex-1 truncate'>
 					<h1 className={isReadState ? 'font-medium' : 'font-bold'}>
 						{content.customer.login}
