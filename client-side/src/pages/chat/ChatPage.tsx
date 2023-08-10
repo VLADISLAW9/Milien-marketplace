@@ -1,10 +1,10 @@
-import { SearchOutlined } from '@ant-design/icons'
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
-import { Input, Select } from 'antd'
+import { Select } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useFetching } from '../../hooks/use-fetching'
+import { useTypedSelector } from '../../hooks/use-typed-selector'
 import ChatService from '../../services/ChatService'
 import UsersService from '../../services/UsersService'
 import { ICustomer } from '../../types/ICustomer'
@@ -15,6 +15,7 @@ import Messager from './messager/Messager'
 
 const ChatPage: FC = () => {
 	const params = useParams()
+	const { user } = useTypedSelector(state => state.user)
 	const [searchValue, setSearchValue] = useState('')
 	const [isLoadingChat, setIsLoadingChat] = useState(false)
 	const [connection, setConnection] = useState<any>()
@@ -26,6 +27,7 @@ const ChatPage: FC = () => {
 
 	const [messages, setMessages] = useState<IGetCurrentCorresponence[]>([])
 	const [companion, setCompanion] = useState<ICustomer>()
+	const [selectValue, setSelectValue] = useState('all')
 
 	const [
 		fetchAllCorrespondences,
@@ -132,6 +134,16 @@ const ChatPage: FC = () => {
 	}, [searchValue])
 
 	useEffect(() => {
+		const intervalId = setInterval(() => {
+			fetchAllCorrespondencesWithoutLoading()
+		}, 10000)
+
+		return () => {
+			clearInterval(intervalId) // Очищаем интервал при размонтировании компонента
+		}
+	}, [])
+
+	useEffect(() => {
 		fetchCurrentCorrespondences(Number(params.id))
 		joinRoom(String(params.id))
 	}, [params.id])
@@ -143,6 +155,9 @@ const ChatPage: FC = () => {
 				<div className='w-[40%] h-[100%]'>
 					<div className='flex gap-3'>
 						<Select
+							onChange={(value: string) => {
+								setSelectValue(value)
+							}}
 							defaultValue='all'
 							style={{ width: 190 }}
 							options={[
@@ -177,15 +192,21 @@ const ChatPage: FC = () => {
 							))
 						) : allChats.length > 0 && searchValue.length === 0 ? (
 							<>
-								{allChats.map(chat => (
-									<ChatItem
-										params={params}
-										setCompanion={setCompanion}
-										closeConnection={closeConnection}
-										content={chat}
-										key={chat.customer.id}
-									/>
-								))}
+								{allChats
+									.filter(
+										selectValue !== 'all'
+											? chat => chat.isRead === false
+											: chat => chat
+									)
+									.map(chat => (
+										<ChatItem
+											params={params}
+											setCompanion={setCompanion}
+											closeConnection={closeConnection}
+											content={chat}
+											key={chat.customer.id}
+										/>
+									))}
 							</>
 						) : (
 							<div className='flex justify-center items-center mt-32'>

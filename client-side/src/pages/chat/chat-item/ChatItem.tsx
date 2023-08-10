@@ -2,7 +2,6 @@ import { DeleteOutlined, EllipsisOutlined } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { Link, Params, useNavigate } from 'react-router-dom'
-import AvatarItem from '../../../app/components/ui/avatar/AvatarItem'
 import { ICustomer } from '../../../types/ICustomer'
 import { IGetAllCorresponences } from '../../../types/IGetAllCorresponences'
 import { formatFromDateToCounts } from '../../../utils/formatFromDateToCounts'
@@ -24,7 +23,7 @@ const ChatItem: FC<ChatItemProps> = ({
 	const dateOfDispatch = new Date(content.dateOfDispatch)
 	const [isReadState, setIsReadState] = useState(content.isRead)
 
-	const handleClickToUser = () => {
+	const handleClickToUser = async () => {
 		if (content.customer.id !== Number(params.id)) {
 			closeConnection()
 			setCompanion(content.customer)
@@ -42,6 +41,10 @@ const ChatItem: FC<ChatItemProps> = ({
 			setIsReadState(true)
 		}
 	}, [])
+
+	useEffect(() => {
+		setIsReadState(content.isRead)
+	}, [content])
 
 	const items: MenuProps['items'] = [
 		{

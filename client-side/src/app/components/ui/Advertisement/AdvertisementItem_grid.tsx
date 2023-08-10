@@ -1,6 +1,18 @@
-import { DeleteOutlined, HeartOutlined } from '@ant-design/icons'
+import {
+	DeleteOutlined,
+	EllipsisOutlined,
+	HeartOutlined,
+} from '@ant-design/icons'
 import { CardMedia, Checkbox } from '@mui/material'
-import { Button, Carousel, message, Modal, Tooltip } from 'antd'
+import {
+	Button,
+	Carousel,
+	Dropdown,
+	MenuProps,
+	message,
+	Modal,
+	Tooltip,
+} from 'antd'
 import { FC, useContext, useEffect, useState } from 'react'
 import { BsSuitHeartFill } from 'react-icons/bs'
 import { MdFavoriteBorder, MdOutlineNoPhotography } from 'react-icons/md'
@@ -141,6 +153,55 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 		setIsModalOpen(false)
 	}
 
+	const items: MenuProps['items'] = [
+		{
+			label: (
+				<>
+					<div className='flex items-center' onClick={showModal}>
+						<DeleteOutlined className='mr-1.5' />
+						<h1>Удалить объявление</h1>
+					</div>
+					<Modal
+						title={
+							<div>
+								<h1 className='text-xl'>Внимание</h1>
+							</div>
+						}
+						open={isModalOpen}
+						onOk={handleOk}
+						onCancel={handleCancel}
+						footer={[
+							<button
+								onClick={handleCancel}
+								className='mr-5 px-4 py-2 w-[100px] bg-[#166430] rounded-3xl text-white'
+							>
+								Отмена
+							</button>,
+							<button
+								onClick={handleDeleteAdvtr}
+								className='px-4 py-2 w-[100px] text-[#166430] border border-[#166430] rounded-3xl '
+							>
+								Принять
+							</button>,
+						]}
+					>
+						{advrt.premium ? (
+							<p className='my-7 text-base'>
+								Если вы удалите это объявление, то пропадет пакет "Премиум". Вы
+								действительно хотите удалить объявление?
+							</p>
+						) : (
+							<p className=' text-base my-7'>
+								Вы действительно хотите удалить объявление
+							</p>
+						)}
+					</Modal>
+				</>
+			),
+			key: '0',
+		},
+	]
+
 	return (
 		<>
 			{contextHolder}
@@ -176,8 +237,11 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 						userData &&
 						advrt.customerId === userData.id &&
 						location.pathname === '/my-profile' && (
-							<div className='translate-y-1 flex flex-col items-end gap-2'>
-								<Tooltip title="Добавлено в избранное"  className='cursor-pointer flex items-center gap-2'>
+							<div className='translate-y-2 flex flex-col items-end gap-1'>
+								<Tooltip
+									title='Добавлено в избранное'
+									className='cursor-pointer flex items-center gap-2'
+								>
 									<h1
 										className={
 											advrt.premium ? 'text-sm text-gray-200' : 'text-sm'
@@ -187,59 +251,14 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 									</h1>
 									<BsSuitHeartFill className='w-4 h-4 text-red-600' />
 								</Tooltip>
-								<>
+								<Dropdown menu={{ items }} trigger={['click']}>
 									<Button
-										icon={<DeleteOutlined className='mr-1' />}
-										className='flex items-center'
-										size='small'
-										style={
-											advrt.premium
-												? {
-														color: 'white',
-														backgroundColor: 'red',
-														borderColor: 'red',
-												  }
-												: { color: 'red', borderColor: 'red' }
-										}
-										onClick={showModal}
-									>
-										<h1>Удалить</h1>
-									</Button>
-									<Modal
-										title={
-											<div>
-												<h1 className='text-xl'>Внимание</h1>
-											</div>
-										}
-										open={isModalOpen}
-										onOk={handleOk}
-										onCancel={handleCancel}
-										footer={[
-											<button
-												onClick={handleCancel}
-												className='mr-5 px-4 py-2 w-[100px] bg-[#166430] rounded-3xl text-white'
-											>
-												Отмена
-											</button>,
-											<button
-												onClick={handleDeleteAdvtr}
-												className='px-4 py-2 w-[100px] text-[#166430] border border-[#166430] rounded-3xl '
-											>
-												Принять
-											</button>,
-										]}
-									>
-										{advrt.premium ? (
-											<p className='my-10 text-lg'>
-												Если вы удалите это объявление, то пропадет пакет
-												"Премиум" .
-												<br /> Вы действительно хотите удалить объявление?
-											</p>
-										) : (
-											<p>Вы действительно хотите удалить объявление</p>
-										)}
-									</Modal>
-								</>
+										style={advrt.premium ? { color: 'white' } : {}}
+										className='flex translate-x-2 justify-center items-center'
+										icon={<EllipsisOutlined />}
+										type='text'
+									/>
+								</Dropdown>
 							</div>
 						)}
 				</div>

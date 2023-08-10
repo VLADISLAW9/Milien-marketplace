@@ -68,8 +68,6 @@ const Messager: FC<IMessagerProps> = ({
 		}
 	}
 
-	
-
 	if (!companion) {
 		return (
 			<div className='w-[60%] min-h-[100%] bg-[#F5F5F4] rounded-lg flex flex-col justify-between h-[72vh]'></div>
@@ -116,7 +114,6 @@ const Messager: FC<IMessagerProps> = ({
 						<div className='flex-1 ml-3 mr-3'>
 							<TextArea
 								readOnly={true}
-								// disabled={true}
 								value={message}
 								onChange={(e: any) => {
 									setMessage(e.target.value)
@@ -225,12 +222,13 @@ const Messager: FC<IMessagerProps> = ({
 					<div className='rounded-b-lg py-4 px-8 bg-white shadow-lg shadow-stone-200  flex items-center justify-between'>
 						<div className='flex-1 ml-3 mr-3'>
 							<TextArea
+								onPressEnter={handleSendMessage}
 								value={message}
 								onChange={(e: any) => {
 									setMessage(e.target.value)
 								}}
 								maxLength={2000}
-								placeholder='Напишите сообщения...'
+								placeholder='Напишите сообщение...'
 								size='large'
 								className='flex items-center px-4 py-2'
 								autoSize={{ minRows: 1, maxRows: 6 }}
