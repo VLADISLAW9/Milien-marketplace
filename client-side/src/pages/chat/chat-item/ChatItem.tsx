@@ -64,16 +64,7 @@ const ChatItem: FC<ChatItemProps> = ({
 				</Link>
 			),
 			key: '1',
-		},
-		{
-			label: (
-				<div className='flex items-center gap-2'>
-					<DeleteOutlined style={{ width: 20 }} />
-					<h1>Удалить чат</h1>
-				</div>
-			),
-			key: '0',
-		},
+		}
 	]
 	return (
 		<li

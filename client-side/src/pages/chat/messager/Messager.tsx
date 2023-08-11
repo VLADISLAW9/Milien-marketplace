@@ -1,8 +1,4 @@
-import {
-	DeleteOutlined,
-	EllipsisOutlined,
-	SendOutlined,
-} from '@ant-design/icons'
+import { EllipsisOutlined, SendOutlined } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import { FC, useEffect, useRef, useState } from 'react'
@@ -29,20 +25,16 @@ const Messager: FC<IMessagerProps> = ({
 		{
 			label: (
 				<div className='flex items-center gap-2'>
-					<Avatar style={{ width: 20, height: 20 }} />
+					<Avatar
+						src={companion?.avatar}
+						style={{ width: 20, height: 20 }}
+					>
+						{companion?.login.slice(0,1)}
+					</Avatar>
 					<h1>Перейти в профиль</h1>
 				</div>
 			),
 			key: '1',
-		},
-		{
-			label: (
-				<div className='flex items-center gap-2'>
-					<DeleteOutlined style={{ width: 20 }} />
-					<h1>Удалить чат</h1>
-				</div>
-			),
-			key: '0',
 		},
 	]
 	const { user } = useTypedSelector(state => state.user)
