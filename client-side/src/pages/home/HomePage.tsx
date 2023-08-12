@@ -88,7 +88,7 @@ const HomePage: FC = () => {
 				!isNewAdsLoading &&
 				!isNewServicesLoading && (
 					<>
-						<div className='mt-12 mb-12'>
+						<div className='mt-12 mb-12 max-xl:hidden'>
 							<HomeCarousel />
 						</div>
 

@@ -32,7 +32,7 @@ const ChatIcon = () => {
 	return (
 		<Badge style={{ marginTop: '-3px' }} count={countOfUnreadMessages}>
 			<Link onClick={() => setCountOfUnreadMessages(0)} to='/chat'>
-				<BsFillChatSquareFill className='text-stone-400 ml-[19px] w-[21px] h-[21px] hover:text-stone-500  transition-colors ' />
+				<BsFillChatSquareFill className='text-stone-400 ml-[19px] w-[21px] h-[21px] max-xl:h-[40px] max-xl:w-[40px] hover:text-stone-500  transition-colors ' />
 			</Link>
 		</Badge>
 	)

@@ -37,11 +37,14 @@ const Layout: FC<ILayoutProps> = ({ children }) => {
 						<YandexAd_list_right />
 					</div>
 
-					{isAuth && user && location.pathname !== '/createAdvrt' && (
-						<div className='fixed z-[30] right-[67px] bottom-16	'>
-							<AddAdvrt />
-						</div>
-					)}
+					{isAuth &&
+						user &&
+						location.pathname !== '/createAdvrt' &&
+						!location.pathname.includes('/chat') && (
+							<div className='fixed z-[30] right-[67px] bottom-16	'>
+								<AddAdvrt />
+							</div>
+						)}
 					<main
 						className={
 							isBlur

@@ -1,4 +1,4 @@
-import { DeleteOutlined, EllipsisOutlined } from '@ant-design/icons'
+import { EllipsisOutlined } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, MenuProps } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { Link, Params, useNavigate } from 'react-router-dom'
@@ -34,6 +34,7 @@ const ChatItem: FC<ChatItemProps> = ({
 
 	const handleMoreClick = (event: any) => {
 		event.stopPropagation()
+		
 	}
 
 	useEffect(() => {
@@ -55,16 +56,15 @@ const ChatItem: FC<ChatItemProps> = ({
 				>
 					<Avatar
 						src={content.customer.avatar}
-						className='flex justify-center items-center'
-						style={{ width: 20, height: 20, fontSize: 12 }}
+						className='flex justify-center items-center w-[20px] h-[20px] text-[12px] max-xl:w-[40px] max-xl:h-[40px] max-xl:text-[24px]'
 					>
 						{content.customer.login.slice(0, 1)}
 					</Avatar>
-					<h1>Перейти в профиль</h1>
+					<h1 className='max-xl:text-2xl'>Перейти в профиль</h1>
 				</Link>
 			),
 			key: '1',
-		}
+		},
 	]
 	return (
 		<li
@@ -81,21 +81,26 @@ const ChatItem: FC<ChatItemProps> = ({
 					fontSize={'23'}
 				/> */}
 				<Avatar
-					className='flex justify-center items-center'
+					className='flex justify-center items-center w-[50px] h-[50px] max-xl:w-[100px] max-xl:h-[100px] text-[23px]'
 					src={content.customer.avatar}
-					style={{ width: 50, height: 50, fontSize: 23 }}
 				>
 					{content.customer.login.slice(0, 1)}
 				</Avatar>
 				<div className='flex-1 truncate'>
-					<h1 className={isReadState ? 'font-medium' : 'font-bold'}>
+					<h1
+						className={
+							isReadState
+								? 'font-medium max-xl:text-2xl'
+								: 'font-bold max-xl:text-2xl'
+						}
+					>
 						{content.customer.login}
 					</h1>
 					<p
 						className={
 							isReadState
-								? 'line-clamp-1 max-w-[400px] break-all text-stone-500 text-sm'
-								: 'line-clamp-1 w-[200px] text-sm font-bold text-black'
+								? 'line-clamp-1 max-w-[400px] break-all text-stone-500 text-sm max-xl:text-xl'
+								: 'line-clamp-1 w-[200px] text-sm font-bold text-black max-xl:text-xl'
 						}
 					>
 						{content.message}
@@ -106,20 +111,24 @@ const ChatItem: FC<ChatItemProps> = ({
 				<h1
 					className={
 						isReadState
-							? 'text-xs text-stone-400'
-							: 'text-xs text-black font-bold'
+							? 'text-xs text-stone-400 max-xl:text-xl   max-xl:-translate-y-5'
+							: 'text-xs text-black font-bold max-xl:text-xl max-xl:-translate-y-5'
 					}
 				>
 					{formatFromDateToCounts(dateOfDispatch)}
 				</h1>
 				<Dropdown placement='bottomRight' menu={{ items }} trigger={['click']}>
-					<Button
-						onClick={handleMoreClick}
-						type='text'
-						className='flex justify-center items-center'
-						size='small'
-						icon={<EllipsisOutlined />}
-					/>
+					<div onClick={handleMoreClick}>
+						<Button
+							type='text'
+							className='flex max-xl:hidden justify-center items-center'
+							size='small'
+							icon={<EllipsisOutlined />}
+						/>
+						<Button size='large' className='hidden max-xl:block max-xl:text-xl'>
+							Подробнее
+						</Button>
+					</div>
 				</Dropdown>
 			</div>
 		</li>

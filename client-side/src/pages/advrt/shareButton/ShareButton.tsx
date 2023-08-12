@@ -1,9 +1,9 @@
 import { Button, Divider, message, Modal, Tooltip } from 'antd'
 import { FC, useState } from 'react'
 import { AiOutlineWhatsApp } from 'react-icons/ai'
+import { CiShare1 } from 'react-icons/ci'
 import { FaCopy, FaOdnoklassniki } from 'react-icons/fa'
 import { SlPaperPlane, SlSocialVkontakte } from 'react-icons/sl'
-import { CiShare1 } from 'react-icons/ci'
 
 interface ShareButtonProps {
 	adId: number
@@ -48,9 +48,14 @@ const ShareButton: FC<ShareButtonProps> = ({ adId, adImg, adTitle }) => {
 	return (
 		<>
 			{contextHolder}
-			<Button type='text' className='flex items-center gap-2' size='small' onClick={showModal}>
-				<CiShare1 className='w-4 h-4'/>
-				Поделиться
+			<Button
+				type='text'
+				className='flex items-center gap-2'
+				size='small'
+				onClick={showModal}
+			>
+				<CiShare1 className='w-4 h-4 max-xl:w-10 max-xl:h-10' />
+				<h1 className='max-xl:text-3xl'>Поделиться</h1>
 			</Button>
 			<Modal
 				title={<h1 className=''>Поделиться</h1>}

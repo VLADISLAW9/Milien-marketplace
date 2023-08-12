@@ -15,6 +15,8 @@ import DotsLoader from '../../ui/spiner/DotsLoader'
 import AuthorizationButtons from './buttons/AuthorizationButtons'
 import HeaderLogo from './logo/HeaderLogo'
 import HeaderSearch from './search/HeaderSearch'
+import ChatIcon from './user/chat-icon/ChatIcon'
+import Notification from './user/Notification'
 import UserHeader from './user/UserHeader'
 
 const Header: FC = () => {
@@ -58,15 +60,28 @@ const Header: FC = () => {
 				<HeaderSearch />
 			</div>
 
-			<div className='hidden max-xl:block'>
-				<button
-					onClick={() => {
-						setShowBurger(true)
-					}}
-					className='z-30'
-				>
-					<HiMenu className='w-14 text-stone-600 h-14' />
-				</button>
+			<div className='hidden max-xl:block max-xl:flex items-center gap-7'>
+				{isAuth && (
+					<>
+						<div className='translate-x-4 -translate-y-[2px]'>
+							<Notification />
+						</div>
+						<div className='translate-y-[2px]'>
+							<ChatIcon />
+						</div>
+					</>
+				)}
+
+				<div>
+					<button
+						onClick={() => {
+							setShowBurger(true)
+						}}
+						className='z-30'
+					>
+						<HiMenu className='w-14 text-stone-400 h-14' />
+					</button>
+				</div>
 			</div>
 
 			{showBurger && (

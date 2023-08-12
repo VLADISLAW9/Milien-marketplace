@@ -57,7 +57,7 @@ const Notification: FC = () => {
 			<Badge count={count}>
 				<IoIosNotifications
 					onClick={showDrawer}
-					className='text-stone-400 w-[28px] h-[28px] cursor-pointer hover:text-stone-500 transition-colors'
+					className='text-stone-400 w-[28px] h-[28px] cursor-pointer hover:text-stone-500 transition-colors max-xl:w-[50px] max-xl:h-[50px]'
 				/>
 			</Badge>
 			<Drawer

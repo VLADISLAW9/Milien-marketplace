@@ -240,7 +240,7 @@ const AdvertisementItem_grid: FC<IAdvrtProps> = ({
 							<div className='translate-y-2 flex flex-col items-end gap-1'>
 								<Tooltip
 									title='Добавлено в избранное'
-									className='cursor-pointer flex items-center gap-2'
+									className='cursor-pointer flex items-center gap-2 max-xl:hidden'
 								>
 									<h1
 										className={

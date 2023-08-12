@@ -3,7 +3,6 @@ import { Dispatch } from '@reduxjs/toolkit'
 import { Button, message } from 'antd'
 import { useContext, useEffect, useState } from 'react'
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
-import { BsHeart } from 'react-icons/bs'
 import { MdOutlineNoPhotography } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -254,40 +253,65 @@ const AdvertisementPage = () => {
 													</>
 												) : (
 													<>
-														{!isFavAd && advrt ? (
-															<button
-																disabled={favLoading}
-																onClick={handleAddToFav}
-																className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex h-[100px] w-[500px] justify-center  items-center text-3xl text-white'
-															>
-																{!favLoading && (
-																	<>
-																		<h1>Добавить в избранное</h1>
-																		<BsHeart className='ml-3' />
-																	</>
-																)}
-															</button>
-														) : (
-															<button
-																onClick={handleDeleteFromFav}
-																className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex [100px] w-[500px] justify-center  items-center text-3xl text-white'
-															>
-																Удалить из избранного
-																<BsHeart className='ml-3' />
-															</button>
-														)}
+														<button
+															disabled={favLoading}
+															onClick={handleAddToFav}
+															className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex h-[100px] w-[500px] justify-center  items-center text-3xl text-white'
+														>
+															{!favLoading && (
+																<>
+																	<h1>Написать продавцу</h1>
+																</>
+															)}
+														</button>
 
 														<ShowContacts
 															isLoading={isLoadingCustomer}
 															isError={isErrorCustomer}
 															customer={customer}
 														/>
-														<div className='mt-4'>
-															<ShareButton
-																adImg={advrt.photoPath[0]}
-																adTitle={advrt.title}
-																adId={advrt.id}
-															/>
+														<div className='mt-10 flex items-center'>
+															<div>
+																<ShareButton
+																	adImg={advrt.photoPath[0]}
+																	adTitle={advrt.title}
+																	adId={advrt.id}
+																/>
+															</div>
+															<div>
+																{!isFavAd && advrt ? (
+																	<Button
+																		disabled={favLoading}
+																		onClick={handleAddToFav}
+																		className='flex w-[190px] max-xl:w-[100%] items-center gap-2 '
+																		size='small'
+																		type='text'
+																	>
+																		<AiOutlineHeart className='w-4 h-4 max-xl:w-10 max-xl:h-10' />
+																		<h1
+																			className='
+																		max-xl:text-3xl'
+																		>
+																			Добавить в избранное
+																		</h1>
+																	</Button>
+																) : (
+																	<Button
+																		onClick={handleDeleteFromFav}
+																		className='flex w-[190px] max-xl:w-[100%] items-center gap-2 '
+																		size='small'
+																		type='text'
+																	>
+																		<AiFillHeart className='w-4 text-red-500 h-4 max-xl:w-10 max-xl:h-10' />
+																		<h1
+																			className='
+																		max-xl:text-3xl'
+																		>
+																			Удалить из избранного
+																		</h1>
+																	</Button>
+																)}
+															</div>
 														</div>
 													</>
 												)}

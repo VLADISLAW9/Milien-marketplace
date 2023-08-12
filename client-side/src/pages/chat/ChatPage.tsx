@@ -1,6 +1,8 @@
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
-import { Select } from 'antd'
+import { Button, Drawer, Select } from 'antd'
 import { FC, useEffect, useState } from 'react'
+import { AiOutlineHistory } from 'react-icons/ai'
+import { MdClose } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import Loader from '../../app/components/ui/spiner/Loader'
 import { useFetching } from '../../hooks/use-fetching'
@@ -28,6 +30,7 @@ const ChatPage: FC = () => {
 	const [messages, setMessages] = useState<IGetCurrentCorresponence[]>([])
 	const [companion, setCompanion] = useState<ICustomer>()
 	const [selectValue, setSelectValue] = useState('all')
+	const [showHistoryModal, setShowHistoryModal] = useState(false)
 
 	const [
 		fetchAllCorrespondences,
@@ -151,8 +154,95 @@ const ChatPage: FC = () => {
 	return (
 		<div>
 			<h1 className='mt-14 mb-5 text-3xl'>Сообщения</h1>
-			<div className='flex gap-10 mt-10'>
-				<div className='w-[40%] h-[100%]'>
+			<div className='flex max-xl:flex-col gap-10 mt-10'>
+				<div className='hidden max-xl:flex  max-xl:items-center'>
+					<Button
+						onClick={() => {
+							setShowHistoryModal(true)
+						}}
+						icon={<AiOutlineHistory />}
+						type='text'
+						className='text-2xl flex justify-center items-center gap-3 -translate-x-4'
+					>
+						История переписок
+					</Button>
+					<Drawer
+						placement={'left'}
+						open={showHistoryModal}
+						width={'100%'}
+						closeIcon={<MdClose className='w-16 text-stone-600 h-16' />}
+						onClose={() => {
+							setShowHistoryModal(false)
+						}}
+						title={<h1 className='text-3xl text-center'>История переписок</h1>}
+					>
+						<div className='h-[100%]'>
+							<div className='flex gap-3'>
+								<Select
+									onChange={(value: string) => {
+										setSelectValue(value)
+									}}
+									defaultValue='all'
+									className='w-[190px] max-xl:hidden'
+									options={[
+										{ value: 'all', label: 'Все сообщения' },
+										{ value: 'unread	', label: 'Непрочитанные' },
+									]}
+								/>
+							</div>
+							<ul className='flex flex-col mt-5'>
+								{isErrorAllCorrespondence ? (
+									<></>
+								) : isLoadingAllCorrespondences ? (
+									<div className='flex justify-center mt-32'>
+										<Loader />
+									</div>
+								) : searchResults.length > 0 && searchValue.length > 0 ? (
+									searchResults.map(chat => (
+										<ChatItem
+											params={params}
+											setCompanion={setCompanion}
+											closeConnection={closeConnection}
+											content={chat}
+											key={chat.customer.id}
+										/>
+									))
+								) : allChats.length > 0 && searchValue.length === 0 ? (
+									<>
+										{allChats
+											.filter(
+												selectValue !== 'all'
+													? chat => chat.isRead === false
+													: chat => chat
+											)
+											.map(chat => (
+												<div
+													onClick={() => {
+														setShowHistoryModal(false)
+													}}
+												>
+													<ChatItem
+														params={params}
+														setCompanion={setCompanion}
+														closeConnection={closeConnection}
+														content={chat}
+														key={chat.customer.id}
+													/>
+												</div>
+											))}
+									</>
+								) : (
+									<div className='flex justify-center items-center mt-32'>
+										<h1 className='text-lg text-stone-500'>
+											У вас нет историй переписок
+										</h1>
+									</div>
+								)}
+							</ul>
+						</div>
+					</Drawer>
+				</div>
+				<div className='w-[40%] max-xl:hidden h-[100%]'>
 					<div className='flex gap-3'>
 						<Select
 							onChange={(value: string) => {
@@ -165,13 +255,6 @@ const ChatPage: FC = () => {
 								{ value: 'unread	', label: 'Непрочитанные' },
 							]}
 						/>
-						{/* <Input
-							onChange={(e: any) => {
-								setSearchValue(e.target.value)
-							}}
-							placeholder='Поиск по сообщениям'
-							prefix={<SearchOutlined className='pr-1' />}
-						/> */}
 					</div>
 					<ul className='flex flex-col mt-5'>
 						{isErrorAllCorrespondence ? (
