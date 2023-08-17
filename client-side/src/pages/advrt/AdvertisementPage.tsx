@@ -15,7 +15,7 @@ import { useTypedSelector } from '../../hooks/use-typed-selector'
 import {
 	useGetAdvrtByCategoryQuery,
 	useGetAdvrtByIdQuery,
-	useGetAdvrtsByCustomerIdQuery,
+	useGetAdvrtsByCustomerIdQuery
 } from '../../services/AdvrtsService'
 import CreateAdvrtService from '../../services/CreatorAdvrtService'
 import { useGetCustomerByIdQuery } from '../../services/CustomerService'
@@ -253,9 +253,8 @@ const AdvertisementPage = () => {
 													</>
 												) : (
 													<>
-														<button
-															disabled={favLoading}
-															onClick={handleAddToFav}
+														<Link
+															to={`/chat/${advrt.customerId}`}
 															className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex h-[100px] w-[500px] justify-center  items-center text-3xl text-white'
 														>
 															{!favLoading && (
@@ -263,7 +262,7 @@ const AdvertisementPage = () => {
 																	<h1>Написать продавцу</h1>
 																</>
 															)}
-														</button>
+														</Link>
 
 														<ShowContacts
 															isLoading={isLoadingCustomer}
