@@ -5,6 +5,7 @@ import StepConnector, {
 import { StepIconProps } from '@mui/material/StepIcon'
 import { styled } from '@mui/material/styles'
 import { Dispatch, unwrapResult } from '@reduxjs/toolkit'
+import axios from 'axios'
 import { FC, useState } from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
 import { IoMdKeypad } from 'react-icons/io'
@@ -147,6 +148,24 @@ const SingInStepper: FC = () => {
 		) {
 			try {
 				setIsLoading(true)
+				const sendMessageOnPhone = await axios
+					.post(
+						'https://lite-mobileid.beeline.ru/lite-auth',
+						{
+							client_id: 'Million_LiteApi',
+							secret: 'FZhHWD44vOdO3nUS',
+							response_type: 'polling',
+							msisdn: '79994956698',
+						},
+						{
+							headers: {
+								Authorization: 'Million_LiteApi:FZhHWD44vOdO3nUS',
+							},
+						}
+					)
+					.then(() => {
+						console.log('Код отправлен')
+					})
 				const result = await dispatch(
 					checkPhone(reformatPhoneNumber(userData.phoneNumber))
 				)
@@ -161,7 +180,7 @@ const SingInStepper: FC = () => {
 					)
 				}
 			} catch (error: any) {
-				console.error('Error checking login:', error)
+				console.log('Error checking login:', error)
 				setErrorMessage('Произошла ошибка при проверке логина')
 			} finally {
 				setIsLoading(false)
@@ -373,11 +392,21 @@ const SingInStepper: FC = () => {
 							className={
 								!isLoading
 									? 'flex gap-2 h-[50px] px-5 text-white w-[200px] justify-center  rounded-3xl hover:opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
+									: activeStep === 1
+									? 'flex gap-2 h-[50px] px-5 text-white w-[300px] justify-center  rounded-3xl opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 									: 'flex gap-2 h-[50px] px-5 text-white w-[200px] justify-center  rounded-3xl opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 							}
 						>
-							<h1>{isLoading ? 'Загрузка...' : 'Продолжить'}</h1>
-							{!isLoading && <MdCheck className='w-8 h-8' />}
+							<h1>
+								{isLoading
+									? 'Загрузка...'
+									: activeStep === 1
+									? 'Подтвердить телефон'
+									: 'Продолжить'}
+							</h1>
+							{!isLoading && activeStep !== 1 && (
+								<MdCheck className='w-8 h-8' />
+							)}
 						</button>
 					)}
 				</div>
