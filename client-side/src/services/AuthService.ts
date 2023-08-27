@@ -64,12 +64,8 @@ export default class AuthService {
 		})
 	}
 
-	static async checkPhone(
-		phoneNumber: string
-	): Promise<AxiosResponse<boolean>> {
-		return $api.get('/api/Auth/check_phone', {
-			params: { phoneNumber: phoneNumber },
-		})
+	static async checkPhone(phoneNumber: string): Promise<AxiosResponse<any>> {
+		return $api.post('/api/Auth/check_phone', {phoneNumber: phoneNumber})
 	}
 
 	static async checkEmail(email: string): Promise<AxiosResponse<boolean>> {
@@ -78,9 +74,5 @@ export default class AuthService {
 
 	static async logout(): Promise<void> {
 		return $api.post('/api/Token/revoke')
-	}
-
-	static async sendMessageToMobilePhone(): Promise<void>{
-		return $api.post('/Ad/Test')
 	}
 }

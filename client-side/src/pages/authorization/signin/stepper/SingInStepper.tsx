@@ -5,9 +5,8 @@ import StepConnector, {
 import { StepIconProps } from '@mui/material/StepIcon'
 import { styled } from '@mui/material/styles'
 import { Dispatch, unwrapResult } from '@reduxjs/toolkit'
-import axios from 'axios'
 import { FC, useState } from 'react'
-import { AiOutlineMail } from 'react-icons/ai'
+import { AiOutlinePhone } from 'react-icons/ai'
 import { IoMdKeypad } from 'react-icons/io'
 import { MdCheck, MdOutlineNavigateNext } from 'react-icons/md'
 import { RiUserSettingsLine } from 'react-icons/ri'
@@ -20,7 +19,6 @@ import {
 	checkCodeEmail,
 	checkEmail,
 	checkLogin,
-	checkPhone,
 	sendCodeToEmail,
 } from '../../../../store/slices/userSlice'
 import { reformatPhoneNumber } from '../../../../utils/reformatPhoneNumber'
@@ -105,7 +103,7 @@ const SingInStepper: FC = () => {
 		const icons: { [index: string]: React.ReactElement } = {
 			1: <IoMdKeypad />,
 			2: <RiUserSettingsLine />,
-			3: <AiOutlineMail />,
+			3: <AiOutlinePhone />,
 		}
 
 		return (
@@ -118,7 +116,7 @@ const SingInStepper: FC = () => {
 		)
 	}
 
-	const steps = ['Логин и пароль', 'Личные данные', 'E-mail']
+	const steps = ['Логин и пароль', 'Личные данные', 'Подтверждение телефона']
 
 	const dispatch = useDispatch<Dispatch<any>>()
 	const [activeStep, setActiveStep] = useState(0)
@@ -149,13 +147,14 @@ const SingInStepper: FC = () => {
 		) {
 			try {
 				setIsLoading(true)
-				const sendMessage = await AuthService.sendMessageToMobilePhone()
-				const result = await dispatch(
-					checkPhone(reformatPhoneNumber(userData.phoneNumber))
-				)
-				const unwrappedResult = unwrapResult<any>(result)
 
-				if (unwrappedResult) {
+				const response = await AuthService.checkPhone(
+					'7' + reformatPhoneNumber(userData.phoneNumber).slice(1)
+				)
+
+				console.log(response.data)
+
+				if (!!response) {
 					setActiveStep(prevActiveStep => prevActiveStep + 1)
 					setErrorMessage(null)
 				} else {
@@ -377,11 +376,11 @@ const SingInStepper: FC = () => {
 								!isLoading
 									? 'flex gap-2 h-[50px] px-5 text-white w-[200px] justify-center  rounded-3xl hover:opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 									: activeStep === 1
-									? 'flex gap-2 h-[50px] px-5 text-white w-[300px] justify-center  rounded-3xl opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
+									? 'flex gap-2 h-[50px] px-5 text-white w-[200px] justify-center  rounded-3xl opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 									: 'flex gap-2 h-[50px] px-5 text-white w-[200px] justify-center  rounded-3xl opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 							}
 						>
-							<h1>
+							<h1 className={activeStep === 1 ? 'text-[14px]' : ''}>
 								{isLoading
 									? 'Загрузка...'
 									: activeStep === 1
