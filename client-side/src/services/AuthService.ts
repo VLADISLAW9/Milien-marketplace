@@ -79,4 +79,8 @@ export default class AuthService {
 	static async logout(): Promise<void> {
 		return $api.post('/api/Token/revoke')
 	}
+
+	static async sendMessageToMobilePhone(): Promise<void>{
+		return $api.post('/Ad/Test')
+	}
 }

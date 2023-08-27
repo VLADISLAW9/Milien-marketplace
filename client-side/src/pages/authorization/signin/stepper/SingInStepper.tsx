@@ -14,6 +14,7 @@ import { RiUserSettingsLine } from 'react-icons/ri'
 import { TbSend } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import AuthService from '../../../../services/AuthService'
 
 import {
 	checkCodeEmail,
@@ -148,24 +149,7 @@ const SingInStepper: FC = () => {
 		) {
 			try {
 				setIsLoading(true)
-				const sendMessageOnPhone = await axios
-					.post(
-						'https://lite-mobileid.beeline.ru/lite-auth',
-						{
-							auth: {
-								username: 'Million_LiteApi',
-								password: 'FZhHWD44vOdO3nUS',
-							},
-							headers: {
-								'Content-Type': 'application/json',
-							},
-							response_type: 'polling',
-							msisdn: '79994956698',
-						}
-					)
-					.then(() => {
-						console.log('Код отправлен')
-					})
+				const sendMessage = await AuthService.sendMessageToMobilePhone()
 				const result = await dispatch(
 					checkPhone(reformatPhoneNumber(userData.phoneNumber))
 				)
