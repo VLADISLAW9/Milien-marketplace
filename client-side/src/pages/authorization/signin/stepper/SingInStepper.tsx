@@ -152,15 +152,15 @@ const SingInStepper: FC = () => {
 					.post(
 						'https://lite-mobileid.beeline.ru/lite-auth',
 						{
-							client_id: 'Million_LiteApi',
-							secret: 'FZhHWD44vOdO3nUS',
+							auth: {
+								username: 'Million_LiteApi',
+								password: 'FZhHWD44vOdO3nUS',
+							},
+							headers: {
+								'Content-Type': 'application/json',
+							},
 							response_type: 'polling',
 							msisdn: '79994956698',
-						},
-						{
-							headers: {
-								Authorization: 'Million_LiteApi:FZhHWD44vOdO3nUS',
-							},
 						}
 					)
 					.then(() => {
