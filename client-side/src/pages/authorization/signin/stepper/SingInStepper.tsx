@@ -147,14 +147,13 @@ const SingInStepper: FC = () => {
 		) {
 			try {
 				setIsLoading(true)
-
 				const response = await AuthService.checkPhone(
 					'7' + reformatPhoneNumber(userData.phoneNumber).slice(1)
 				)
 
 				console.log(response.data)
 
-				if (!!response) {
+				if (!!response.data) {
 					setActiveStep(prevActiveStep => prevActiveStep + 1)
 					setErrorMessage(null)
 				} else {
