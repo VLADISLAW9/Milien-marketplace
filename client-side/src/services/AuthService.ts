@@ -65,8 +65,8 @@ export default class AuthService {
 	}
 
 	static async checkPhone(phoneNumber: string): Promise<AxiosResponse<any>> {
-		return $api.post('/api/Auth/check_phone', {phoneNumber}, {
-			headers: { 'Content-Type': 'aplication/json' },
+		return $api.get('/api/Auth/check_phone', {
+			params: { phoneNumber: phoneNumber },
 		})
 	}
 
