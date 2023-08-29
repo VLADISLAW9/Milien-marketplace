@@ -11,7 +11,6 @@ export interface LoginPayload {
 export interface SignInPayload {
 	login: string
 	pass: string
-	email: string
 	firstName: string
 	lastName: string
 	phoneNumber: string
@@ -28,7 +27,6 @@ export const sendCodeToEmail = createAsyncThunk(
 		const response = await AuthService.registration(
 			payload.login,
 			payload.pass,
-			payload.email,
 			payload.firstName,
 			payload.lastName,
 			payload.phoneNumber

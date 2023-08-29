@@ -30,7 +30,6 @@ export default class AuthService {
 	static async registration(
 		login: string,
 		pass: string,
-		email: string,
 		firstName: string,
 		lastName: string,
 		phoneNumber: string
@@ -38,7 +37,6 @@ export default class AuthService {
 		return $api.post('/api/Auth/register', {
 			login,
 			pass,
-			email,
 			firstName,
 			lastName,
 			phoneNumber,

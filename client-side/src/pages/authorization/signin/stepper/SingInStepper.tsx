@@ -5,6 +5,7 @@ import StepConnector, {
 import { StepIconProps } from '@mui/material/StepIcon'
 import { styled } from '@mui/material/styles'
 import { Dispatch, unwrapResult } from '@reduxjs/toolkit'
+import { message } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { AiOutlinePhone } from 'react-icons/ai'
 import { IoMdKeypad } from 'react-icons/io'
@@ -119,6 +120,7 @@ const SingInStepper: FC = () => {
 
 	const dispatch = useDispatch<Dispatch<any>>()
 	const [activeStep, setActiveStep] = useState(0)
+	const [messageApi, contextHolder] = message.useMessage()
 	const [isLoading, setIsLoading] = useState(false)
 	const [isSendCodeToEmail, setIsSendCodeToEmail] = useState(false)
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -213,7 +215,6 @@ const SingInStepper: FC = () => {
 							sendCodeToEmail({
 								login: userData.login.replace(/\s/g, ''),
 								pass: userData.pass.replace(/\s/g, ''),
-								email: userData.email.replace(/\s/g, ''),
 								firstName: userData.firstName,
 								lastName: userData.lastName,
 								phoneNumber: reformatPhoneNumber(userData.phoneNumber),
@@ -290,6 +291,33 @@ const SingInStepper: FC = () => {
 			try {
 				const response = await AuthService.cheakAuthMobilePhone(requestId)
 				console.log(response.data.result_type, 'is result type')
+				if (response.data.result_type === 1) {
+					try {
+						await dispatch(
+							sendCodeToEmail({
+								login: userData.login.replace(/\s/g, ''),
+								pass: userData.pass.replace(/\s/g, ''),
+								firstName: userData.firstName,
+								lastName: userData.lastName,
+								phoneNumber: reformatPhoneNumber(userData.phoneNumber),
+							})
+						)
+						window.location.href = '/login'
+					} catch (error) {
+						console.log(error)
+					}
+				} else {
+					messageApi.open({
+						type: 'error',
+						content:
+							response.data.result_type === 2
+								? 'Вы отклонили аутентификатор, попробуйте еще раз'
+								: response.data.result_type === 3
+								? 'Вы отклонили аутентификатор, попробуйте еще раз'
+								: 'Произошла ошибка на сервере, пожалуйста повторите позже',
+						duration: 10,
+					})
+				}
 			} catch (error: any) {
 				console.log(error)
 			}
