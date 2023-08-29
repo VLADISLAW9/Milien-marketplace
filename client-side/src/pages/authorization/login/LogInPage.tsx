@@ -89,6 +89,40 @@ const LogInPage: FC = () => {
 		}
 	}
 
+	const handleCheckEmailCode = async () => {
+		try {
+			setLoading(true)
+			const response = await AuthService.checkEmailCode(loginValue, emailCode)
+			setIsAcceptEmail(true)
+			handleCheckEmailAccept()
+		} catch (e: any) {
+			setError('Неверный код с почты')
+		} finally {
+		}
+	}
+
+	const handleCheckEmailAccept = async () => {
+		try {
+			setLoading(true)
+			const response = await AuthService.checkAcceptEmail(loginValue)
+			console.log(response.data, 'is accept')
+			if (response.data === true) {
+				setIsAcceptEmail(true)
+				setError('')
+				handleLogin()
+			} else {
+				setIsAcceptEmail(false)
+				handleSendEmailCode()
+				setError('Пожалуйста подтвердите вашу почту!')
+			}
+		} catch (e: any) {
+			setIsAcceptEmail(null)
+			setError(e.response.data)
+		} finally {
+			setLoading(false)
+		}
+	}
+
 	return (
 		<div className='p-10 shadow-2xl shadow-stone-300 bg-white rounded-xl'>
 			<Link to='/' className='flex justify-center items-center'>
@@ -101,7 +135,7 @@ const LogInPage: FC = () => {
 					</div>
 					<input
 						className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
-						placeholder='Логин или телефон'
+						placeholder='Логин'
 						value={loginValue}
 						required
 						onChange={e => {
@@ -179,7 +213,7 @@ const LogInPage: FC = () => {
 					</>
 				)}
 				<button
-					onClick={handleLogin}
+					onClick={isSendCode ? handleCheckEmailCode : handleCheckEmailAccept}
 					disabled={!loginValue || !password || loading}
 					className={
 						!loginValue || !password || loading
