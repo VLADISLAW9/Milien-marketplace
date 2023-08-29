@@ -5,12 +5,11 @@ import StepConnector, {
 import { StepIconProps } from '@mui/material/StepIcon'
 import { styled } from '@mui/material/styles'
 import { Dispatch, unwrapResult } from '@reduxjs/toolkit'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { AiOutlinePhone } from 'react-icons/ai'
 import { IoMdKeypad } from 'react-icons/io'
-import { MdCheck, MdOutlineNavigateNext } from 'react-icons/md'
+import { MdOutlineNavigateNext } from 'react-icons/md'
 import { RiUserSettingsLine } from 'react-icons/ri'
-import { TbSend } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import AuthService from '../../../../services/AuthService'
@@ -119,10 +118,13 @@ const SingInStepper: FC = () => {
 	const steps = ['Логин и пароль', 'Личные данные', 'Подтверждение телефона']
 
 	const dispatch = useDispatch<Dispatch<any>>()
-	const [activeStep, setActiveStep] = useState(0)
+	const [activeStep, setActiveStep] = useState(2)
 	const [isLoading, setIsLoading] = useState(false)
 	const [isSendCodeToEmail, setIsSendCodeToEmail] = useState(false)
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+	const [requestId, setRequestId] = useState<string | null>(null)
+	const [checkMobilePhoneInterval, setCheckMobilePhoneInterval] =
+		useState<NodeJS.Timeout | null>(null)
 
 	const navigate = useNavigate()
 
@@ -153,7 +155,9 @@ const SingInStepper: FC = () => {
 
 				console.log(response.data)
 
-				if (!!response.data) {
+				setRequestId(response.data.request_id)
+
+				if (response.data.request_id) {
 					setActiveStep(prevActiveStep => prevActiveStep + 1)
 					setErrorMessage(null)
 				} else {
@@ -163,7 +167,7 @@ const SingInStepper: FC = () => {
 				}
 			} catch (error: any) {
 				console.log('Error checking login:', error)
-				setErrorMessage('Произошла ошибка при проверке логина')
+				setErrorMessage(error.data)
 			} finally {
 				setIsLoading(false)
 			}
@@ -281,6 +285,30 @@ const SingInStepper: FC = () => {
 		}
 	}
 
+	const checkAuthMobilePhone = async () => {
+		if (requestId) {
+			try {
+				const response = await AuthService.cheakAuthMobilePhone(requestId)
+				console.log(response.data.result_type, 'is result type')
+			} catch (error: any) {
+				console.log(error)
+			}
+		}
+	}
+
+	useEffect(() => {
+		if (activeStep === 2) {
+			const intervalId = setInterval(() => {
+				checkAuthMobilePhone()
+			}, 5000) // Interval in milliseconds (5 seconds)
+
+			// Clear the interval when the component unmounts
+			return () => {
+				clearInterval(intervalId)
+			}
+		}
+	}, [activeStep])
+
 	const handleBack = () => {
 		setActiveStep(prevActiveStep => prevActiveStep - 1)
 	}
@@ -337,11 +365,7 @@ const SingInStepper: FC = () => {
 					{activeStep === steps.length - 1 ? (
 						<button
 							onClick={() => {
-								if (!isSendCodeToEmail) {
-									handleNextEmail()
-								} else {
-									acceptCodeFromEmail()
-								}
+								checkAuthMobilePhone()
 							}}
 							disabled={isLoading}
 							className={
@@ -350,16 +374,7 @@ const SingInStepper: FC = () => {
 									: 'flex gap-2 h-[50px] px-5 text-white rounded-3xl opacity-80 transition-opacity w-[200px] justify-center py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 							}
 						>
-							<h1>
-								{isLoading
-									? 'Загрузка...'
-									: isSendCodeToEmail
-									? 'Подтвердить код'
-									: 'Отправить код'}
-							</h1>
-							{!isLoading && !isSendCodeToEmail && (
-								<TbSend className='w-6 h-6' />
-							)}
+							<h1>{isLoading ? 'Загрузка...' : 'Отправить код'}</h1>
 						</button>
 					) : (
 						<button
@@ -373,22 +388,19 @@ const SingInStepper: FC = () => {
 							}}
 							className={
 								!isLoading
-									? 'flex gap-2 h-[50px] px-5 text-white w-[200px] justify-center  rounded-3xl hover:opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
+									? 'flex gap-2 h-[50px] px-5 text-white w-[214px] justify-center  rounded-3xl hover:opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 									: activeStep === 1
 									? 'flex gap-2 h-[50px] px-5 text-white w-[200px] justify-center  rounded-3xl opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 									: 'flex gap-2 h-[50px] px-5 text-white w-[200px] justify-center  rounded-3xl opacity-80 transition-opacity  py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 							}
 						>
-							<h1 className={activeStep === 1 ? 'text-[14px]' : ''}>
+							<h1>
 								{isLoading
 									? 'Загрузка...'
 									: activeStep === 1
 									? 'Подтвердить телефон'
 									: 'Продолжить'}
 							</h1>
-							{!isLoading && activeStep !== 1 && (
-								<MdCheck className='w-8 h-8' />
-							)}
 						</button>
 					)}
 				</div>

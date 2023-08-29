@@ -135,7 +135,7 @@ const LogInPage: FC = () => {
 					</div>
 					<input
 						className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
-						placeholder='Логин'
+						placeholder='Логин или телефон'
 						value={loginValue}
 						required
 						onChange={e => {

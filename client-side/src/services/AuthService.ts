@@ -77,4 +77,12 @@ export default class AuthService {
 	static async logout(): Promise<void> {
 		return $api.post('/api/Token/revoke')
 	}
+
+	static async cheakAuthMobilePhone(
+		requestId: string
+	): Promise<AxiosResponse<any>> {
+		return $api.get('/api/Auth/check_authMobilePhone', {
+			params: { requestId: requestId },
+		})
+	}
 }
