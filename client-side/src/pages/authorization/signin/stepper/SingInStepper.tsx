@@ -118,7 +118,7 @@ const SingInStepper: FC = () => {
 	const steps = ['Логин и пароль', 'Личные данные', 'Подтверждение телефона']
 
 	const dispatch = useDispatch<Dispatch<any>>()
-	const [activeStep, setActiveStep] = useState(2)
+	const [activeStep, setActiveStep] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
 	const [isSendCodeToEmail, setIsSendCodeToEmail] = useState(false)
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
