@@ -23,7 +23,6 @@ export default class UserService {
 		aboutMe: string | null,
 		firstName: string,
 		lastName: string,
-		email: string,
 		phoneNumber: string,
 		avatar: File | string
 	): Promise<AxiosResponse> {
@@ -33,7 +32,6 @@ export default class UserService {
 		formData.append('aboutMe', aboutMe ? aboutMe : '')
 		formData.append('firstName', firstName)
 		formData.append('lastName', lastName)
-		formData.append('email', email)
 		formData.append('phoneNumber', phoneNumber)
 		formData.append(`avatar`, avatar ? avatar : '')
 

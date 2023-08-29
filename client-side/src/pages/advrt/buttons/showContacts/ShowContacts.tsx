@@ -3,7 +3,6 @@ import { FC, useState } from 'react'
 import ErrorMessage from '../../../../app/components/ui/error/ErrorMessage'
 import Loader from '../../../../app/components/ui/spiner/Loader'
 import { ICustomer } from '../../../../types/ICustomer'
-import Email from './Email'
 import Tel from './Tel'
 
 interface IShowContactsProps {
@@ -59,7 +58,6 @@ const ShowContacts: FC<IShowContactsProps> = ({
 								</div>
 								<div className='mt-10 px-10 py-5 rounded-md bg-slate-100 '>
 									<Tel customer={customer} />
-									<Email customer={customer} />
 								</div>
 							</>
 						) : null}

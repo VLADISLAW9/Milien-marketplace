@@ -5,6 +5,5 @@ export interface ICustomer {
 	firstName: string
 	lastName: string
 	phoneNumber: string
-	email: string
 	avatar: string
 }

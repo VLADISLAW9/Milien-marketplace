@@ -45,7 +45,6 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 			if (
 				newUsersData.firstName &&
 				newUsersData.lastName &&
-				user.email &&
 				user.phoneNumber &&
 				user.login &&
 				user.id
@@ -59,7 +58,6 @@ const EditModal: FC<IEditModal> = ({ open, handleCloseEdit }) => {
 							newUsersData.aboutMe,
 							newUsersData.firstName,
 							newUsersData.lastName,
-							user.email,
 							user.phoneNumber,
 							newAvatarFile
 						)

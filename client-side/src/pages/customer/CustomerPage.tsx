@@ -1,7 +1,6 @@
 import { Divider } from 'antd'
 import { useEffect, useState } from 'react'
 import { BsTelephoneFill } from 'react-icons/bs'
-import { MdEmail } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
 import AvatarItem from '../../app/components/ui/avatar/AvatarItem'
@@ -124,10 +123,6 @@ const CustomerPage = () => {
 								</>
 							)}
 
-							<div className='mt-3 text-stone-500 flex items-center'>
-								<MdEmail className='mr-2 w-5 h-5 ' />
-								<p>{customer.email}</p>
-							</div>
 							<div className='mt-10'>
 								{isAuth && !isLoadingCheckedSubOnUser && (
 									<>

@@ -61,6 +61,7 @@ function App() {
 					localStorage.setItem('token', response.data.accessToken)
 					localStorage.setItem('refresh', response.data.refreshToken)
 					const userDate = await UserService.getUserData()
+					console.log(userDate)
 					setUserData(userDate.data.user)
 					setUser(userDate.data.user)
 					if (userDate.data.userAds) {
