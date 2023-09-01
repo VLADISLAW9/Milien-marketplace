@@ -125,6 +125,8 @@ const SingInStepper: FC = () => {
 	const [isSendCodeToEmail, setIsSendCodeToEmail] = useState(false)
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 	const [requestId, setRequestId] = useState<string | null>(null)
+	const [isResendButtonDisabled, setResendButtonDisabled] = useState(false)
+	const [resendTimer, setResendTimer] = useState(0)
 	const [checkMobilePhoneInterval, setCheckMobilePhoneInterval] =
 		useState<NodeJS.Timeout | null>(null)
 
@@ -155,12 +157,27 @@ const SingInStepper: FC = () => {
 					'7' + reformatPhoneNumber(userData.phoneNumber).slice(1)
 				)
 
-				console.log(response.data)
-
 				setRequestId(response.data.request_id)
 
 				if (response.data.request_id) {
-					setActiveStep(prevActiveStep => prevActiveStep + 1)
+					if (activeStep !== 2) {
+						setActiveStep(prevActiveStep => prevActiveStep + 1)
+					}
+
+					// Блокируем кнопку и начинаем отсчет времени
+					setResendButtonDisabled(true)
+					setResendTimer(90) // 90 секунд
+
+					const timerInterval = setInterval(() => {
+						setResendTimer(prevTimer => prevTimer - 1)
+					}, 1000)
+
+					// Через 90 секунд разблокируем кнопку и остановим таймер
+					setTimeout(() => {
+						setResendButtonDisabled(false)
+						clearInterval(timerInterval)
+					}, 90000) // 90 секунд
+
 					setErrorMessage(null)
 				} else {
 					setErrorMessage(
@@ -393,16 +410,22 @@ const SingInStepper: FC = () => {
 					{activeStep === steps.length - 1 ? (
 						<button
 							onClick={() => {
-								checkAuthMobilePhone()
+								handleNextUserData()
 							}}
-							disabled={isLoading}
+							disabled={isLoading || isResendButtonDisabled}
 							className={
-								!isLoading
+								!isLoading && !isResendButtonDisabled
 									? 'flex gap-2 h-[50px] px-5 text-white rounded-3xl hover:opacity-80 transition-opacity w-[200px] justify-center py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 									: 'flex gap-2 h-[50px] px-5 text-white rounded-3xl opacity-80 transition-opacity w-[200px] justify-center py-[25px] bg items-center bg-gradient-to-r from-[#166430] via-[#168430] to-[#FEED00]'
 							}
 						>
-							<h1>{isLoading ? 'Загрузка...' : 'Отправить код'}</h1>
+							<h1>
+								{isLoading
+									? 'Загрузка...'
+									: isResendButtonDisabled
+									? `Отправить код еще раз через ${resendTimer} секунд`
+									: 'Отправить код'}
+							</h1>
 						</button>
 					) : (
 						<button

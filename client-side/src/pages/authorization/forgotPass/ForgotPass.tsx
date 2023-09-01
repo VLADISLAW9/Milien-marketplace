@@ -1,10 +1,14 @@
+import { message } from 'antd'
 import axios from 'axios'
-import { FC, useState } from 'react'
-import { BiCode, BiMailSend } from 'react-icons/bi'
+import { FC, useEffect, useState } from 'react'
+import { AiOutlineMail } from 'react-icons/ai'
+import { BiPhoneCall } from 'react-icons/bi'
 import { BsArrowDown, BsPass } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 import { useFetching } from '../../../hooks/use-fetching'
 import AuthService from '../../../services/AuthService'
+import { formatPhoneNumber } from '../../../utils/formatPhoneNumber'
+import { reformatPhoneNumber } from '../../../utils/reformatPhoneNumber'
 
 interface LoginPayload {
 	login: string
@@ -12,14 +16,18 @@ interface LoginPayload {
 }
 
 const LogInPage: FC = () => {
-	const [emailValue, setEmailValue] = useState('')
+	const [phoneValue, setPhoneValue] = useState('')
+	const [messageApi, contextHolder] = message.useMessage()
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 	const [isPasswordValid, setPasswordValid] = useState(true)
 	const [isSendCode, setIsSend] = useState(false)
+	const [isResendButtonDisabled, setResendButtonDisabled] = useState(false)
+	const [resendTimer, setResendTimer] = useState(0)
 	const [isTrueCode, setIsTrueCode] = useState(false)
 	const [alertMessage, setAlertMessage] = useState<string | null>(null)
 	const [codeValue, setCodeValue] = useState('')
 	const [newPass, setNewPass] = useState('')
+	const [requestId, setRequestId] = useState(null)
 	const [repeatNewPass, setRepeatNewPass] = useState('')
 	const [resetPass, resetPassLoading, resetPassError] = useFetching(
 		async () => {
@@ -30,7 +38,7 @@ const LogInPage: FC = () => {
 					{
 						params: {
 							password: newPass,
-							email: emailValue,
+							email: reformatPhoneNumber(phoneValue),
 						},
 					}
 				)
@@ -40,81 +48,123 @@ const LogInPage: FC = () => {
 			}
 		}
 	)
-	const [checker, checkerLoading, checkerError] = useFetching(async () => {
-		if (codeValue.length > 0) {
-			const checkCode = await AuthService.checkCode(emailValue, codeValue)
-			if (checkCode) {
-				setIsTrueCode(true)
-			} else {
-				setErrorMessage('Неверный код подтверждения!')
-			}
-		}
-	})
 	const [sendler, sendlerLoading, sendlerError] = useFetching(async () => {
-		const sendCode = await axios.put(
+		const sendCode: any = await axios.put(
 			'https://api.xn--h1agbg8e4a.xn--p1ai/api/Auth/reset_password',
 			null,
 			{
 				params: {
-					email: emailValue,
+					email: reformatPhoneNumber(phoneValue),
 				},
 			}
 		)
 		if (sendCode.status === 200) {
 			setIsSend(true)
-			setAlertMessage('На ваше письмо отправлен код, пожалуйста введите его')
+			console.log(sendCode.data)
+			setRequestId(sendCode.data.request_id)
+			setAlertMessage(
+				'На ваш телефон отправлено СМС с ссылкой, перейдите по ней для подтверждения номера'
+			)
+			// Блокируем кнопку и начинаем отсчет времени
+			setResendButtonDisabled(true)
+			setResendTimer(90) // 90 секунд
+
+			// Запускаем таймер для разблокировки кнопки
+			const timerInterval = setInterval(() => {
+				setResendTimer(prevTimer => prevTimer - 1)
+			}, 1000)
+
+			// Через 90 секунд разблокируем кнопку и остановим таймер
+			setTimeout(() => {
+				setResendButtonDisabled(false)
+				clearInterval(timerInterval)
+			}, 90000) // 90 секунд
 		}
 	})
+
+	const cheakPhoneAuth = async () => {
+		if (requestId) {
+			try {
+				const response = await AuthService.cheakAuthMobilePhone(requestId)
+				if (response.data.result_type === 1) {
+					setIsTrueCode(true)
+				}
+			} catch (error) {
+				console.log(error)
+			}
+		}
+	}
+
+	useEffect(() => {
+		if (isSendCode) {
+			const intervalId = setInterval(() => {
+				cheakPhoneAuth()
+			}, 5000) // Interval in milliseconds (5 seconds)
+
+			// Clear the interval when the component unmounts
+			return () => {
+				clearInterval(intervalId)
+			}
+		}
+	}, [isSendCode])
+
 	return (
 		<div className='p-10 shadow-2xl shadow-stone-300 bg-white rounded-xl'>
+			{contextHolder}
 			<Link to='/' className='flex justify-center items-center'>
 				<img src='/logo.png' className='w-[200px]' alt='логотип' />
 			</Link>
 			<div className='flex flex-col mt-10'>
 				{!isTrueCode && (
-					<div className='flex mb-4'>
-						<div className='px-3 py-3 bg-stone-200 rounded-l-md'>
-							<BiMailSend className='scale-[.8] w-8 h-8 text-stone-400' />
+					<>
+						<div className='flex mb-4'>
+							<div className='px-3 py-3 bg-stone-200 rounded-l-md'>
+								<BiPhoneCall className='scale-[.8] w-8 h-8 text-stone-400' />
+							</div>
+							<input
+								className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[320px]'
+								placeholder='Введите ваш номер телефона'
+								value={phoneValue}
+								onKeyPress={e => {
+									if (e.key === ' ') {
+										e.preventDefault()
+									}
+								}}
+								required
+								onChange={e => {
+									setPhoneValue(formatPhoneNumber(e.target.value))
+								}}
+								type='text'
+							/>
 						</div>
-						<input
-							className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[320px]'
-							placeholder='Введите почту от вашего аккаунта'
-							value={emailValue}
-							onKeyPress={e => {
-								if (e.key === ' ') {
-									e.preventDefault()
-								}
-							}}
-							required
-							onChange={e => {
-								setEmailValue(e.target.value)
-							}}
-							type='text'
-						/>
-					</div>
-				)}
-
-				{isSendCode && !isTrueCode && (
-					<div className='flex mb-4'>
-						<div className='px-3 py-3 bg-stone-200 rounded-l-md'>
-							<BiCode className='scale-[.8] w-8 h-8 text-stone-400' />
-						</div>
-						<input
-							className='pl-4 pr-6 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[300px]'
-							placeholder='Введите код с почты'
-							value={codeValue}
-							onKeyPress={e => {
-								if (e.key === ' ') {
-									e.preventDefault()
-								}
-							}}
-							required
-							onChange={e => {
-								setCodeValue(e.target.value)
-							}}
-							type='text'
-						/>
-					</div>
+						{alertMessage && (
+							<div className='relative py-5'>
+								<div className='absolute opacity-60 rounded-full p-5 bg-stone-200 text-white top-2 right-20'>
+									<AiOutlineMail className='w-12 h-12' />
+								</div>
+								<h1 className='max-w-[360px] text-[15px] text-stone-700'>
+									{alertMessage}
+								</h1>
+								<div className='flex justify-center'>
+									<button
+										onClick={() => sendler()}
+										disabled={isResendButtonDisabled}
+										className={
+											isResendButtonDisabled
+												? 'text-white mt-10 bg-[#166434]/70 px-6 py-3 rounded-md'
+												: 'text-white mt-10 bg-[#166434] px-6 py-3 rounded-md'
+										}
+									>
+										{isResendButtonDisabled ? (
+											<>Отправить код еще раз через {resendTimer} секунд</>
+										) : (
+											<>Отправить код еще раз</>
+										)}
+									</button>
+								</div>
+							</div>
+						)}
+					</>
 				)}
 
 				{isTrueCode && (
@@ -171,29 +221,14 @@ const LogInPage: FC = () => {
 				{!isSendCode && (
 					<button
 						onClick={() => sendler()}
-						disabled={emailValue.length === 0 || sendlerLoading}
+						disabled={phoneValue.length === 0 || sendlerLoading}
 						className={
-							emailValue.length > 0
+							phoneValue.length > 0
 								? 'text-white mt-10 bg-[#166434] px-6 py-3 rounded-md'
 								: 'text-white mt-10 bg-[#166434]/70 px-6 py-3 rounded-md'
 						}
 					>
-						{sendlerLoading ? <>Загрузка...</> : <>Отправить код</>}
-					</button>
-				)}
-				{isSendCode && !isTrueCode && (
-					<button
-						onClick={() => {
-							checker()
-						}}
-						disabled={codeValue.length === 0 || checkerLoading}
-						className={
-							codeValue.length > 0
-								? 'text-white mt-10 bg-[#166434] px-6 py-3 rounded-md'
-								: 'text-white mt-10 bg-[#166434]/70 px-6 py-3 rounded-md'
-						}
-					>
-						{checkerLoading ? <>Загрузка...</> : <>Подтвердить код</>}
+						{sendlerLoading ? <>Загрузка...</> : <>Подтвердить номер</>}
 					</button>
 				)}
 				{isTrueCode && (
@@ -224,7 +259,7 @@ const LogInPage: FC = () => {
 							resetPassLoading
 						}
 						className={
-							emailValue.length > 0
+							phoneValue.length > 0
 								? 'text-white mt-10 bg-[#166434] px-6 py-3 rounded-md'
 								: 'text-white mt-10 bg-[#166434]/70 px-6 py-3 rounded-md'
 						}

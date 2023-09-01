@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import { AiOutlineHeart, AiOutlineSetting } from 'react-icons/ai'
 import { BiMessage } from 'react-icons/bi'
 import { BsTelephoneFill } from 'react-icons/bs'
-import { MdEmail } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import AdvertisementItem_grid from '../../app/components/ui/Advertisement/AdvertisementItem_grid'
@@ -136,8 +135,7 @@ const ProfilePage = () => {
 										{getSubscribersString(countSubscribers)}
 									</p>
 								</div>
-								<Link className='text-stone-500' 
-								to='/my-subscriptions'>
+								<Link className='text-stone-500' to='/my-subscriptions'>
 									<h1 className='text-xl font-medium '>{mySubs.length}</h1>
 									<p className='text-stone-500 '>
 										{' '}
@@ -168,15 +166,14 @@ const ProfilePage = () => {
 									<BsTelephoneFill className='mr-2 ' />
 									<p>{convertToPhoneNumber(userData.phoneNumber)}</p>
 								</div>
-								<div className='mt-3 text-stone-500 flex items-center'>
-									<MdEmail className='mr-2 w-5 h-5 ' />
-									<p>{userData.email}</p>
-								</div>
 							</div>
 							<Divider />
 
 							<EditModal open={open} handleCloseEdit={handleCloseEdit} />
-							<Link to='/chat' className='text-stone-500 hover:text-stone-700 transition-all'>
+							<Link
+								to='/chat'
+								className='text-stone-500 hover:text-stone-700 transition-all'
+							>
 								<button
 									onClick={handleOpenEdit}
 									className='flex  items-center gap-2 '
@@ -185,7 +182,10 @@ const ProfilePage = () => {
 									<h1>Мои сообщения</h1>
 								</button>
 							</Link>
-							<Link to='/favorite' className='text-stone-500 hover:text-stone-700 transition-all'>
+							<Link
+								to='/favorite'
+								className='text-stone-500 hover:text-stone-700 transition-all'
+							>
 								<button
 									onClick={handleOpenEdit}
 									className='flex mt-4 items-center gap-2 '

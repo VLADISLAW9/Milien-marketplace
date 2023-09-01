@@ -28,7 +28,7 @@ const MySubscribtions = () => {
 			) : isError ? (
 				<div></div>
 			) : subs.length > 0 ? (
-				<ul className='grid grid-cols-6 mt-12 max-xl:grid-cols-4'>
+				<ul className='grid grid-cols-6 gap-y-8	mt-12 max-xl:grid-cols-4'>
 					{subs.map(sub => (
 						<li>
 							<Link

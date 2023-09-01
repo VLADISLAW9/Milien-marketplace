@@ -15,7 +15,7 @@ const Tel: FC<ITelProps> = ({ customer }) => {
 			onClick={() =>
 				handleCopyToClipboard(convertToPhoneNumber(customer.phoneNumber))
 			}
-			className='flex hover:text-black cursor-pointer transition-all items-center text-stone-500 border-b py-5'
+			className='flex hover:text-black cursor-pointer transition-all items-center text-stone-500  py-5'
 		>
 			<BsTelephoneFill className='mr-4' />
 			<a

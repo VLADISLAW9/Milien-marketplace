@@ -15,7 +15,7 @@ import { useTypedSelector } from '../../hooks/use-typed-selector'
 import {
 	useGetAdvrtByCategoryQuery,
 	useGetAdvrtByIdQuery,
-	useGetAdvrtsByCustomerIdQuery
+	useGetAdvrtsByCustomerIdQuery,
 } from '../../services/AdvrtsService'
 import CreateAdvrtService from '../../services/CreatorAdvrtService'
 import { useGetCustomerByIdQuery } from '../../services/CustomerService'
@@ -254,14 +254,12 @@ const AdvertisementPage = () => {
 												) : (
 													<>
 														<Link
-															to={`/chat/${advrt.customerId}`}
+															to={
+																isAuth ? `/chat/${advrt.customerId}` : '/login'
+															}
 															className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex h-[100px] w-[500px] justify-center  items-center text-3xl text-white'
 														>
-															{!favLoading && (
-																<>
-																	<h1>Написать продавцу</h1>
-																</>
-															)}
+															<h1>Написать продавцу</h1>
 														</Link>
 
 														<ShowContacts
@@ -382,7 +380,7 @@ const AdvertisementPage = () => {
 									) : (
 										<>
 											<Link
-												to={`/chat/${customer?.id}`}
+												to={isAuth ? `/chat/${advrt.customerId}` : '/login'}
 												className='px-4 rounded-md  bg-[#EF7E1B] py-5 flex h-[68px] w-[320px] justify-center  items-center text-xl text-white'
 											>
 												<h1>Написать продавцу</h1>

@@ -31,39 +31,6 @@ const LogInPage: FC = () => {
 		useContext(UserContext)
 	const [isHide, setIsHide] = useState(true)
 
-	console.log(isAcceptEmail)
-
-	useEffect(() => {
-		let interval: NodeJS.Timeout | null = null
-
-		if (isSendCode && countdown > 0) {
-			interval = setInterval(() => {
-				setCountdown(prevCountdown => prevCountdown - 1)
-			}, 1000)
-		} else {
-			clearInterval(interval!)
-		}
-
-		return () => {
-			clearInterval(interval!)
-		}
-	}, [isSendCode, countdown])
-
-	const handleSendEmailCode = async () => {
-		try {
-			setLoadingCode(true)
-			const response = await AuthService.sendEmailCode(loginValue)
-			setIsSendCode(true)
-			setCountdown(30) // Reset the countdown to 30 seconds
-			console.log('код отправлен')
-		} catch (e: any) {
-			setError(e.response.data)
-			setIsSendCode(false)
-		} finally {
-			setLoadingCode(false)
-		}
-	} 
-
 	const handleLogin = async () => {
 		const payload: LoginPayload = {
 			login: loginValue,
@@ -89,39 +56,6 @@ const LogInPage: FC = () => {
 		}
 	}
 
-	const handleCheckEmailCode = async () => {
-		try {
-			setLoading(true)
-			const response = await AuthService.checkEmailCode(loginValue, emailCode)
-			setIsAcceptEmail(true)
-			handleCheckEmailAccept()
-		} catch (e: any) {
-			setError('Неверный код с почты')
-		} finally {
-		}
-	}
-
-	const handleCheckEmailAccept = async () => {
-		try {
-			setLoading(true)
-			const response = await AuthService.checkAcceptEmail(loginValue)
-			console.log(response.data, 'is accept')
-			if (response.data === true) {
-				setIsAcceptEmail(true)
-				setError('')
-				handleLogin()
-			} else {
-				setIsAcceptEmail(false)
-				handleSendEmailCode()
-				setError('Пожалуйста подтвердите вашу почту!')
-			}
-		} catch (e: any) {
-			setIsAcceptEmail(null)
-			setError(e.response.data)
-		} finally {
-			setLoading(false)
-		}
-	}
 
 	return (
 		<div className='p-10 shadow-2xl shadow-stone-300 bg-white rounded-xl'>
@@ -178,42 +112,9 @@ const LogInPage: FC = () => {
 				<div className='mt-5'>
 					{error ? <h1 className='text-red-600'>{error}</h1> : <></>}
 				</div>
-				{isAcceptEmail === false && (
-					<>
-						<div className='flex relative mt-5'>
-							<div className='px-3 py-3 bg-stone-200 rounded-l-md'>
-								<MdOutlineNumbers className='scale-[.6] w-8 h-8 text-stone-400' />
-							</div>
-							<input
-								className='pl-4 pr-6 py-3 placeholder:text-stone-400 bg-stone-100 rounded-r-md w-[250px]'
-								placeholder='Введите код с почты'
-								type={'text'}
-								value={emailCode}
-								onChange={e => {
-									setEmailCode(e.target.value)
-								}}
-							/>
-						</div>
-
-						<button
-							className={
-								countdown > 0
-									? 'text-sm mt-2 text-start text-stone-300'
-									: 'text-sm mt-2 text-start text-stone-500'
-							}
-							onClick={handleSendEmailCode}
-							disabled={countdown > 0} // Disable the button when already sent or countdown is running
-						>
-							{loadingCode
-								? 'Загрузка...'
-								: countdown > 0
-								? `Отправить код еще раз через ${countdown} сек`
-								: 'Отправить код еще раз'}
-						</button>
-					</>
-				)}
+				
 				<button
-					onClick={isSendCode ? handleCheckEmailCode : handleCheckEmailAccept}
+					onClick={handleLogin}
 					disabled={!loginValue || !password || loading}
 					className={
 						!loginValue || !password || loading
