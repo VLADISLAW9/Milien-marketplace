@@ -15,12 +15,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import AuthService from '../../../../services/AuthService'
 
-import {
-	checkCodeEmail,
-	checkEmail,
-	checkLogin,
-	sendCodeToEmail,
-} from '../../../../store/slices/userSlice'
+import { checkLogin, sendCodeToEmail } from '../../../../store/slices/userSlice'
 import { reformatPhoneNumber } from '../../../../utils/reformatPhoneNumber'
 import EmailAccept from './steps/EmailAccept'
 import LoginPass from './steps/LoginPass'
@@ -152,6 +147,7 @@ const SingInStepper: FC = () => {
 			userData.phoneNumber !== ''
 		) {
 			try {
+				setErrorMessage('')
 				setIsLoading(true)
 				const response = await AuthService.checkPhone(
 					'7' + reformatPhoneNumber(userData.phoneNumber).slice(1)
@@ -179,83 +175,14 @@ const SingInStepper: FC = () => {
 					}, 90000) // 90 секунд
 
 					setErrorMessage(null)
-				} else {
-					setErrorMessage(
-						'Пользователь с данным номером телефона уже существует'
-					)
 				}
 			} catch (error: any) {
-				console.log('Error checking login:', error)
-				setErrorMessage(error.data)
+				setErrorMessage(error.response.data)
 			} finally {
 				setIsLoading(false)
 			}
 		} else {
 			setErrorMessage('Пожалуйста заполните все поля')
-		}
-	}
-
-	const acceptCodeFromEmail = async () => {
-		setErrorMessage(null)
-		if (userData.emailCode !== '') {
-			try {
-				const resultCode = await dispatch(
-					checkCodeEmail({ login: userData.login, code: userData.emailCode })
-				)
-				const unwrappedResult = unwrapResult<any>(resultCode)
-
-				if (unwrappedResult) {
-					setErrorMessage(null)
-					window.location.href = '/login'
-				}
-			} catch (e: any) {
-				setErrorMessage('Неверный код подтверждения')
-			} finally {
-				setIsLoading(false)
-			}
-		} else {
-			setErrorMessage('Пожалуйста заполните поле для ввода кода')
-		}
-	}
-
-	const handleNextEmail = async () => {
-		setErrorMessage(null)
-		if (userData.email !== '') {
-			try {
-				setIsLoading(true)
-				const result = await dispatch(checkEmail(userData.email))
-				const unwrappedResult = unwrapResult<any>(result)
-				if (unwrappedResult) {
-					try {
-						setErrorMessage(null)
-						const resultEmail = await dispatch(
-							sendCodeToEmail({
-								login: userData.login.replace(/\s/g, ''),
-								pass: userData.pass.replace(/\s/g, ''),
-								firstName: userData.firstName,
-								lastName: userData.lastName,
-								phoneNumber: reformatPhoneNumber(userData.phoneNumber),
-							})
-						)
-						const unwrappedResultEmail = unwrapResult<any>(resultEmail)
-						if (unwrappedResultEmail) {
-							setIsSendCodeToEmail(true)
-						}
-					} catch (error: any) {
-						console.error('Error checking send code:', error)
-						setErrorMessage('Произошла ошибка при отправке письма почты')
-					}
-				} else {
-					setErrorMessage('Данная почта уже зарегистрирована, введите другую')
-				}
-			} catch (error: any) {
-				console.error('Error checking email:', error)
-				setErrorMessage('Произошла ошибка при проверке почты')
-			} finally {
-				setIsLoading(false)
-			}
-		} else {
-			setErrorMessage('Пожалуйста заполните поле')
 		}
 	}
 
@@ -306,6 +233,7 @@ const SingInStepper: FC = () => {
 	const checkAuthMobilePhone = async () => {
 		if (requestId) {
 			try {
+				setErrorMessage('')
 				const response = await AuthService.cheakAuthMobilePhone(requestId)
 				console.log(response.data.result_type, 'is result type')
 				if (response.data.result_type === 1) {
@@ -324,19 +252,16 @@ const SingInStepper: FC = () => {
 						console.log(error)
 					}
 				} else {
-					messageApi.open({
-						type: 'error',
-						content:
-							response.data.result_type === 2
-								? 'Вы отклонили аутентификатор, попробуйте еще раз'
-								: response.data.result_type === 3
-								? 'Вы отклонили аутентификатор, попробуйте еще раз'
-								: 'Произошла ошибка на сервере, пожалуйста повторите позже',
-						duration: 10,
-					})
+					setErrorMessage(
+						response.data.result_type === 2
+							? 'Вы отклонили аутентификатор, попробуйте еще раз'
+							: response.data.result_type === 3
+							? 'Вы отклонили аутентификатор, попробуйте еще раз'
+							: ''
+					)
 				}
 			} catch (error: any) {
-				console.log(error)
+				setErrorMessage(error.response.data)
 			}
 		}
 	}
