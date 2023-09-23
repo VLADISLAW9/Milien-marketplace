@@ -23,7 +23,7 @@ const MapComponent: FC<IMapProps> = ({ advrtData, setAdvrtData }) => {
 		setPlacemarkGeometry(coordinates)
 		setSelectedPlacemark(coordinates)
 
-		const geocodeUrl = `https://geocode-maps.yandex.ru/1.x/?format=json&apikey=db03ed69-9486-4e12-9082-f2086b3e9d93&geocode=${coordinates[1]},${coordinates[0]}`
+		const geocodeUrl = `https://geocode-maps.yandex.ru/1.x/?format=json&apikey=22184a1b-219d-4fc9-bd84-43d6d645c8fe&geocode=${coordinates[1]},${coordinates[0]}`
 
 		fetch(geocodeUrl)
 			.then(response => response.json())
@@ -69,7 +69,7 @@ const MapComponent: FC<IMapProps> = ({ advrtData, setAdvrtData }) => {
 	}
 
 	return (
-		<YMaps query={{ apikey: 'db03ed69-9486-4e12-9082-f2086b3e9d93' }}>
+		<YMaps query={{ apikey: '22184a1b-219d-4fc9-bd84-43d6d645c8fe' }}>
 			<div>
 				<Map
 					onClick={handleMapClick}

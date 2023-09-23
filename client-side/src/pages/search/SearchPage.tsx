@@ -26,29 +26,35 @@ const SearchPage: FC = () => {
 	const [currentCat, setCurrentCat] = useState<string | null>(null)
 	const [currentSub, setCurrentSub] = useState<string | null>(null)
 
-	console.log(totalPages, 'is total pages')
-
 	const [filtration, filtrationLoading, filtrationError] = useFetching(
 		async () => {
+			// Find the category object in the categories array that matches the currentCat or currentSub
+			const categoryObject = categories.find(
+				(cat) => cat.name === currentCat || cat.name === currentSub
+			);
+	
 			const filter = await axios.get(
 				'https://api.xn--h1agbg8e4a.xn--p1ai/Ad/Filtration',
 				{
 					params: {
+						// Set the title parameter to null if categoryObject is found, else use params.param
+						tittle: categoryObject ? null : params.param,
 						limit: limit,
 						page: page,
-						category: currentCat,
-						subcategory: currentSub,
-						town: townValue,
-						min: minPrice,
-						max: maxPrice,
+						category: categoryObject ? currentCat : params.param,
+						subcategory:categoryObject ? currentSub : params.param ,
+						town: townValue || null,
+						min: minPrice || null,
+						max: maxPrice || null,
 					},
 				}
-			)
-			setFoundAds([...filter.data])
-			const totalCount = filter.headers['count']
-			setTotalPages(getPageCount(totalCount, limit))
+			);
+	
+			setFoundAds([...filter.data]);
+			const totalCount = filter.headers['count'];
+			setTotalPages(getPageCount(totalCount, limit));
 		}
-	)
+	);
 	const [searchingAds, searchingLoading, searchingError] = useFetching(
 		async () => {
 			const response = await axios.get(
