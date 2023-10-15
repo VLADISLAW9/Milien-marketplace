@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import $api from '../store/api/auth-api'
+import $api from '../api/auth-api'
 import { IAuthResponse } from '../types/IAuthResponse'
 
 export default class AuthService {

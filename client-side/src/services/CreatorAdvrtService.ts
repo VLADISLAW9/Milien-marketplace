@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
-import $createAdvrt_api from '../store/api/createAdvrt-api'
-import $createPremiumAdvrt_api from '../store/api/createPaidAdvrt-api'
+import $createAdvrt_api from '../api/createAdvrt-api'
+import $createPremiumAdvrt_api from '../api/createPaidAdvrt-api'
 
 export default class CreateAdvrtService {
 	static async editAdvrtData(

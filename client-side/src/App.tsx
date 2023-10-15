@@ -11,7 +11,7 @@ import { useFetching } from './hooks/use-fetching'
 import useSignalRConnection from './hooks/use-signalR-connection'
 import { useTypedSelector } from './hooks/use-typed-selector'
 import UserService from './services/UserService'
-import { AUTH_URL } from './store/api/auth-api'
+import { AUTH_URL } from './api/auth-api'
 import { IAuthResponse } from './types/IAuthResponse'
 import { IUser } from './types/IUser'
 

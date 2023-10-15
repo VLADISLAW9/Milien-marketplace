@@ -150,6 +150,7 @@ const CreateAdvrtPage: FC = () => {
 	}
 
 	const handleNextAddress = () => {
+		console.log(advrtData.adress)
 		if (advrtData.adress !== null) {
 			setErrorMessage('')
 			setActiveStep(prevActiveStep => prevActiveStep + 1)

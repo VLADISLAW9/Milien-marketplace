@@ -1,97 +1,30 @@
-import { FC, useRef, useState } from 'react'
-import { Map, Placemark, SearchControl, YMaps } from 'react-yandex-maps'
+import { FC,useEffect,useState } from 'react'
 import { IAdvrtData } from '../../../CreateAdvrtPage'
+import 'react-dadata/dist/react-dadata.css';
+import { AddressSuggestions, DaDataSuggestion, DaDataAddress  } from 'react-dadata';
+
+const API_KEY_FOR_DADATA = '66ab16bfcbb3198b44e4b114d095a0d0297f355a'
 
 interface IMapProps {
 	advrtData: IAdvrtData
 	setAdvrtData: (data: IAdvrtData) => void
 }
 
-const MapComponent: FC<IMapProps> = ({ advrtData, setAdvrtData }) => {
-	const [address, setAddress] = useState(
-		advrtData.adress ? advrtData.adress : ''
-	)
-	const [selectedPlacemark, setSelectedPlacemark] = useState(null)
-	const [placemarkGeometry, setPlacemarkGeometry] = useState([
-		56.49771, 84.97437,
-	])
+const MapComponent: FC<IMapProps> = ({ advrtData, setAdvrtData }) => {	
+	const [suggestValue, setSuggestValue] = useState<DaDataSuggestion<DaDataAddress> | undefined>()
 
-	const searchControlRef = useRef<any>(null)
-
-	const handleMapClick = (e: any) => {
-		const coordinates = e.get('coords')
-		setPlacemarkGeometry(coordinates)
-		setSelectedPlacemark(coordinates)
-
-		const geocodeUrl = `https://geocode-maps.yandex.ru/1.x/?format=json&apikey=22184a1b-219d-4fc9-bd84-43d6d645c8fe&geocode=${coordinates[1]},${coordinates[0]}`
-
-		fetch(geocodeUrl)
-			.then(response => response.json())
-			.then(data => {
-				const featureMember =
-					data.response.GeoObjectCollection.featureMember[0].GeoObject
-				const address = featureMember.metaDataProperty.GeocoderMetaData.text
-				setAddress(address)
-				setAdvrtData({ ...advrtData, adress: address })
-			})
-			.catch(error => {
-				console.error('Error retrieving address:', error)
-			})
-
-		if (searchControlRef.current) {
-			searchControlRef.current.clear()
+	useEffect(() => {
+		if(suggestValue){
+			setAdvrtData({ ...advrtData, adress: suggestValue.value })
 		}
-	}
-
-	const handleSearchResult = (e: any) => {
-		const suggestion = e.get('item')
-		if (suggestion) {
-			const displayName = suggestion.value
-			const coordinates = suggestion.coords
-
-			setAddress(displayName)
-			setPlacemarkGeometry(coordinates)
-			setSelectedPlacemark(coordinates)
-
-			// You can use the coordinates for further processing if needed
-			console.log('Coordinates:', coordinates)
-		}
-	}
-
-	const handleSearchError = (e: any) => {
-		console.error('Error during geocoding:', e)
-	}
-
-	const clearSearchInput = () => {
-		if (searchControlRef.current) {
-			searchControlRef.current.clear()
-		}
-	}
+	}, [suggestValue])
 
 	return (
-		<YMaps query={{ apikey: '22184a1b-219d-4fc9-bd84-43d6d645c8fe' }}>
-			<div>
-				<Map
-					onClick={handleMapClick}
-					defaultState={{ center: placemarkGeometry, zoom: 10 }}
-					style={{ width: '100%', height: '400px' }}
-				>
-					<SearchControl
-						options={{ float: 'left' }}
-						onResultSelect={handleSearchResult}
-						onSearchError={handleSearchError}
-						instanceRef={(ref: any) => (searchControlRef.current = ref)}
-					/>
-					{selectedPlacemark && <Placemark geometry={selectedPlacemark} />}
-				</Map>
-				<div>
-					<h1 className='text-xl text-center mt-5 font-medium'>
-						Адрес: <span className='text-stone-400 font-normal'>{address}</span>
-					</h1>
+		<div>
+				<div className='mt-10 '>
+					<AddressSuggestions token={API_KEY_FOR_DADATA} value={suggestValue} onChange={setSuggestValue}/>	
 				</div>
-				{/* <button onClick={clearSearchInput}>Clear Search Input</button> */}
-			</div>
-		</YMaps>
+		</div>
 	)
 }
 

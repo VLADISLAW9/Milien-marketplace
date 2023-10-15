@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import $user_api from '../store/api/user-api'
+import $user_api from '../api/user-api'
 import { IAdvrt } from '../types/IAdvrt'
 
 export default class FavoriteAdvrtService {
