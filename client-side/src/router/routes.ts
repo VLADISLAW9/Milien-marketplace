@@ -8,6 +8,7 @@ import CreateAdvrtPage from '../pages/creatorAd/CreateAdvrtPage'
 
 import CustomerPage from '../pages/customer/CustomerPage'
 import FavoritePage from '../pages/favorite/FavoritePage'
+import GuideOfSite from '../pages/guide-of-site/GuideOfSite'
 import HomePage from '../pages/home/HomePage'
 import MySubscribtions from '../pages/my-subscribtions/MySubscribtions'
 import PaymentPage from '../pages/payment/PaymentPage'
@@ -41,4 +42,5 @@ export const publicRoutes = [
 	{ path: '/search/:param', component: SearchPage, exact: true },
 	{ path: '/forgot-password', component: ForgotPass, exact: true },
 	{ path: '/user-acception', component: UserAcception, exact: true },
+	{ path: '/guide', component: GuideOfSite, exact: true },
 ]

@@ -132,7 +132,10 @@ const HeaderSearch = () => {
 			>
 				<RxHamburgerMenu className='translate-x-2 mr-2 w-6 h-6 max-lg:w-10 max-lg:w-10' />
 			</button>
-			<div className='relative w-[50%] max-lg:w-[100%]'>
+			<form onSubmit={(e) => {
+				e.preventDefault()
+				handleNavigate(searchValue)
+			}} className='relative w-[50%] max-lg:w-[100%]'>
 				<input
 					onClick={() => {
 						setIsShow(true)
@@ -225,7 +228,7 @@ const HeaderSearch = () => {
 						)}
 					</div>
 				)}
-			</div>
+			</form>
 
 			<button
 				onClick={() => {

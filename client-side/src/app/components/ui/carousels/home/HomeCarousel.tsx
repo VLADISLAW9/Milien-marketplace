@@ -83,7 +83,7 @@ const HomeCarousel = () => {
 						/>
 					</div>
 				</Link>
-				<div className='bg-[#EAD8FE] relative overflow-hidden rounded-xl h-[170px] px-[36px] py-[18px]'>
+				<Link to='/guide' className='bg-[#EAD8FE] relative overflow-hidden rounded-xl h-[170px] px-[36px] py-[18px]'>
 					<div className='h-[100%] flex flex-col justify-end'>
 						<h1 className='text-xl z-[20] font-medium text-[#454649]'>
 							Руководство по сайту
@@ -98,7 +98,7 @@ const HomeCarousel = () => {
 							src='/rukovdstvo.png'
 						/>
 					</div>
-				</div>
+				</Link>
 			</Slider>
 		</>
 	)
